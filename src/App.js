@@ -1,4 +1,4 @@
-import logo from "./logo.svg";
+// import logo from "./logo.svg";
 import "./App.css";
 import { Sidebar } from "./components/Sidebar";
 import { BrowserRouter } from "react-router-dom";
@@ -17,33 +17,35 @@ import { Otp } from "./pages/Otp";
 import { Password } from "./pages/Password";
 import AddFriends from "../src/pages/AddFriends";
 import MatchMaking from "../src/pages/MatchMaking";
-import Test from "./pages/InvitePage";
+// import Test from "./pages/InvitePage";
 import InvitePage from "../src/pages/InvitePage";
 
 function App() {
   return (
     <BrowserRouter>
-      <Sidebar>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="home" element={<Home />} />
-          <Route path="allgames" element={<AllGames />} />
-          <Route path="addgames" element={<Addgames />} />
-          <Route path="friends" element={<Friends />} />
-          <Route path="addfriends" element={<AddFriends />} />
-          <Route path="install" element={<Install />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="faqs" element={<Faqs />} />
+      <div className="flex">
+        <Sidebar>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="home" element={<Home />} />
+            <Route path="allgames" element={<AllGames />} />
+            <Route path="addgames" element={<Addgames />} />
+            <Route path="friends" element={<Friends />} />
+            <Route path="addfriends" element={<AddFriends />} />
+            <Route path="install" element={<Install />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="faqs" element={<Faqs />} />
 
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<SignUP />} />
-          <Route path="otp" element={<Otp />} />
-          <Route path="password" element={<Password />} />
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<SignUP />} />
+            <Route path="otp" element={<Otp />} />
+            <Route path="password" element={<Password />} />
 
-          <Route path="matchmaking" element={<MatchMaking />} />
-          <Route path="invite" element={<InvitePage />} />
-        </Routes>
-      </Sidebar>
+            <Route path="matchmaking" element={<MatchMaking />} />
+            <Route path="invite" element={<InvitePage />} />
+          </Routes>
+        </Sidebar>
+      </div>
     </BrowserRouter>
   );
 }
