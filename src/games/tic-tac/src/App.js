@@ -71,8 +71,42 @@ function App() {
 
     if (winner) {
       setFinishedState(winner);
+
+      let result;
+      if (winner === playingAs) {
+        result = "win";
+      } else if (winner !== "draw") {
+        result = "loss";
+      }
+
+      if (result) {
+        const saveFinalResults = async () => {
+          try {
+            const response = await fetch("http://localhost:3005/finalResults", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: playerName,
+                result: result,
+              }),
+            });
+
+            if (!response.ok) {
+              throw new Error("Failed to save final results");
+            }
+
+            console.log("Final results saved successfully", response);
+          } catch (error) {
+            console.error("Error saving final results:", error);
+          }
+        };
+
+        saveFinalResults();
+      }
     }
-  }, [gameState]);
+  }, [gameState, playingAs, playerName]);
 
   const takePlayerName = async () => {
     const result = await Swal.fire({
@@ -89,6 +123,37 @@ function App() {
     });
     return result;
   };
+
+  useEffect(() => {
+    if (playOnline && opponentName) {
+      const createMatch = async () => {
+        try {
+          const response = await fetch("http://localhost:3005/createMatch", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              player1: playerName,
+              player2: opponentName,
+              game: "tic-tac-toe",
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to create match");
+          }
+
+          const data = await response.json();
+          console.log("Match created successfully:", data.message);
+        } catch (error) {
+          console.error("Error creating match:", error);
+        }
+      };
+
+      createMatch();
+    }
+  }, [playOnline, opponentName, playerName]);
 
   socket?.on("playerMoveFromServer", (data) => {
     setGameState((prevState) => {
@@ -126,7 +191,7 @@ function App() {
     const username = result.value;
     setPlayerName(username);
 
-    const newSocket = io("http://localhost:5001", {
+    const newSocket = io("https://tic-tac-server-kidq.onrender.com", {
       autoConnect: true,
     });
 
