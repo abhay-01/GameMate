@@ -7,11 +7,12 @@ import logo2 from "../images/logo2.jpeg";
 import logo3 from "../images/logo3.png";
 import trophy from "../images/trophy.png";
 import group from "../images/group.png";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaTimes } from "react-icons/fa";
 import headerImage from "../images/headerImage.png";
 import openSocket from "socket.io-client";
 import Carousels from "../components/Carousel";
 import io from "socket.io-client";
+import { useLocation } from "react-router-dom";
 
 const socket = io("http://localhost:3005", {
   withCredentials: true,
@@ -31,6 +32,21 @@ const Home = () => {
     console.log("Connected to server");
   });
 
+  const [winner, setWinner] = React.useState("");
+  const [matchEmails, setMatchEmails] = React.useState({
+    email1: "",
+    email2: "",
+  });
+
+  const [show, setShow] = React.useState(true);
+  const [status,setStatus] = React.useState(false);
+
+  const location = useLocation();
+
+  const getQueryParams = (query) => {
+    return new URLSearchParams(query);
+  };
+
   // useEffect(() => {
 
   //   const socket = io('http://localhost:3005',{
@@ -42,6 +58,74 @@ const Home = () => {
   //   }
   //   );
   // }, []);
+
+  useEffect(() => {
+    setWinner("");
+    const queryParams = getQueryParams(location.search);
+    const email = queryParams.get("email"); //TODO: get email from query params
+
+    // NOTE:for temp purpose only
+
+    const temp = "sumit";
+
+    if (temp) {
+      setWinner("");
+
+      setShow(true);
+      const fetchResult = async () => {
+        try {
+          const response = await fetch("http://localhost:3005/postResults", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: temp,
+            }),
+          });
+
+          const result = await response.json();
+          console.log("HOME PAGE REDIRECT--->", result.players[0].email);
+
+          setWinner(result.winner === temp ? "Win" : "Lost");
+        } catch (err) {
+          console.log("ERROR IN FETCHING RESULTS", err);
+        }
+      };
+
+      fetchResult();
+    }
+  }, [location.search]);
+
+  const handleClose = async () => {
+    console.log("PRESSED");
+    setShow(false)
+    try {
+      const response = await fetch("http://localhost:3005/updateStatus", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email:"lalit"
+        }),
+      });
+
+
+      const res  = await response.json();
+      console.log("AFTER UPDATION", res);
+      if (response.ok) {
+        console.log("Match status updated");
+        setWinner("");
+        setShow(false);
+      } else {
+        console.log("Failed to update match status");
+      }
+    } catch (error) {
+      console.error("Error in closing match", error);
+    }
+  };
+
   return (
     <div className="h-screen w-screen overflow-y-auto bg-black text-white md:pr-10 md:pl-20 pr-5 pl-10">
       {/* Search Bar */}
@@ -59,6 +143,21 @@ const Home = () => {
         <img src={headerImage} alt="Header Game" className="w-full h-auto" />
       </div>
       <Carousels />
+
+      {/* Display Winner or Loser with Close Button */}
+      {show && winner && (
+        <div className="text-center text-xl font-bold mt-4">
+          Player Result: {winner}
+          {winner && (
+            <button
+              onClick={handleClose}
+              className="ml-4 bg-red-500 text-white p-2 rounded"
+            >
+              Close <FaTimes />
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Upcoming Matches */}
       <div className="p-5">

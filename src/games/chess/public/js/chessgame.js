@@ -155,7 +155,7 @@ const displayGameResult = (result) => {
   // document.body.appendChild(resultElement);
   // Redirect to the matchmaking page with parameters
 
-  window.location.href = `http://localhost:3000/matchmaking`;
+  window.location.href = `http://localhost:3000`;
 };
 const playAgain = () => {
   // Redirect to the matchmaking page with parameters
