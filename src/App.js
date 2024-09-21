@@ -24,7 +24,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="flex">
-        <Sidebar>
+        <Sidebar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="home" element={<Home />} />
@@ -44,7 +44,6 @@ function App() {
             <Route path="matchmaking" element={<MatchMaking />} />
             <Route path="invite" element={<InvitePage />} />
           </Routes>
-        </Sidebar>
       </div>
     </BrowserRouter>
   );

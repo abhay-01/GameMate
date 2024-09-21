@@ -29,14 +29,6 @@ const Friends = () => {
         flexDirection: "column",
       }}
     >
-      {/* Search Bar */}
-      <div style={{ padding: "20px", textAlign: "center" }} className="border-b border-white border-opacity-35 ">
-        <input
-          type="text"
-          placeholder="Search for games..."
-          className="w-10/12 py-2 border  rounded-md text-[16px] bg-transparent px-2"
-        />
-      </div>
       
       {/* Header Image */}
       <div
