@@ -59,7 +59,7 @@ export const Login = () => {
               className="w-full mt-5 p-2 border border-gray-300 rounded-lg placeholder-gray-500  bg-zinc-800"
             />
             <input
-              type="text"
+              type="password"
               placeholder="at least 8 characters"
               className="w-full mt-5 p-2 border border-gray-300 rounded-lg placeholder-gray-500  bg-zinc-800"
             />
