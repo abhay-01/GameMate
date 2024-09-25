@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect ,useState} from "react";
 import img1 from "../images/img1.jpeg";
 import img2 from "../images/img2.jpg";
 import img3 from "../images/img3.jpeg";
@@ -12,7 +12,7 @@ import headerImage from "../images/headerImage.png";
 import openSocket from "socket.io-client";
 import Carousels from "../components/Carousel";
 import io from "socket.io-client";
-
+import MatchResultModal from '../components/Modal';
 const socket = io("http://localhost:3005", {
   withCredentials: true,
   transportOptions: {
@@ -42,10 +42,55 @@ const Home = () => {
   //   }
   //   );
   // }, []);
+
+  // logic for popup modal for sologames
+  const [matchResult, setMatchResult] = useState(null);  // To store win/loss result
+  const [modalOpen, setModalOpen] = useState(false);     // Controls modal visibility
+  const userEmail = 'test@gmail.com';                  // Replace with actual user email
+
+  // Fetch match result from the backend
+  const fetchMatchResult = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/updateSoloDatabase`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: userEmail }),
+      });
+      const data = await response.text(); // Handle the result ('win'/'loss')
+      setMatchResult(data === 'win' ? 'win' : 'loss');
+      setModalOpen(true);  // Open the modal after fetching
+    } catch (error) {
+      console.error('Error fetching match result:', error);
+    }
+  };
+
+  // Trigger the backend to mark the match as completed
+  const closeModal = async () => {
+    try {
+      await fetch(`${process.env.REACT_APP_API_URL}/updateSoloStatus`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: userEmail }),
+      });
+      setModalOpen(false);  // Close the modal
+    } catch (error) {
+      console.error('Error updating match status:', error);
+    }
+  };
+
+  // Fetch the match result on component load
+  useEffect(() => {
+    fetchMatchResult();
+  }, []);
+
   return (
     <div className="h-screen w-screen overflow-y-auto bg-black text-white md:pr-10 md:pl-20 pr-5 pl-10">
       {/* Search Bar */}
-
+      <MatchResultModal isOpen={modalOpen} result={matchResult} onClose={closeModal} />
       <div className="p-5 text-center">
         <input
           type="text"

@@ -29,8 +29,29 @@ const AllGames = () => {
     window.open("http://localhost:3000", "_blank");
   };
 
-  const openGeography = () => {
+  const openGeography = async() => {
     const email = "test@gmail.com";
+    try {
+      // Make the POST request using fetch
+      const response = await fetch("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/createSoloMatch", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }), // Send the email in the request body
+        credentials: 'include', // Include credentials like cookies if necessary
+      });
+  
+      // Check if the response is OK
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Match created:", data);
+      } else {
+        console.error("Failed to create match:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error occurred:", error.message);
+    }
     const url = "https://geography-classes.netlify.app" + "?email=" + email;
     window.open(url, "_blank");
   };
