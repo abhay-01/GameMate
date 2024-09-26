@@ -26,7 +26,7 @@ export const Login = () => {
         }}
       >
         {/* Search Bar */}
-        <div
+        {/* <div
           style={{ padding: "20px", textAlign: "center" }}
           className="border-b border-white border-opacity-35 "
         >
@@ -35,7 +35,7 @@ export const Login = () => {
             placeholder="Search for games..."
             className="w-8/12 py-2 pl-6 border  rounded-md text-[16px] bg-transparent px-2"
           />
-        </div>
+        </div> */}
         {/* Header Image */}
         <div
           className={`flex flex-col   items-center justify-center flex-1`}
