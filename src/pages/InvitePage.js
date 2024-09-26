@@ -10,9 +10,9 @@ const socket = io("http://localhost:3005", {
     email: "test2",
   },
 });
+
 const InvitePage = () => {
   const [email, setEmail] = useState("test2");
-  const [invites, setInvites] = useState([]);
   const [matchedInvite, setMatchedInvite] = useState(false);
   const [inviteSender, setInviteSender] = useState("");
   const [inviteTarget, setInviteTarget] = useState("");
@@ -21,60 +21,46 @@ const InvitePage = () => {
 
   const handleAcceptInvite = async () => {
     if (matchedInvite) {
-      //   console.log("EK BAR DATA-->", matchedInvite);
       try {
-        const response = await fetch(
-          "http://localhost:3005/accept-matchmaking",
-          {
+        const response = await fetch("http://localhost:3005/accept-matchmaking", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            sender: inviteTarget,
+            target: inviteSender,
+            url: inviteUrl,
+            type: inviteType,
+          }),
+        });
+
+        if (response.ok) {
+          socket.emit("accept-matchmaking", {
+            sender: inviteTarget,
+            target: inviteSender,
+            url: inviteUrl,
+            type: inviteType,
+          });
+
+          const createMatch = await fetch("http://localhost:3005/createMatch", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              sender: inviteTarget,
-              target: inviteSender,
-              url: inviteUrl,
-              type: inviteType,
+              player1: inviteSender,
+              player2: inviteTarget,
+              game: inviteType,
             }),
+          });
+
+          if (createMatch.ok) {
+            console.log("Match created successfully");
           }
-        );
-
-        if (response.ok) {
-          if (
-            socket.emit("accept-matchmaking", {
-              sender: inviteTarget,
-              target: inviteSender,
-              url: inviteUrl,
-              type: inviteType,
-            })
-          ) {
-
-            const createMatch = await fetch("http://localhost:3005/createMatch", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                player1: inviteSender,
-                player2: inviteTarget,
-                game: inviteType,
-              }),
-            });
-
-            if (createMatch.ok) {
-              console.log("Match created successfully");
-            } else {
-              console.error("Failed to create match");
-            }
-            
-            console.log("EMITTED");
-            const url = inviteUrl + `?email=${email}`;
-            window.open(url, "_blank");
-          } else {
-            console.log("NOT EMITTED");
-          }
-          socket.on("registerEmail",inviteTarget);
-
+          
+          const url = inviteUrl + `?email=${email}`;
+          window.open(url, "_blank");
         } else {
           console.error("Failed to accept invite");
         }
@@ -86,13 +72,7 @@ const InvitePage = () => {
 
   useEffect(() => {
     socket.on("matchmaking", (data) => {
-      console.log("THIS IS INVITE PAGE-->", data);
-
-    
-
-
       if (data.target === email) {
-        console.log("YE MATCH HUA HAI", data.target, email);
         setMatchedInvite(true);
         setInviteSender(data.sender);
         setInviteTarget(data.target);
@@ -111,38 +91,18 @@ const InvitePage = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        marginLeft: "300px",
-      }}
-    >
-      <h2>Invite Page</h2>
+    <div className="flex flex-col items-center justify-center h-screen ml-72">
+      <h2 className="text-2xl mb-4">Invite Page</h2>
       <input
         type="email"
         value={email}
         onChange={handleInputChange}
         placeholder="Enter your email to check invites"
-        style={{
-          padding: "10px",
-          margin: "10px",
-          borderRadius: "5px",
-        }}
+        className="p-2 mb-4 rounded border border-gray-300"
       />
       <button
-        style={{
-          padding: "10px",
-          margin: "10px",
-          backgroundColor: "blue",
-          color: "white",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
         onClick={() => window.location.reload()}
+        className="p-2 mb-4 bg-blue-500 text-white rounded cursor-pointer"
       >
         CHECK
       </button>
@@ -151,15 +111,7 @@ const InvitePage = () => {
           <p>Invite received from: {inviteSender}</p>
           <button
             onClick={handleAcceptInvite}
-            style={{
-              padding: "10px",
-              margin: "10px",
-              backgroundColor: "green",
-              color: "white",
-              borderRadius: "5px",
-              cursor: "pointer",
-              marginLeft: "300px",
-            }}
+            className="p-2 mt-4 bg-green-500 text-white rounded cursor-pointer"
           >
             Accept Invite
           </button>

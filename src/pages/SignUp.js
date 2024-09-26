@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import bg from "../assets/bg.svg";
-import { FaGoogle } from "react-icons/fa";
-import { FaSquareGooglePlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import g from "../images/g.webp";
 import f from "../images/f.webp";
@@ -9,7 +7,6 @@ import axios from "axios";
 
 export const SignUP = () => {
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState(["", "", "", ""]);
   const [error, setError] = useState("");
   const [username, setUsername] = useState("");
   const [correctOtp, setCorrectOtp] = useState("");
@@ -25,18 +22,6 @@ export const SignUP = () => {
     return isValidEmail;
   };
 
-  // const otpPage = async () => {
-  //   if (validateEmail(email)) {
-  //     setError("");
-  //     navigate("/otp");
-
-  //     await axios
-  //       .post("https://gamemate.onrender.com/sendOTP", { email })
-  //       .then((response) => {
-  //         console.log(response);
-  //       });
-  //   } else setError("Invalid email address. Please enter a valid email.");
-  // };
 
   const closeModal = () => {
     setError("");
@@ -74,20 +59,9 @@ export const SignUP = () => {
           flexDirection: "column",
         }}
       >
-        {/* Search Bar */}
-        <div
-          style={{ padding: "20px", textAlign: "center" }}
-          className="border-b border-white border-opacity-35 "
-        >
-          <input
-            type="text"
-            placeholder="Search for games..."
-            className="w-8/12 py-2 pl-6 border  rounded-md text-[16px] bg-transparent px-2"
-          />
-        </div>
         {/* Header Image */}
         <div
-          className={`flex flex-col   items-center justify-center flex-1`}
+          className={`flex flex-col items-center justify-center flex-1`}
           style={{
             width: "100%",
             backgroundImage: `url(${bg})`,

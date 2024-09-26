@@ -128,15 +128,6 @@ const Home = () => {
 
   return (
     <div className="h-screen w-screen overflow-y-auto bg-black text-white md:pr-10 md:pl-20 pr-5 pl-10">
-      {/* Search Bar */}
-
-      <div className="p-5 text-center">
-        <input
-          type="text"
-          placeholder="Search for games..."
-          className="w-4/5 p-2 rounded-md border border-gray-300 text-lg"
-        />
-      </div>
 
       {/* Header Image */}
       <div className="w-full">
