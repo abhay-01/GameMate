@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
 import {
   FaCog,
   FaDownload,
@@ -13,9 +12,12 @@ import {
 } from "react-icons/fa";
 import { FaGamepad } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
+import logo from "../assets/boy.png"; // Add your logo image
+import userProfileImage from "../assets/boy.png"; // Add a placeholder profile image
 
 export const Sidebar = ({ children }) => {
   const navigate = useNavigate();
+
   const handleLoginClick = () => {
     navigate("/login");
   };
@@ -28,12 +30,12 @@ export const Sidebar = ({ children }) => {
     },
     {
       path: "/allgames",
-      name: "ALL Games",
+      name: "All Games",
       icon: <FaGamepad />,
     },
     {
       path: "/addgames",
-      name: "Add games",
+      name: "Add Games",
       icon: <FaGamepad />,
     },
     {
@@ -58,45 +60,50 @@ export const Sidebar = ({ children }) => {
     },
     {
       path: "/faqs",
-      name: "FAQS",
+      name: "FAQs",
       icon: <FaQuestionCircle />,
     },
   ];
 
   return (
-    <div className="container">
-      <div className="sidebar" style={{ width: "250px" }}>
-        <div className="top_section">
-          <h1 className="logo">Logo</h1>
+    <div className="fixed flex">
+<div className="min-h-screen w-[300px] text-white bg-custom-gradient h-screen">
+        <div className="flex justify-center items-center py-4">
+          <img src={logo} alt="Game Mate" className="h-12" />
         </div>
 
-        <div className="explore expanded">
-          <div className="icon">
-            <FaSearch />
-          </div>
-          <div className="explore-text">Explore</div>
+        <div className="explore flex items-center px-4 py-2 bg-gray-800 rounded-lg mb-4 cursor-pointer">
+          <FaSearch className="mr-2 text-xl" />
+          <div className="text-lg font-medium">Explore</div>
         </div>
 
-        {menuItem.map((item, index) => (
-          <NavLink
-            to={item.path}
-            key={index}
-            className="link"
-            activeclassName="active"
-          >
-            <div className="icon">{item.icon}</div>
-            <div className="link_text">{item.name}</div>
-          </NavLink>
-        ))}
+        <div className="navigate px-4">
+          {menuItem.map((item, index) => (
+            <NavLink
+              to={item.path}
+              key={index}
+              className="link flex items-center text-gray-300 hover:text-white py-2 px-2 mb-1"
+              activeClassName="text-white"
+            >
+              <div className="icon mr-3 text-xl">{item.icon}</div>
+              <div className="link_text text-md">{item.name}</div>
+            </NavLink>
+          ))}
+        </div>
 
-        <div className="explore expanded" onClick={handleLoginClick}>
-          <div className="icon">
-            <FaUserCircle size={30} />
+        <div className="absolute bottom-4 left-4 w-[280px] flex items-center py-2 border-t border-gray-700" onClick={handleLoginClick}>
+          <img
+            src={userProfileImage}
+            alt="User Profile"
+            className="h-10 w-10 rounded-full mr-2"
+          />
+          <div>
+            <div className="text-white font-semibold">Login/SignUP</div>
+            <div className="text-xs text-gray-400">Bio/AIR</div>
           </div>
-          <div className="explore-text">Login/SignUP</div>
         </div>
       </div>
-      <main className="main-content">{children}</main>
+      <main className="main-content flex-1 p-4">{children}</main>
     </div>
   );
 };

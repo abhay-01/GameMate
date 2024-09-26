@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from "react"; 
 import { FaGem, FaSearch, FaChevronDown } from "react-icons/fa";
 
 const Navbar = () => {
@@ -7,145 +7,60 @@ const Navbar = () => {
 
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
-    setIsDropdownOpen(false); // Close the dropdown after selection
+    setIsDropdownOpen(false);
   };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const navbarStyles = {
-    container: {
-      height: "70px",
-      marginLeft: "250px", // Sidebar width offset
-      display: "flex",
-      alignItems: "center",
-      backgroundColor: "rgb(63, 62, 62)",
-      color: "white",
-      width: "calc(100% - 250px)", // Adjust width based on the sidebar
-      padding: "0 32px",
-      boxSizing: "border-box",
-      justifyContent: "space-between",
-    },
-    search: {
-      display: "flex",
-      alignItems: "center",
-      gap: "10px",
-      border: "0.1px solid rgb(245, 236, 236)",
-      width: "380px",
-      padding: "4px 13px",
-      borderRadius: "7px",
-      marginRight: "auto",
-    },
-    searchText: {
-      padding: "2px",
-    },
-    coin: {
-      display: "flex",
-      alignItems: "center",
-      gap: "10px",
-      marginLeft: "20px",
-      marginRight: "20px",
-    },
-    coinLogo: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      width: "25px",
-      height: "25px",
-      borderRadius: "50%",
-      backgroundColor: "#333",
-      color: "white",
-      fontSize: "14px",
-      border: "2px solid white",
-    },
-    total: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "flex-start",
-    },
-    text: {
-      fontSize: "12px",
-    },
-    digits: {
-      fontSize: "16px",
-      fontWeight: "bold",
-    },
-    lang: {
-      position: "relative",
-    },
-    dropdownButton: {
-      background: "#070707",
-      border: "none",
-      color: "white",
-      padding: "4px 14px",
-      borderRadius: "20px",
-      cursor: "pointer",
-      display: "flex",
-      alignItems: "center",
-      gap: "8px",
-    },
-    dropdownContent: {
-      display: isDropdownOpen ? "flex" : "none",
-      flexDirection: "column",
-      position: "absolute",
-      top: "100%",
-      right: "0",
-      backgroundColor: "#333",
-      color: "white",
-      minWidth: "100px",
-      borderRadius: "4px",
-      boxShadow: "0 8px 16px rgba(0,0,0,0.2)",
-      zIndex: 1000,
-      marginTop: "4px",
-    },
-    dropdownItem: {
-      background: "none",
-      border: "none",
-      color: "white",
-      padding: "12px 16px",
-      textAlign: "left",
-      width: "100%",
-      cursor: "pointer",
-    },
-    dropdownItemHover: {
-      backgroundColor: "#575757",
-    },
-  };
-
   return (
-    <div style={navbarStyles.container}>
-      <div style={navbarStyles.search}>
-        <FaSearch />
-        <div style={navbarStyles.searchText}>Search..</div>
+    <div className="bg-custom-gray text-white h-[80px] flex items-center justify-between px-8 fixed top-0 left-[300px] w-[calc(100%-300px)] z-50">
+      {/* Search Bar */}
+      <div className="flex items-center gap-3 bg-gray-800 px-5 py-2 rounded-full w-[400px]">
+        <FaSearch className="text-lg" />
+        <input
+          type="text"
+          placeholder="Search..."
+          className="bg-transparent outline-none text-white flex-1 placeholder-gray-400"
+        />
       </div>
-      <div style={navbarStyles.coin}>
-        <div style={navbarStyles.coinLogo}>
+
+      {/* Coins Section */}
+      <div className="flex items-center gap-3">
+        <div className="flex items-center justify-center w-10 h-10 bg-gray-800 rounded-full text-lg border-2 border-white">
           <FaGem />
         </div>
-        <div style={navbarStyles.total}>
-          <div style={navbarStyles.text}>Coins</div>
-          <div style={navbarStyles.digits}>00</div>
+        <div className="text-center">
+          <span className="text-sm text-gray-400 block">Coins</span>
+          <span className="text-xl font-bold">00</span>
         </div>
       </div>
-      <div style={navbarStyles.lang}>
-        <button style={navbarStyles.dropdownButton} onClick={toggleDropdown}>
-          {language} <FaChevronDown />
+
+      {/* Language Selector */}
+      <div className="relative">
+        <button
+          className="bg-gray-800 py-2 px-4 rounded-full flex items-center gap-2"
+          onClick={toggleDropdown}
+        >
+          {language} <FaChevronDown className="text-sm" />
         </button>
-        <div style={navbarStyles.dropdownContent}>
-          <button
-            style={navbarStyles.dropdownItem}
-            onClick={() => handleLanguageChange("ENG")}
-          >
-            English
-          </button>
-          <button
-            style={navbarStyles.dropdownItem}
-            onClick={() => handleLanguageChange("HIN")}
-          >
-            Hindi
-          </button>
-        </div>
+        {isDropdownOpen && (
+          <div className="absolute top-full right-0 mt-2 bg-gray-800 text-white rounded-md shadow-lg min-w-[100px]">
+            <button
+              className="block w-full text-left py-2 px-4 hover:bg-gray-600"
+              onClick={() => handleLanguageChange("ENG")}
+            >
+              English
+            </button>
+            <button
+              className="block w-full text-left py-2 px-4 hover:bg-gray-600"
+              onClick={() => handleLanguageChange("HIN")}
+            >
+              Hindi
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
