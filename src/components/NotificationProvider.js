@@ -13,7 +13,7 @@ const NotificationProvider = ({ children }) => {
   useEffect(() => {
     socket.on("matchmaking", (data) => {
       console.log("NOTIFICATION-->", data);
-    //   setAlert(invite.message); // Set the alert message
+    //   setAlert(invite.message); 
       setTimeout(() => setAlert(null), 5000);
     });
 
