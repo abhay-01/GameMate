@@ -11,6 +11,7 @@ export const SignUP = () => {
   const [username, setUsername] = useState("");
   const [correctOtp, setCorrectOtp] = useState("");
 
+  //comment
   const navigate = useNavigate();
   const handleSignin = () => {
     navigate("/login");
@@ -31,7 +32,7 @@ export const SignUP = () => {
       setError("");
       try {
         const response = await axios.post(
-          "https://gamemate.onrender.com/sendOTP",
+          "http://localhost:3005/sendOTP",
           { email }
         );
         setCorrectOtp(response.data.otp); // Store correct OTP in state

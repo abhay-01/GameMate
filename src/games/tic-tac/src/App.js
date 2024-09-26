@@ -10,8 +10,6 @@ const renderFrom = [
   [7, 8, 9],
 ];
 
-// comment
-
 function App() {
   const [gameState, setGameState] = useState(renderFrom);
   const [currentPlayer, setCurrentPlayer] = useState("circle");
@@ -28,10 +26,10 @@ function App() {
       if (
         gameState[row][0] === gameState[row][1] &&
         gameState[row][1] === gameState[row][2] &&
-        gameState[row][0] !== null // Ensure the squares are filled (not null)
+        gameState[row][0] !== null
       ) {
         setFinishedArrayState([row * 3 + 0, row * 3 + 1, row * 3 + 2]);
-        return gameState[row][0]; // Return the winner ('circle' or 'cross')
+        return gameState[row][0];
       }
     }
 
@@ -39,10 +37,10 @@ function App() {
       if (
         gameState[0][col] === gameState[1][col] &&
         gameState[1][col] === gameState[2][col] &&
-        gameState[0][col] !== null // Ensure the squares are filled (not null)
+        gameState[0][col] !== null
       ) {
         setFinishedArrayState([0 * 3 + col, 1 * 3 + col, 2 * 3 + col]);
-        return gameState[0][col]; // Return the winner ('circle' or 'cross')
+        return gameState[0][col];
       }
     }
 
@@ -80,6 +78,7 @@ function App() {
       }
 
       if (result) {
+        console.log("Game over, result:", result);
         const saveFinalResults = async () => {
           try {
             const response = await fetch("http://localhost:3005/finalResults", {
@@ -97,7 +96,9 @@ function App() {
               throw new Error("Failed to save final results");
             }
 
-            console.log("Final results saved successfully", response);
+            console.log("Final results saved successfully");
+             window.location.href = `http://localhost:3000`;
+
           } catch (error) {
             console.error("Error saving final results:", error);
           }
@@ -112,8 +113,6 @@ function App() {
     const result = await Swal.fire({
       title: "Enter your name",
       input: "text",
-      // inputLabel: "Your name",
-      // inputValue,
       showCancelButton: true,
       inputValidator: (value) => {
         if (!value) {
@@ -134,8 +133,8 @@ function App() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              player1: playerName,
-              player2: opponentName,
+              email1: playerName,
+              email2: opponentName,
               game: "tic-tac-toe",
             }),
           });
@@ -175,6 +174,7 @@ function App() {
   socket?.on("OpponentNotfound", function () {
     setOpponentName(false);
   });
+
   socket?.on("Opponentfound", function (data) {
     setOpponentName(data.opponentName);
     setPlayingAs(data.playingAs);
