@@ -20,9 +20,7 @@ const Faqs = () => {
         <div
           className={`flex flex-col justify-center items-center   pl-10 flex-1`}
           style={{
-            width: "100%",
             backgroundImage: `url(${bg})`,
-            backgroundRepeat: "repeat",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

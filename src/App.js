@@ -1,49 +1,19 @@
-// import logo from "./logo.svg";
-import "./App.css";
-import { Sidebar } from "./components/Sidebar";
 import { BrowserRouter } from "react-router-dom";
-import AllGames from "../src/pages/AllGames";
-import Addgames from "../src/pages/Addgames";
-import Home from "../src/pages/Home";
-import Friends from "../src/pages/Friends";
-import Settings from "../src/pages/Settings";
-import Install from "../src/pages/Install";
-import Faqs from "../src/pages/Faqs";
-import { Routes, Route } from "react-router-dom";
-
-import { Login } from "./pages/Login";
-import { SignUP } from "./pages/SignUp";
-import { Otp } from "./pages/Otp";
-import { Password } from "./pages/Password";
-import AddFriends from "../src/pages/AddFriends";
-import MatchMaking from "../src/pages/MatchMaking";
-// import Test from "./pages/InvitePage";
-import InvitePage from "../src/pages/InvitePage";
+import Navbar from "./components/Navbar";
+import AppRoutes from "./Routes";
+import { Sidebar } from "./components/Sidebar"
 
 function App() {
   return (
     <BrowserRouter>
       <div className="flex">
-        <Sidebar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="home" element={<Home />} />
-            <Route path="allgames" element={<AllGames />} />
-            <Route path="addgames" element={<Addgames />} />
-            <Route path="friends" element={<Friends />} />
-            <Route path="addfriends" element={<AddFriends />} />
-            <Route path="install" element={<Install />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="faqs" element={<Faqs />} />
-
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<SignUP />} />
-            <Route path="otp" element={<Otp />} />
-            <Route path="password" element={<Password />} />
-
-            <Route path="matchmaking" element={<MatchMaking />} />
-            <Route path="invite" element={<InvitePage />} />
-          </Routes>
+      <Sidebar />
+        <div className="flex-1 flex flex-col ml-[250px]">
+          <Navbar />
+          <div className="mt-[70px] p-4"> {/* Adjusts to compensate for the fixed navbar */}
+            <AppRoutes />
+          </div>
+        </div>
       </div>
     </BrowserRouter>
   );
