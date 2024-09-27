@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import bg from "../assets/bg.svg";
 import { useNavigate } from "react-router-dom";
 import g from "../images/g.webp";
@@ -9,8 +9,15 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
+  
   const navigate = useNavigate();
+
+  useEffect(() => {
+      const storedCredentials = JSON.parse(localStorage.getItem("userCredentials"));
+    if (storedCredentials && storedCredentials.email && storedCredentials.password) {
+      navigate("/home"); 
+    }
+  }, [navigate]);
 
   const handleSignup = () => {
     navigate("/signup");
@@ -24,12 +31,18 @@ export const Login = () => {
       });
 
       if (response.status === 200) {
+        const userCredentials = {
+          email,
+          password,
+        };
+        localStorage.setItem("userCredentials", JSON.stringify(userCredentials));
+
         navigate("/home");
       }
     } catch (error) {
-      if (error.response.status === 401) {
+      if (error.response && error.response.status === 401) {
         setError("Password does not match.");
-      } else if (error.response.status === 404) {
+      } else if (error.response && error.response.status === 404) {
         setError("User not found.");
       } else {
         setError("Failed to login. Please try again.");
@@ -65,7 +78,7 @@ export const Login = () => {
             backgroundPosition: "center",
           }}
         >
-          <div className="flex flex-col items-center justify-center w-full max-w-xs px-4 py-8  rounded-md shadow-md">
+          <div className="flex flex-col items-center justify-center w-full max-w-xs px-4 py-8 rounded-md shadow-md">
             <input
               type="text"
               placeholder="Example@email.com"
@@ -78,7 +91,7 @@ export const Login = () => {
               placeholder="at least 8 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full mt-5 p-2 border border-gray-300 rounded-lg placeholder-gray-500  bg-zinc-800"
+              className="w-full mt-5 p-2 border border-gray-300 rounded-lg placeholder-gray-500 bg-zinc-800"
             />
 
             <div className="mt-1 mr-0 pr-0 flex justify-end text-blue-700">
@@ -87,10 +100,7 @@ export const Login = () => {
               </div>
             </div>
 
-            <button
-              onClick={handleLogin}
-              className="bg-blue-950 w-full mt-2 p-2 rounded-md text-white"
-            >
+            <button onClick={handleLogin} className="bg-blue-950 w-full mt-2 p-2 rounded-md text-white">
               Sign in
             </button>
 
