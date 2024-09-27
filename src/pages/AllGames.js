@@ -4,7 +4,7 @@ import trophy from "../images/trophy.png";
 import group from "../images/group.png";
 import "./Home.css";
 import { FaArrowRight } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const AllGames = () => {
   const navigate = useNavigate();
@@ -21,13 +21,24 @@ const AllGames = () => {
   //     });
   // };
 
+
+  const location = useLocation();
+  const friendName = location.state?.friendName;
+
+
+  console.log("Friend Name:", friendName);
+
+
   const startChessServer = () => {
-    navigate("/matchmaking");
+    navigate("/matchmaking",{
+      state: { 
+        friendName: friendName,
+        gameUrl: "http://localhost:3001",
+      }
+    });
   };
 
-  const startServer = () => {
-    window.open("http://localhost:3000", "_blank");
-  };
+
 
   const openGeography = async() => {
     const email = "test@gmail.com";
@@ -63,7 +74,7 @@ const AllGames = () => {
           key={game.id}
           className="card"
           onClick={
-            game.onClick === "startChessServer" ? startChessServer : startServer
+            game.onClick === "startChessServer" ? startChessServer : null
           }
         >
           <div className="image">
