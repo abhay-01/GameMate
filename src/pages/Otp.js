@@ -15,6 +15,9 @@ export const Otp = () => {
   const otpRef = useRef(null);
 
   const correctOtp = location.state?.correctOtp;
+  const email = location.state?.email;
+  const password = location.state?.password;
+  const userName = location.state?.username;
 
   const resetOtp = () => {
     setOtp(["", "", "", ""]); // Reset the OTP state
@@ -23,9 +26,27 @@ export const Otp = () => {
     }
   };
 
-  const verifyOTP = () => {
+  const verifyOTP = async () => {
     if (otp.join("") === correctOtp.toString().trim()) {
-      navigate("/password");
+      let response = axios.post("http://localhost:3005/signup", {
+        email,
+        password,
+        userName,
+      });
+
+      if ((await response).status === 409) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "User already exists. Try logging in.",
+          confirmButtonText: "Login",
+          didClose: () => {
+            navigate("/login");
+          },
+        });
+      } else {
+        navigate("/home");
+      }
     } else {
       Swal.fire({
         icon: "error",

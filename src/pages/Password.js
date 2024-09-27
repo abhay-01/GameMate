@@ -18,7 +18,7 @@ export const Password = () => {
     setPass("");
     setrePass("");
     if (otpRef.current) {
-      otpRef.current.focus(); // Focus on the password input
+      otpRef.current.focus();
     }
   };
 
