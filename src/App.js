@@ -9,6 +9,7 @@ import Friends from "../src/pages/Friends";
 import Settings from "../src/pages/Settings";
 import Install from "../src/pages/Install";
 import Faqs from "../src/pages/Faqs";
+import Profile from "../src/pages/Profile"
 import { Routes, Route } from "react-router-dom";
 
 import { Login } from "./pages/Login";
@@ -39,7 +40,7 @@ function App() {
           <Route path="signup" element={<SignUP />} />
           <Route path="otp" element={<Otp />} />
           <Route path="password" element={<Password />} />
-
+          <Route path="profile" element={<Profile />} />
           <Route path="matchmaking" element={<MatchMaking />} />
           <Route path="invite" element={<InvitePage />} />
         </Routes>

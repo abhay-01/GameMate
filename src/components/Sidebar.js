@@ -67,6 +67,11 @@ export const Sidebar = ({ children }) => {
       name: "FAQS",
       icon: <FaQuestionCircle />,
     },
+    {
+      path: "/profile",
+      name: "Profile",
+      icon: <FaQuestionCircle />,
+    },
   ];
 
   return (
