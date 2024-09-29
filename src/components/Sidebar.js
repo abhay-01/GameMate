@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   FaCog,
   FaDownload,
@@ -16,6 +16,7 @@ import userProfileImage from "../assets/boy.png"; // Add a placeholder profile i
 
 export const Sidebar = ({ children }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLoginClick = () => {
     navigate("/login");
@@ -66,7 +67,7 @@ export const Sidebar = ({ children }) => {
 
   return (
     <div className="fixed flex">
-<div className="min-h-screen w-[300px] text-white bg-custom-gradient h-screen">
+    <div className="min-h-screen w-80 text-white bg-custom-gradient h-screen">
         <div className="flex justify-center items-center py-4">
           <img src={logo} alt="Game Mate" className="h-12" />
         </div>
@@ -87,11 +88,10 @@ export const Sidebar = ({ children }) => {
             <NavLink
               to={item.path}
               key={index}
-              className="link flex items-center text-gray-400 hover:text-white py-2 px-2 mb-1"
-              activeClassName="text-white"
+              className={`flex items-center ${location.pathname === item.path? 'text-white':'text-gray-400'} hover:text-white py-2 px-2 mb-1`}
             >
-              <div className="icon mr-3 text-xl">{item.icon}</div>
-              <div className="link_text text-md">{item.name}</div>
+              <div className="mr-3 text-xl">{item.icon}</div>
+              <div className="text-md">{item.name}</div>
             </NavLink>
           ))}
         </div>
