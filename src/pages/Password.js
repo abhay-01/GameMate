@@ -1,11 +1,6 @@
 import React, { useState, useRef } from "react";
 import bg from "../assets/bg.svg";
-import { FaGoogle } from "react-icons/fa";
-import { FaSquareGooglePlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import g from "../images/g.webp";
-import f from "../images/f.webp";
-import axios from "axios";
 import Swal from "sweetalert2";
 
 export const Password = () => {

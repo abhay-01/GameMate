@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import io from "socket.io-client";
 import bg from "../assets/bg.svg";
 import boy from "../images/boy.png";
-import { FaGem, FaChevronDown } from "react-icons/fa";
+import Coin from "../components/Coin";
 
 const socket = io("http://localhost:3005", {
   transports: ["websocket"],
@@ -21,8 +21,6 @@ const Matchmaking = () => {
   const [myEmail, setMyEmail] = useState("test");
   const [result, setResult] = useState("");
   const [showResult, setShowResult] = useState(false);
-  const [language, setLanguage] = useState("ENG");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [countdown, setCountdown] = useState(60);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [player1Stake, setPlayer1Stake] = useState(0);
@@ -195,15 +193,6 @@ const Matchmaking = () => {
     }
   };
 
-  const handleLanguageChange = (lang) => {
-    setLanguage(lang);
-    setIsDropdownOpen(false);
-  };
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
   return (
     <div>
       <div
@@ -215,54 +204,6 @@ const Matchmaking = () => {
           flexDirection: "column",
         }}
       >
-        <div
-          style={{ padding: "20px", textAlign: "center" }}
-          className="flex items-center justify-between p-4 border-b border-white border-opacity-35 ml-9"
-        >
-          <input
-            type="text"
-            placeholder="Search for games..."
-            className="w-8/12 py-2 pl-6 border rounded-md text-[16px] bg-transparent px-2"
-          />
-
-          <div className="flex items-center space-x-6 ">
-            <div className="flex items-center mr-4">
-              <div className="flex justify-center items-center bg-gray-800 rounded-full w-8 h-8">
-                <FaGem className="text-white" />
-              </div>
-              <div className="ml-0 flex flex-col text-white">
-                <span className="text-xs font-light">Coins</span>
-                <span className="text-sm font-bold">00</span>
-              </div>
-            </div>
-
-            <div className="relative ml-6">
-              <button
-                className="flex items-center bg-gray-800 text-white py-1 px-3 rounded-full"
-                onClick={toggleDropdown}
-              >
-                {language} <FaChevronDown className="ml-1" />
-              </button>
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 bg-white text-black rounded-md shadow-lg">
-                  <button
-                    className="block px-4 py-2 hover:bg-gray-200"
-                    onClick={() => handleLanguageChange("ENG")}
-                  >
-                    English
-                  </button>
-                  <button
-                    className="block px-4 py-2 hover:bg-gray-200"
-                    onClick={() => handleLanguageChange("HIN")}
-                  >
-                    Hindi
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
         <div
           className={`flex flex-col justify-center items-center pl-10 flex-1`}
           style={{
@@ -283,14 +224,8 @@ const Matchmaking = () => {
                 <span className="text-2xl font-bold">Sandhya Gupta</span>
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
-              <div className="flex items-center justify-center mr-4 pt-0">
-                <div className="flex justify-center items-center border-2 border-gray-300 bg-gray-800 rounded-full w-7 h-7 mr-1">
-                  <FaGem size={13} className="text-white" />
-                </div>
-                <div className="ml-0 flex flex-col text-white">
-                  <span className="text-xs font-light mb-0 pb-0">Coins</span>
-                  <span className="text-sm font-bold">00</span>
-                </div>
+              <div className=" pl-16">
+              <Coin />
               </div>
 
               <div className="flex flex-col items-center mt-4">
@@ -331,15 +266,10 @@ const Matchmaking = () => {
                 </span>
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
-              <div className="flex items-center justify-center mr-4 pt-0">
-                <div className="flex justify-center items-center border-2 border-gray-300 bg-gray-800 rounded-full w-7 h-7 mr-1">
-                  <FaGem size={13} className="text-white" />
-                </div>
-                <div className="ml-0 flex flex-col text-white">
-                  <span className="text-xs font-light mb-0 pb-0">Coins</span>
-                  <span className="text-sm font-bold">00</span>
-                </div>
+              <div className=" pl-16">
+              <Coin />
               </div>
+              
 
               <div className="flex flex-col items-center mt-4">
                 <input
