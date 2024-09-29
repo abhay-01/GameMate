@@ -37,10 +37,24 @@ const Home = () => {
 
   const location = useLocation();
 
+  const email = location.state?.email;
+  const userName = location.state?.userName;
+
+  console.log("Email", email);
+  console.log("Username", userName);
+
+
+
   const getQueryParams = (query) => {
     return new URLSearchParams(query);
   };
 
+  useEffect(() => {
+    const storedCredentials = JSON.parse(
+      localStorage.getItem("userCredentials")
+    );
+    console.log("Stored Credentials", storedCredentials);
+  }, []);
   // useEffect(() => {
 
   //   const socket = io('http://localhost:3005',{
