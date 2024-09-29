@@ -2,8 +2,8 @@ import React from "react";
 
 const Settings = () => {
   return (
-    <div className="bg-black text-white min-h-screen flex justify-center items-center">
-      <div className="bg-gray-900 p-8 rounded-lg shadow-lg w-full max-w-md">
+    <div className="text-white min-h-screen flex justify-center items-center">
+      <div className="bg-gray-900 p-8 rounded-lg shadow-lg max-w-md">
         <h1 className="text-3xl font-bold mb-6 text-center">Settings</h1>
 
         <div className="mb-4">

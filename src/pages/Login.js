@@ -16,11 +16,9 @@ export const Login = () => {
     <>
       <div
         style={{
-          height: "100vh",
           overflowY: "auto",
           backgroundColor: "black",
           color: "white",
-          width: "100vw",
           display: "flex",
           flexDirection: "column",
         }}

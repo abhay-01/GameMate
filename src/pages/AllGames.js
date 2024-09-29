@@ -47,7 +47,7 @@ const AllGames = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen w-screen ">
+    <div className="flex justify-center items-center pl-16">
       {games.map((game) => (
         <div
           key={game.id}
