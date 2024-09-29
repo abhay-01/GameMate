@@ -20,11 +20,9 @@ const Friends = () => {
   return (
     <div
       style={{
-        height: "100vh",
         overflowY: "auto",
         backgroundColor: "black",
         color: "white",
-        width: "100vw",
         display: "flex",
         flexDirection: "column",
       }}
@@ -34,7 +32,6 @@ const Friends = () => {
       <div
         className={`flex flex-col items-start pl-[100px] `}
         style={{
-          width: "100%",
           backgroundImage: `url(${bg})`,
           backgroundRepeat: "repeat",
           backgroundSize: "cover",

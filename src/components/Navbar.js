@@ -51,7 +51,7 @@ const Navbar = () => {
               English
             </button>
             <button
-              className="block w-full text-left py-2 px-4 hover:bg-gray-600"
+              className="block w-full text-md py-2 px-4 hover:bg-gray-600"
               onClick={() => handleLanguageChange("HIN")}
             >
               Hindi

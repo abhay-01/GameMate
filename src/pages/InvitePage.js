@@ -91,7 +91,7 @@ const InvitePage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen ml-72">
+    <div className="flex flex-col items-center mt-52">
       <h2 className="text-2xl mb-4">Invite Page</h2>
       <input
         type="email"

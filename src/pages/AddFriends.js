@@ -12,7 +12,7 @@ const AddFriends = () => {
         display: "flex",
         flexDirection: "column",
       }}
-      className="h-screen w-screen overflow-x-hidden"
+      className="overflow-x-hidden"
     >
 
       
@@ -20,7 +20,6 @@ const AddFriends = () => {
       <div
         className={`flex flex-col items-center pl-[50px] `}
         style={{
-          width: "100%",
           backgroundImage: `url(${bg})`,
           backgroundRepeat: "repeat",
           backgroundSize: "cover",
@@ -32,13 +31,13 @@ const AddFriends = () => {
         <div className="w-9/12 flex flex-col items-center gap-y-4 border rounded-md py-12 ">
         <input
           type="text"
-          placeholder="Search for games..."
+          placeholder="Enter Friend Username"
           className="w-11/12 py-2 border border-white border-opacity-40   rounded-md text-[16px] bg-transparent px-2"
         />
         <div className="font-bold text-xl text-white text-opacity-70">OR</div>
         <input
           type="text"
-          placeholder="Search for games..."
+          placeholder="Enter Friend Code"
           className="w-11/12 py-2 border border-white border-opacity-40  rounded-md text-[16px] bg-transparent px-2"
         />
         </div>

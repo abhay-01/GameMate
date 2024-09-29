@@ -40,11 +40,11 @@ export const Password = () => {
     <>
       <div
         style={{
-          height: "100vh",
+          // height: "100vh",
           overflowY: "auto",
           backgroundColor: "black",
           color: "white",
-          width: "100vw",
+          // width: "100vw",
           display: "flex",
           flexDirection: "column",
         }}
