@@ -1,5 +1,6 @@
 import React, { useState } from "react"; 
 import { FaGem, FaSearch, FaChevronDown } from "react-icons/fa";
+import Coin from "./Coin";
 
 const Navbar = () => {
   const [language, setLanguage] = useState("ENG");
@@ -15,40 +16,36 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-custom-gray text-white h-[80px] flex items-center justify-between px-8 fixed top-0 left-[300px] w-[calc(100%-300px)] z-50">
+    <div className="bg-custom-gray text-white h-[90px] flex items-center justify-between px-8 fixed top-0 left-[300px] w-[calc(100%-300px)] z-50">
       {/* Search Bar */}
-      <div className="flex items-center gap-3 bg-gray-800 px-5 py-2 rounded-full w-[400px]">
-        <FaSearch className="text-lg" />
+      <div className="flex items-center gap-3 bg-black px-5 py-3 rounded-md border border-gray-400 w-[732px] h-[65x]">
+        <FaSearch className="text-base" />
         <input
           type="text"
           placeholder="Search..."
-          className="bg-transparent outline-none text-white flex-1 placeholder-gray-400"
+          className="bg-transparent focus:outline-none text-white flex-1 placeholder-gray-400"
         />
       </div>
 
       {/* Coins Section */}
-      <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center w-10 h-10 bg-gray-800 rounded-full text-lg border-2 border-white">
-          <FaGem />
-        </div>
-        <div className="text-center">
-          <span className="text-sm text-gray-400 block">Coins</span>
-          <span className="text-xl font-bold">00</span>
-        </div>
+      <div className="pl-20">
+      <Coin />
       </div>
 
+
+
       {/* Language Selector */}
-      <div className="relative">
+      <div className="relative right-[40px]">
         <button
-          className="bg-gray-800 py-2 px-4 rounded-full flex items-center gap-2"
+          className="bg-black py-2 px-4 rounded-full flex items-center gap-2"
           onClick={toggleDropdown}
         >
-          {language} <FaChevronDown className="text-sm" />
+          {language} <FaChevronDown className="text-sm text-custom-purple" />
         </button>
         {isDropdownOpen && (
-          <div className="absolute top-full right-0 mt-2 bg-gray-800 text-white rounded-md shadow-lg min-w-[100px]">
+          <div className="absolute top-full right-0 mt-2 bg-custom-gray text-white rounded-md shadow-lg min-w-[100px]">
             <button
-              className="block w-full text-left py-2 px-4 hover:bg-gray-600"
+              className="block w-full text-md py-2 px-4 hover:bg-gray-600"
               onClick={() => handleLanguageChange("ENG")}
             >
               English

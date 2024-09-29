@@ -6,13 +6,12 @@ import {
   FaHome,
   FaQuestionCircle,
   FaSearch,
-  FaUserCircle,
   FaUserFriends,
   FaUserPlus,
 } from "react-icons/fa";
 import { FaGamepad } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
-import logo from "../assets/boy.png"; // Add your logo image
+import logo from "../assets/Game-Mate-Logo.png"; // Add your logo image
 import userProfileImage from "../assets/boy.png"; // Add a placeholder profile image
 
 export const Sidebar = ({ children }) => {
@@ -72,9 +71,15 @@ export const Sidebar = ({ children }) => {
           <img src={logo} alt="Game Mate" className="h-12" />
         </div>
 
-        <div className="explore flex items-center px-4 py-2 bg-gray-800 rounded-lg mb-4 cursor-pointer">
-          <FaSearch className="mr-2 text-xl" />
-          <div className="text-lg font-medium">Explore</div>
+        <div class="flex items-center space-x-2 bg-black p-4 rounded-lg border border-t-0 border-r-0 border-l-0 ml-6 mr-6 mb-4">
+        <div class="bg-custom-gray p-2 rounded mr-8">
+        <FaSearch className="" />
+        </div>
+        <div className="text-lg font-medium">Explore</div>
+        </div>
+
+        <div className="px-6 py-2 text-gray-400 text-xs">
+          Navigate
         </div>
 
         <div className="navigate px-4">
@@ -82,7 +87,7 @@ export const Sidebar = ({ children }) => {
             <NavLink
               to={item.path}
               key={index}
-              className="link flex items-center text-gray-300 hover:text-white py-2 px-2 mb-1"
+              className="link flex items-center text-gray-400 hover:text-white py-2 px-2 mb-1"
               activeClassName="text-white"
             >
               <div className="icon mr-3 text-xl">{item.icon}</div>
