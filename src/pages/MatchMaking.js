@@ -83,6 +83,11 @@ const Matchmaking = () => {
       setResult(resultParam);
       setShowResult(true);
     }
+
+    const storedCredentials = JSON.parse(
+      localStorage.getItem("userCredentials")
+    );
+    console.log(storedCredentials);
     return () => {
       socket.off("accept-matchmaking");
     };

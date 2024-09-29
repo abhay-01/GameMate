@@ -9,13 +9,21 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
-      const storedCredentials = JSON.parse(localStorage.getItem("userCredentials"));
-    if (storedCredentials && storedCredentials.email && storedCredentials.password) {
-      navigate("/home"); 
+    const storedCredentials = JSON.parse(
+      localStorage.getItem("userCredentials")
+    );
+    if (
+      storedCredentials &&
+      storedCredentials.email &&
+      storedCredentials.password
+    ) {
+      navigate("/home", {
+        state: { email: storedCredentials.email },
+      });
     }
   }, [navigate]);
 
@@ -33,11 +41,15 @@ export const Login = () => {
       if (response.status === 200) {
         const userCredentials = {
           email,
-          password,
         };
-        localStorage.setItem("userCredentials", JSON.stringify(userCredentials));
+        localStorage.setItem(
+          "userCredentials",
+          JSON.stringify(userCredentials)
+        );
 
-        navigate("/home");
+        navigate("/home", {
+          state: { email },
+        });
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -100,7 +112,10 @@ export const Login = () => {
               </div>
             </div>
 
-            <button onClick={handleLogin} className="bg-blue-950 w-full mt-2 p-2 rounded-md text-white">
+            <button
+              onClick={handleLogin}
+              className="bg-blue-950 w-full mt-2 p-2 rounded-md text-white"
+            >
               Sign in
             </button>
 

@@ -45,7 +45,9 @@ export const Otp = () => {
           },
         });
       } else {
-        navigate("/home");
+        navigate("/home",{
+          state: { email, userName },
+        });
       }
     } else {
       Swal.fire({
