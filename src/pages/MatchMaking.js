@@ -5,20 +5,23 @@ import bg from "../assets/bg.svg";
 import boy from "../images/boy.png";
 import { FaGem, FaChevronDown } from "react-icons/fa";
 
-const socket = io("http://localhost:3005", {
-  transports: ["websocket"],
-  reconnection: true,
-  reconnectionAttempts: 10,
-  reconnectionDelay: 1000,
-  query: { email: "test2" },
-});
+const socket = io(
+  "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/",
+  {
+    transports: ["websocket"],
+    reconnection: true,
+    reconnectionAttempts: 10,
+    reconnectionDelay: 1000,
+    query: { email: "test2" },
+  }
+);
 
 const Matchmaking = () => {
   const location = useLocation();
 
   const [friendEmail, setFriendEmail] = useState("test2");
   const [selectedGame, setSelectedGame] = useState("chess");
-  const [myEmail, setMyEmail] = useState("test");
+  const [myEmail, setMyEmail] = useState("");
   const [result, setResult] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [language, setLanguage] = useState("ENG");
@@ -29,6 +32,9 @@ const Matchmaking = () => {
   const [player2Stake, setPlayer2Stake] = useState(0);
   const [opponentName, setOpponentName] = useState("null");
   const [gameUrl, setGameUrl] = useState("");
+
+  // const game_url = location.state?.gameUrl;
+  // setGameUrl(game_url);
 
   const handleStakeChange = (player, value) => {
     const stakeValue = parseInt(value, 10) || 0;
@@ -50,12 +56,14 @@ const Matchmaking = () => {
   useEffect(() => {
     const friendName = location.state?.friendName;
     const gameUrl = location.state?.gameUrl;
+    const email = location.state?.email;
 
+    setMyEmail(email);
     setGameUrl(gameUrl);
     setOpponentName(friendName);
     socket.on("accept-matchmaking", (data) => {
       if (data.url) {
-        const url = data.url + `?email=${myEmail}`;
+        const url = data.url + `?email=${email}`;
         window.open(url, "_blank");
         stopCountdown();
       }
@@ -121,7 +129,7 @@ const Matchmaking = () => {
     console.log("PRESSED");
     try {
       const response = await fetch(
-        "http://localhost:3005/initiate-matchmaking",
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/initiate-matchmaking",
         {
           method: "POST",
           headers: {
@@ -137,11 +145,14 @@ const Matchmaking = () => {
       );
 
       if (response.ok) {
-        console.log("Matchmaking initiated successfully");
+        // console.log("Matchmaking initiated successfully");
+        // console.log("SENDER MAIL-->", myEmail);
+        // console.log("TARGET MAIL-->", friendEmail);
+        // console.log("URL-->", gameUrl);
         socket.emit("matchmaking", {
           sender: myEmail,
           target: friendEmail,
-          url: "http://localhost:3001",
+          url: gameUrl,
           type: selectedGame,
         });
       } else {
@@ -153,15 +164,18 @@ const Matchmaking = () => {
   };
 
   const fetchResults = async () => {
-    let response = await fetch("http://localhost:3005/postResults", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: myEmail,
-      }),
-    });
+    let response = await fetch(
+      "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/postResults",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: myEmail,
+        }),
+      }
+    );
 
     if (response.ok) {
       response = await response.json();
@@ -178,16 +192,19 @@ const Matchmaking = () => {
 
   const handleStatus = async () => {
     try {
-      const response = await fetch("http://localhost:3005/updateStatus", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email1: myEmail,
-          email2: friendEmail,
-        }),
-      });
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateStatus",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email1: myEmail,
+            email2: friendEmail,
+          }),
+        }
+      );
 
       if (response.ok) {
         setShowResult(false);
@@ -220,54 +237,6 @@ const Matchmaking = () => {
           flexDirection: "column",
         }}
       >
-        <div
-          style={{ padding: "20px", textAlign: "center" }}
-          className="flex items-center justify-between p-4 border-b border-white border-opacity-35 ml-9"
-        >
-          <input
-            type="text"
-            placeholder="Search for games..."
-            className="w-8/12 py-2 pl-6 border rounded-md text-[16px] bg-transparent px-2"
-          />
-
-          <div className="flex items-center space-x-6 ">
-            <div className="flex items-center mr-4">
-              <div className="flex justify-center items-center bg-gray-800 rounded-full w-8 h-8">
-                <FaGem className="text-white" />
-              </div>
-              <div className="ml-0 flex flex-col text-white">
-                <span className="text-xs font-light">Coins</span>
-                <span className="text-sm font-bold">00</span>
-              </div>
-            </div>
-
-            <div className="relative ml-6">
-              <button
-                className="flex items-center bg-gray-800 text-white py-1 px-3 rounded-full"
-                onClick={toggleDropdown}
-              >
-                {language} <FaChevronDown className="ml-1" />
-              </button>
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 bg-white text-black rounded-md shadow-lg">
-                  <button
-                    className="block px-4 py-2 hover:bg-gray-200"
-                    onClick={() => handleLanguageChange("ENG")}
-                  >
-                    English
-                  </button>
-                  <button
-                    className="block px-4 py-2 hover:bg-gray-200"
-                    onClick={() => handleLanguageChange("HIN")}
-                  >
-                    Hindi
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
         <div
           className={`flex flex-col justify-center items-center pl-10 flex-1`}
           style={{

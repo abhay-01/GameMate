@@ -3,6 +3,7 @@ import "./App.css";
 import Square from "./square/Square";
 import { io } from "socket.io-client";
 import Swal from "sweetalert2";
+import { useLocation } from "react-router-dom";
 
 const renderFrom = [
   [1, 2, 3],
@@ -11,6 +12,7 @@ const renderFrom = [
 ];
 
 function App() {
+  const location = useLocation();
   const [gameState, setGameState] = useState(renderFrom);
   const [currentPlayer, setCurrentPlayer] = useState("circle");
   const [finishedstate, setFinishedState] = useState(false);
@@ -20,6 +22,11 @@ function App() {
   const [playerName, setPlayerName] = useState("");
   const [opponentName, setOpponentName] = useState("");
   const [playingAs, setPlayingAs] = useState(null);
+
+  const getQueryParams = (query) => {
+    
+    return new URLSearchParams(query);
+  };
 
   const checkWinner = () => {
     for (let row = 0; row < gameState.length; row++) {
@@ -66,6 +73,9 @@ function App() {
 
   useEffect(() => {
     const winner = checkWinner();
+    const queryParams = getQueryParams(location.search);
+    const emailFromQuery = queryParams.get("email"); // Get email from query params
+    console.log("Email from query", emailFromQuery);
 
     if (winner) {
       setFinishedState(winner);
@@ -81,7 +91,7 @@ function App() {
         console.log("Game over, result:", result);
         const saveFinalResults = async () => {
           try {
-            const response = await fetch("http://localhost:3005/finalResults", {
+            const response = await fetch("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/finalResults", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -97,7 +107,7 @@ function App() {
             }
 
             console.log("Final results saved successfully");
-             window.location.href = `http://localhost:3000`;
+             window.location.href = `http://localhost:3000/home?email=${playerName}`;
 
           } catch (error) {
             console.error("Error saving final results:", error);
@@ -127,7 +137,7 @@ function App() {
     if (playOnline && opponentName) {
       const createMatch = async () => {
         try {
-          const response = await fetch("http://localhost:3005/createMatch", {
+          const response = await fetch("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/createMatch", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
