@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:3005", {
-  transports: ["websocket"],
-  reconnection: true,
-  reconnectionAttempts: 10,
-  reconnectionDelay: 1000,
-  query: {
-    email: "test2",
-  },
-});
+const socket = io(
+  "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net",
+  {
+    transports: ["websocket"],
+    reconnection: true,
+    reconnectionAttempts: 10,
+    reconnectionDelay: 1000,
+  }
+);
 
 const InvitePage = () => {
   const [email, setEmail] = useState("test2");
@@ -22,20 +22,25 @@ const InvitePage = () => {
   const handleAcceptInvite = async () => {
     if (matchedInvite) {
       try {
-        const response = await fetch("http://localhost:3005/accept-matchmaking", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            sender: inviteTarget,
-            target: inviteSender,
-            url: inviteUrl,
-            type: inviteType,
-          }),
-        });
+        const response = await fetch(
+          "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/accept-matchmaking",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              sender: inviteTarget,
+              target: inviteSender,
+              url: inviteUrl,
+              type: inviteType,
+            }),
+          }
+        );
 
         if (response.ok) {
+          console.log("Invite accepted successfully");
+
           socket.emit("accept-matchmaking", {
             sender: inviteTarget,
             target: inviteSender,
@@ -43,24 +48,26 @@ const InvitePage = () => {
             type: inviteType,
           });
 
-          const createMatch = await fetch("http://localhost:3005/createMatch", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              player1: inviteSender,
-              player2: inviteTarget,
-              game: inviteType,
-            }),
-          });
+          const createMatch = await fetch(
+            "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/createMatch",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email1: inviteSender,
+                email2: inviteTarget,
+                game: inviteType,
+              }),
+            }
+          );
 
           if (createMatch.ok) {
             console.log("Match created successfully");
+            const url = inviteUrl + `?email=${email}`;
+            window.open(url, "_blank");
           }
-          
-          const url = inviteUrl + `?email=${email}`;
-          window.open(url, "_blank");
         } else {
           console.error("Failed to accept invite");
         }

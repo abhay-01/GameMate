@@ -28,7 +28,7 @@ export const Otp = () => {
 
   const verifyOTP = async () => {
     if (otp.join("") === correctOtp.toString().trim()) {
-      let response = axios.post("http://localhost:3005/signup", {
+      let response = axios.post("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/signup", {
         email,
         password,
         userName,

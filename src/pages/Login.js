@@ -33,7 +33,7 @@ export const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:3005/login", {
+      const response = await axios.post("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/login", {
         email,
         password,
       });

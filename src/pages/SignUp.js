@@ -31,7 +31,7 @@ export const SignUP = () => {
     if (validateEmail(email)) {
       setError("");
       try {
-        const response = await axios.post("http://localhost:3005/sendOTP", {
+        const response = await axios.post("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/sendOTP", {
           email,
         });
         if (response.status === 200) {

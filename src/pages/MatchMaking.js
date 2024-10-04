@@ -5,20 +5,23 @@ import bg from "../assets/bg.svg";
 import boy from "../images/boy.png";
 import Coin from "../components/Coin";
 
-const socket = io("http://localhost:3005", {
-  transports: ["websocket"],
-  reconnection: true,
-  reconnectionAttempts: 10,
-  reconnectionDelay: 1000,
-  query: { email: "test2" },
-});
+const socket = io(
+  "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/",
+  {
+    transports: ["websocket"],
+    reconnection: true,
+    reconnectionAttempts: 10,
+    reconnectionDelay: 1000,
+    query: { email: "test2" },
+  }
+);
 
 const Matchmaking = () => {
   const location = useLocation();
 
   const [friendEmail, setFriendEmail] = useState("test2");
   const [selectedGame, setSelectedGame] = useState("chess");
-  const [myEmail, setMyEmail] = useState("test");
+  const [myEmail, setMyEmail] = useState("");
   const [result, setResult] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [countdown, setCountdown] = useState(60);
@@ -27,6 +30,9 @@ const Matchmaking = () => {
   const [player2Stake, setPlayer2Stake] = useState(0);
   const [opponentName, setOpponentName] = useState("null");
   const [gameUrl, setGameUrl] = useState("");
+
+  // const game_url = location.state?.gameUrl;
+  // setGameUrl(game_url);
 
   const handleStakeChange = (player, value) => {
     const stakeValue = parseInt(value, 10) || 0;
@@ -48,12 +54,14 @@ const Matchmaking = () => {
   useEffect(() => {
     const friendName = location.state?.friendName;
     const gameUrl = location.state?.gameUrl;
+    const email = location.state?.email;
 
+    setMyEmail(email);
     setGameUrl(gameUrl);
     setOpponentName(friendName);
     socket.on("accept-matchmaking", (data) => {
       if (data.url) {
-        const url = data.url + `?email=${myEmail}`;
+        const url = data.url + `?email=${email}`;
         window.open(url, "_blank");
         stopCountdown();
       }
@@ -119,7 +127,7 @@ const Matchmaking = () => {
     console.log("PRESSED");
     try {
       const response = await fetch(
-        "http://localhost:3005/initiate-matchmaking",
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/initiate-matchmaking",
         {
           method: "POST",
           headers: {
@@ -135,11 +143,14 @@ const Matchmaking = () => {
       );
 
       if (response.ok) {
-        console.log("Matchmaking initiated successfully");
+        // console.log("Matchmaking initiated successfully");
+        // console.log("SENDER MAIL-->", myEmail);
+        // console.log("TARGET MAIL-->", friendEmail);
+        // console.log("URL-->", gameUrl);
         socket.emit("matchmaking", {
           sender: myEmail,
           target: friendEmail,
-          url: "http://localhost:3001",
+          url: gameUrl,
           type: selectedGame,
         });
       } else {
@@ -151,15 +162,18 @@ const Matchmaking = () => {
   };
 
   const fetchResults = async () => {
-    let response = await fetch("http://localhost:3005/postResults", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: myEmail,
-      }),
-    });
+    let response = await fetch(
+      "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/postResults",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: myEmail,
+        }),
+      }
+    );
 
     if (response.ok) {
       response = await response.json();
@@ -176,16 +190,19 @@ const Matchmaking = () => {
 
   const handleStatus = async () => {
     try {
-      const response = await fetch("http://localhost:3005/updateStatus", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email1: myEmail,
-          email2: friendEmail,
-        }),
-      });
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateStatus",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email1: myEmail,
+            email2: friendEmail,
+          }),
+        }
+      );
 
       if (response.ok) {
         setShowResult(false);

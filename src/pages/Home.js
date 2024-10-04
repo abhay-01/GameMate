@@ -43,8 +43,6 @@ const Home = () => {
   console.log("Email", email);
   console.log("Username", userName);
 
-
-
   const getQueryParams = (query) => {
     return new URLSearchParams(query);
   };
@@ -70,9 +68,12 @@ const Home = () => {
   useEffect(() => {
     setWinner("");
     const queryParams = getQueryParams(location.search);
-    const email = queryParams.get("email"); //TODO: get email from query params
+    const emailFromQuery = queryParams.get("email");
+    console.log("Email from query", emailFromQuery);
+    if (emailFromQuery) {
+      window.history.replaceState(null, "", window.location.href);
+    }
 
-    // NOTE:for temp purpose only
 
     const temp = "rahul";
 
@@ -82,15 +83,18 @@ const Home = () => {
       setShow(true);
       const fetchResult = async () => {
         try {
-          const response = await fetch("http://localhost:3005/postResults", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email: temp,
-            }),
-          });
+          const response = await fetch(
+            "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/postResults",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: temp,
+              }),
+            }
+          );
 
           const result = await response.json();
           console.log("HOME PAGE REDIRECT--->", result);
@@ -109,15 +113,18 @@ const Home = () => {
     console.log("PRESSED");
     setShow(false);
     try {
-      const response = await fetch("http://localhost:3005/updateStatus", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: "rahul",
-        }),
-      });
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateStatus",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: "rahul",
+          }),
+        }
+      );
 
       const res = await response.json();
       console.log("AFTER UPDATION", res);
@@ -135,15 +142,13 @@ const Home = () => {
 
   return (
     <div className="overflow-y-auto bg-black text-white md:pr-10 md:pl-20 pr-5 pl-10">
-
       {/* Header Image */}
       <div className="">
         <img src={headerImage} alt="Header Game" className="" />
       </div>
       <Carousels />
-
       {show && winner && (
-        <div className="absolute inset-0 bg-black bg-opacity-70 flex flex-col justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex flex-col justify-center items-center z-50">
           <div className="relative text-center p-8 w-[992.818px] h-[653.747px] flex-shrink-0 rounded-[32.525px] bg-[radial-gradient(circle,rgba(128,0,128,1)_0%,rgba(0,0,0,1)_70%)]">
             <button
               onClick={handleClose}
@@ -178,12 +183,11 @@ const Home = () => {
           </div>
         </div>
       )}
-
       {/* Upcoming Matches */}
       <Card />
       //need to make it more modular, use mapping method to display the cards
-      //Create a JSON body to store the data and then map it to display the cards
-
+      //Create a JSON body to store the data and then map it to display the
+      cards
     </div>
   );
 };
