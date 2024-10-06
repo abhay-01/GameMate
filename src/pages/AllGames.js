@@ -41,17 +41,23 @@ const AllGames = () => {
 
 
   const openGeography = async() => {
+    
     const email = "test@gmail.com";
     try {
       // Make the POST request using fetch
-      const response = await fetch("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/createSoloMatch", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }), // Send the email in the request body
-        credentials: 'include', // Include credentials like cookies if necessary
-      });
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/createSoloMatch",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            email: "test@gmail.com",
+          }),
+        }
+      );
   
       // Check if the response is OK
       if (response.ok) {

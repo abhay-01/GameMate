@@ -13,6 +13,7 @@ import openSocket from "socket.io-client";
 import Carousels from "../components/Carousel";
 import io from "socket.io-client";
 import MatchResultModal from '../components/Modal';
+import { useLocation } from 'react-router-dom';
 const socket = io("http://localhost:3005", {
   withCredentials: true,
   transportOptions: {
@@ -48,19 +49,21 @@ const Home = () => {
   const [modalOpen, setModalOpen] = useState(false);     // Controls modal visibility
   const userEmail = 'test@gmail.com';                  // Replace with actual user email
 
+  const location = useLocation();
+  const getQueryParams = (query) => {
+    return new URLSearchParams(query);
+  };
   // Fetch match result from the backend
   const fetchMatchResult = async () => {
+    console.log("Function is called");
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/updateSoloDatabase`, {
+      const response = await fetch("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateSoloDatabase", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email: userEmail }),
       });
-      const data = await response.text(); // Handle the result ('win'/'loss')
-      setMatchResult(data === 'win' ? 'win' : 'loss');
-      setModalOpen(true);  // Open the modal after fetching
     } catch (error) {
       console.error('Error fetching match result:', error);
     }
@@ -69,7 +72,7 @@ const Home = () => {
   // Trigger the backend to mark the match as completed
   const closeModal = async () => {
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/updateSoloStatus`, {
+      await fetch("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateSoloStatus", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,8 +87,14 @@ const Home = () => {
 
   // Fetch the match result on component load
   useEffect(() => {
-    fetchMatchResult();
-  }, []);
+    const queryParams = getQueryParams(location.search);
+    const result = queryParams.get('matchResult');
+    if (result) {
+      fetchMatchResult();
+      setMatchResult(result === 'win' ? 'win' : 'loss');
+      setModalOpen(true); // Open the modal when there's a match result
+    }
+  }, [location.search]);
 
   return (
     <div className="h-screen w-screen overflow-y-auto bg-black text-white md:pr-10 md:pl-20 pr-5 pl-10">
