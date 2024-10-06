@@ -11,19 +11,25 @@ const AllGames = () => {
   const location = useLocation();
   const [userEmail, setUserEmail] = useState("");
 
-  // Extract email from the props passed to this page
   const email = location.state?.email;
   const friendName = location.state?.friendName;
 
-  console.log("Friend Name:", friendName);
-
   const startChessServer = () => {
-    navigate("/matchmaking", {
-      state: {
-        friendName: friendName,
-        gameUrl: "http://localhost:3001",
-      },
-    });
+    if (friendName) {
+      navigate("/matchmaking", {
+        state: {
+          friendName: friendName,
+          gameUrl: "https://chess-gamemate.onrender.com",
+        },
+      });
+    } else {
+      navigate("/friends", {
+        state: {
+          email: userEmail,
+          gameUrl: "https://chess-gamemate.onrender.com",
+        },
+      });
+    }
   };
 
   const openGeography = () => {
@@ -32,24 +38,31 @@ const AllGames = () => {
     window.open(url, "_blank");
   };
 
-  // Add the Tic-Tac-Toe game URL along with the email as a query parameter
   const openTicTacToe = () => {
-    navigate("/matchmaking", {
-      state: {
-        friendName: friendName,
-        gameUrl: "https://tic-tac-kpqi.onrender.com",
-        email: userEmail,
-      },
-    });
+    if (friendName) {
+      navigate("/matchmaking", {
+        state: {
+          friendName: friendName,
+          gameUrl: "https://tic-tac-kpqi.onrender.com",
+          email: userEmail,
+        },
+      });
+    } else {
+      navigate("/friends", {
+        state: {
+          email: userEmail,
+          gameUrl: "https://tic-tac-kpqi.onrender.com",
+        },
+      });
+    }
   };
 
   useEffect(() => {
     const storedCredentials = JSON.parse(
       localStorage.getItem("userCredentials")
     );
-
-    setUserEmail(storedCredentials.email);
-  }, []);
+    setUserEmail(storedCredentials?.email || email);
+  }, [email]);
 
   return (
     <div className="flex justify-center items-center pl-16">
@@ -137,7 +150,7 @@ const AllGames = () => {
         </div>
       </div>
 
-      <div className="card" onClick={() => openGeography()}>
+      <div className="card" onClick={openGeography}>
         <div className="image">
           <img src={group} alt="Group" />
         </div>

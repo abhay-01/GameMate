@@ -61,6 +61,7 @@ const Matchmaking = () => {
     setMyEmail(email);
     setGameUrl(gameUrl);
     setOpponentName(friendName);
+  
     socket.on("accept-matchmaking", (data) => {
       if (data.url) {
         const url = data.url + `?email=${email}`;
@@ -126,7 +127,7 @@ const Matchmaking = () => {
 
   const handleInitiateMatchmaking = async () => {
     startCountdown();
-    console.log("PRESSED");
+    console.log("PRESSED", myEmail, friendEmail, gameUrl, selectedGame);
     try {
       const response = await fetch(
         "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/initiate-matchmaking",
@@ -145,7 +146,7 @@ const Matchmaking = () => {
       );
 
       if (response.ok) {
-        // console.log("Matchmaking initiated successfully");
+        console.log("Matchmaking initiated successfully",myEmail, friendEmail, gameUrl, selectedGame);
         // console.log("SENDER MAIL-->", myEmail);
         // console.log("TARGET MAIL-->", friendEmail);
         // console.log("URL-->", gameUrl);

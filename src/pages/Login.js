@@ -16,11 +16,8 @@ export const Login = () => {
     const storedCredentials = JSON.parse(
       localStorage.getItem("userCredentials")
     );
-    if (
-      storedCredentials &&
-      storedCredentials.email &&
-      storedCredentials.password
-    ) {
+
+    if (storedCredentials.email) {
       navigate("/home", {
         state: { email: storedCredentials.email },
       });
@@ -33,10 +30,13 @@ export const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/login",
+        {
+          email,
+          password,
+        }
+      );
 
       if (response.status === 200) {
         const userCredentials = {
