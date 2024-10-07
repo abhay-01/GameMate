@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { games } from "../utils/Games";
 import trophy from "../images/trophy.png";
 import group from "../images/group.png";
@@ -14,6 +14,9 @@ const AllGames = () => {
   const email = location.state?.email;
   const friendName = location.state?.friendName;
 
+
+  console.log("Friend Name:", friendName);
+
   const startChessServer = () => {
     if (friendName) {
       navigate("/matchmaking", {
@@ -28,12 +31,39 @@ const AllGames = () => {
           email: userEmail,
           gameUrl: "https://chess-gamemate.onrender.com",
         },
-      });
-    }
-  };
+      });
+    }
+  };
 
-  const openGeography = () => {
+  const openGeography = async() => {
+    
     const email = "test@gmail.com";
+    try {
+      // Make the POST request using fetch
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/createSoloMatch",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            email: "test@gmail.com",
+          }),
+        }
+      );
+  
+      // Check if the response is OK
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Match created:", data);
+      } else {
+        console.error("Failed to create match:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error occurred:", error.message);
+    }
     const url = "https://geography-classes.netlify.app" + "?email=" + email;
     window.open(url, "_blank");
   };
@@ -53,19 +83,19 @@ const AllGames = () => {
           email: userEmail,
           gameUrl: "https://tic-tac-kpqi.onrender.com",
         },
-      });
-    }
-  };
+      });
+    }
+  };
 
-  useEffect(() => {
-    const storedCredentials = JSON.parse(
-      localStorage.getItem("userCredentials")
-    );
-    setUserEmail(storedCredentials?.email || email);
-  }, [email]);
+useEffect(() => {
+  const storedCredentials = JSON.parse(
+    localStorage.getItem("userCredentials")
+  );
+  setUserEmail(storedCredentials?.email || email);
+  }, [email]);
 
   return (
-    <div className="flex justify-center items-center pl-16">
+    <div className="flex justify-center items-center h-screen w-screen ">
       {games.map((game) => (
         <div
           key={game.id}
@@ -148,9 +178,9 @@ const AllGames = () => {
             <FaArrowRight size={5} className="arrow" />
           </div>
         </div>
-      </div>
+      </div>
 
-      <div className="card" onClick={openGeography}>
+      <div className="card" onClick={() => openGeography()}>
         <div className="image">
           <img src={group} alt="Group" />
         </div>
