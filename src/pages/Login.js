@@ -17,10 +17,12 @@ export const Login = () => {
       localStorage.getItem("userCredentials")
     );
 
-    if (storedCredentials.email) {
+    if (storedCredentials && storedCredentials.email) {
       navigate("/home", {
         state: { email: storedCredentials.email },
       });
+    }else{
+      navigate("/login");
     }
   }, [navigate]);
 
