@@ -13,9 +13,11 @@ import { Password } from "./pages/Password";
 import AddFriends from "../src/pages/AddFriends";
 import MatchMaking from "../src/pages/MatchMaking";
 import InvitePage from "../src/pages/InvitePage";
+import NotificationProvider from "./components/NotificationProvider";
 
 const AppRoutes = () => {
   return (
+    <NotificationProvider>
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="home" element={<Home />} />
@@ -35,6 +37,7 @@ const AppRoutes = () => {
       <Route path="matchmaking" element={<MatchMaking />} />
       <Route path="invite" element={<InvitePage />} />
     </Routes>
+    </NotificationProvider>
   );
 };
 

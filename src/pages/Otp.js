@@ -1,6 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
-import g from "../images/g.webp";
-import f from "../images/f.webp";
+import React, {useState, useRef } from "react";
 import bg from "../assets/bg.svg";
 import OtpInput from "react-otp-input";
 import { useNavigate, useLocation } from "react-router-dom";

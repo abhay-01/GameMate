@@ -79,6 +79,7 @@ const InvitePage = () => {
 
   useEffect(() => {
     socket.on("matchmaking", (data) => {
+      console.log("YE MAI INVITE PAGE PE HUN",data);
       if (data.target === email) {
         setMatchedInvite(true);
         setInviteSender(data.sender);

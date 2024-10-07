@@ -17,7 +17,7 @@ function Carousels() {
   return (
     <Carousel>
       {items.map((item, i) => (
-        <img  src={item.image} key={i} className="w-full h-[300px]" />
+        <img  src={item.image} alt={`Carousel item ${i}`} key={i} className="w-full h-[300px]" />
       ))}
     </Carousel>
   );

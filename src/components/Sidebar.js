@@ -11,8 +11,8 @@ import {
 } from "react-icons/fa";
 import { FaGamepad } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
-import logo from "../assets/Game-Mate-Logo.png"; // Add your logo image
-import userProfileImage from "../assets/boy.png"; // Add a placeholder profile image
+import logo from "../assets/Game-Mate-Logo.png"; 
+import userProfileImage from "../assets/boy.png";
 
 export const Sidebar = ({ children }) => {
   const navigate = useNavigate();
