@@ -1,25 +1,23 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
-  FaBars,
   FaCog,
   FaDownload,
   FaHome,
   FaQuestionCircle,
   FaSearch,
-  FaUserCircle,
   FaUserFriends,
   FaUserPlus,
 } from "react-icons/fa";
-import { FaArrowDown, FaGamepad } from "react-icons/fa6";
+import { FaGamepad } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
+import logo from "../assets/Game-Mate-Logo.png"; 
+import userProfileImage from "../assets/boy.png";
 
 export const Sidebar = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen(!isOpen);
-
   const navigate = useNavigate();
+  const location = useLocation();
+
   const handleLoginClick = () => {
     navigate("/login");
   };
@@ -32,18 +30,16 @@ export const Sidebar = ({ children }) => {
     },
     {
       path: "/allgames",
-      name: "ALL Games",
+      name: "All Games",
       icon: <FaGamepad />,
     },
     {
       path: "/addgames",
-
-      name: "Add games",
+      name: "Add Games",
       icon: <FaGamepad />,
     },
     {
       path: "/friends",
-
       name: "Friends",
       icon: <FaUserFriends />,
     },
@@ -64,7 +60,7 @@ export const Sidebar = ({ children }) => {
     },
     {
       path: "/faqs",
-      name: "FAQS",
+      name: "FAQs",
       icon: <FaQuestionCircle />,
     },
     {
@@ -75,61 +71,49 @@ export const Sidebar = ({ children }) => {
   ];
 
   return (
-    <div className="container">
-      <div style={{ width: isOpen ? "250px" : "50px" }} className="sidebar">
-        <div className="top_section">
-          <h1 style={{ display: isOpen ? "block" : "none" }} className="logo">
-            Logo
-          </h1>
-          <div style={{ marginLeft: isOpen ? "100px" : "0" }} className="bars">
-            <FaBars onClick={toggle} />
-          </div>
+    <div className="fixed flex">
+    <div className="min-h-screen w-80 text-white bg-custom-gradient h-screen">
+        <div className="flex justify-center items-center py-4">
+          <img src={logo} alt="Game Mate" className="h-12" />
         </div>
 
-        <div className={`explore ${isOpen ? "expanded" : "collapsed"}`}>
-          <div className="icon">
-            <FaSearch />
-          </div>
-          {isOpen && <div className="explore-text">Explore</div>}
+        <div class="flex items-center space-x-2 bg-black p-4 rounded-lg border border-t-0 border-r-0 border-l-0 ml-6 mr-6 mb-4">
+        <div class="bg-custom-gray p-2 rounded mr-8">
+        <FaSearch className="" />
+        </div>
+        <div className="text-lg font-medium">Explore</div>
         </div>
 
-        {/* <div
-          className={`explore ${isOpen ? "expanded" : "collapsed"}`}
-          onClick={handleLoginClick}
-        >
-          <div className="icon">
-            <FaUserCircle />
-          </div>
-          {isOpen && <div className="explore-text">Login/SignUP</div>}
-        </div> */}
+        <div className="px-6 py-2 text-gray-400 text-xs">
+          Navigate
+        </div>
 
-        {menuItem.map((item, index) => (
-          <NavLink
-            to={item.path}
-            key={index}
-            className="link"
-            activeclassName="active"
-          >
-            <div className="icon">{item.icon}</div>
-            <div
-              style={{ display: isOpen ? "block" : "none" }}
-              className="link_text"
+        <div className="navigate px-4">
+          {menuItem.map((item, index) => (
+            <NavLink
+              to={item.path}
+              key={index}
+              className={`flex items-center ${location.pathname === item.path? 'text-white':'text-gray-400'} hover:text-white py-2 px-2 mb-1`}
             >
-              {item.name}
-            </div>
-          </NavLink>
-        ))}
-        <div
-          className={`exploree ${isOpen ? "expanded" : "collapsed"}`}
-          onClick={handleLoginClick}
-        >
-          <div className="icon">
-            <FaUserCircle size={30} />
+              <div className="mr-3 text-xl">{item.icon}</div>
+              <div className="text-md">{item.name}</div>
+            </NavLink>
+          ))}
+        </div>
+
+        <div className="absolute bottom-4 left-4 w-[280px] flex items-center py-2 border-t border-gray-700" onClick={handleLoginClick}>
+          <img
+            src={userProfileImage}
+            alt="User Profile"
+            className="h-10 w-10 rounded-full mr-2"
+          />
+          <div>
+            <div className="text-white font-semibold">Login/SignUP</div>
+            <div className="text-xs text-gray-400">Bio/AIR</div>
           </div>
-          {isOpen && <div className="explore-text">Login/SignUP</div>}
         </div>
       </div>
-      <main className="main-conten">{children}</main>
+      <main className="main-content flex-1 p-4">{children}</main>
     </div>
   );
 };

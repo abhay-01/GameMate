@@ -1,11 +1,6 @@
 import React, { useState, useRef } from "react";
 import bg from "../assets/bg.svg";
-import { FaGoogle } from "react-icons/fa";
-import { FaSquareGooglePlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import g from "../images/g.webp";
-import f from "../images/f.webp";
-import axios from "axios";
 import Swal from "sweetalert2";
 
 export const Password = () => {
@@ -18,7 +13,7 @@ export const Password = () => {
     setPass("");
     setrePass("");
     if (otpRef.current) {
-      otpRef.current.focus(); // Focus on the password input
+      otpRef.current.focus();
     }
   };
 
@@ -40,11 +35,11 @@ export const Password = () => {
     <>
       <div
         style={{
-          height: "100vh",
+          // height: "100vh",
           overflowY: "auto",
           backgroundColor: "black",
           color: "white",
-          width: "100vw",
+          // width: "100vw",
           display: "flex",
           flexDirection: "column",
         }}

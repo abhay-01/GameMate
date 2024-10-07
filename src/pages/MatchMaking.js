@@ -3,32 +3,36 @@ import { useLocation } from "react-router-dom";
 import io from "socket.io-client";
 import bg from "../assets/bg.svg";
 import boy from "../images/boy.png";
-import { FaGem, FaChevronDown } from "react-icons/fa";
+import Coin from "../components/Coin";
 
-const socket = io("http://localhost:3005", {
-  transports: ["websocket"],
-  reconnection: true,
-  reconnectionAttempts: 10,
-  reconnectionDelay: 1000,
-  query: { email: "test2" },
-});
+const socket = io(
+  "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/",
+  {
+    transports: ["websocket"],
+    reconnection: true,
+    reconnectionAttempts: 10,
+    reconnectionDelay: 1000,
+    query: { email: "test2" },
+  }
+);
 
 const Matchmaking = () => {
   const location = useLocation();
 
   const [friendEmail, setFriendEmail] = useState("test2");
   const [selectedGame, setSelectedGame] = useState("chess");
-  const [myEmail, setMyEmail] = useState("test");
+  const [myEmail, setMyEmail] = useState("");
   const [result, setResult] = useState("");
   const [showResult, setShowResult] = useState(false);
-  const [language, setLanguage] = useState("ENG");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [countdown, setCountdown] = useState(60);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [player1Stake, setPlayer1Stake] = useState(0);
   const [player2Stake, setPlayer2Stake] = useState(0);
   const [opponentName, setOpponentName] = useState("null");
   const [gameUrl, setGameUrl] = useState("");
+
+  // const game_url = location.state?.gameUrl;
+  // setGameUrl(game_url);
 
   const handleStakeChange = (player, value) => {
     const stakeValue = parseInt(value, 10) || 0;
@@ -50,12 +54,15 @@ const Matchmaking = () => {
   useEffect(() => {
     const friendName = location.state?.friendName;
     const gameUrl = location.state?.gameUrl;
+    const email = location.state?.email;
 
+    setMyEmail(email);
     setGameUrl(gameUrl);
     setOpponentName(friendName);
+  
     socket.on("accept-matchmaking", (data) => {
       if (data.url) {
-        const url = data.url + `?email=${myEmail}`;
+        const url = data.url + `?email=${email}`;
         window.open(url, "_blank");
         stopCountdown();
       }
@@ -83,6 +90,11 @@ const Matchmaking = () => {
       setResult(resultParam);
       setShowResult(true);
     }
+
+    const storedCredentials = JSON.parse(
+      localStorage.getItem("userCredentials")
+    );
+    console.log(storedCredentials);
     return () => {
       socket.off("accept-matchmaking");
     };
@@ -113,10 +125,10 @@ const Matchmaking = () => {
 
   const handleInitiateMatchmaking = async () => {
     startCountdown();
-    console.log("PRESSED");
+    console.log("PRESSED", myEmail, friendEmail, gameUrl, selectedGame);
     try {
       const response = await fetch(
-        "http://localhost:3005/initiate-matchmaking",
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/initiate-matchmaking",
         {
           method: "POST",
           headers: {
@@ -132,11 +144,14 @@ const Matchmaking = () => {
       );
 
       if (response.ok) {
-        console.log("Matchmaking initiated successfully");
+        console.log("Matchmaking initiated successfully",myEmail, friendEmail, gameUrl, selectedGame);
+        // console.log("SENDER MAIL-->", myEmail);
+        // console.log("TARGET MAIL-->", friendEmail);
+        // console.log("URL-->", gameUrl);
         socket.emit("matchmaking", {
           sender: myEmail,
           target: friendEmail,
-          url: "http://localhost:3001",
+          url: gameUrl,
           type: selectedGame,
         });
       } else {
@@ -148,15 +163,18 @@ const Matchmaking = () => {
   };
 
   const fetchResults = async () => {
-    let response = await fetch("http://localhost:3005/postResults", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: myEmail,
-      }),
-    });
+    let response = await fetch(
+      "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/postResults",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: myEmail,
+        }),
+      }
+    );
 
     if (response.ok) {
       response = await response.json();
@@ -173,16 +191,19 @@ const Matchmaking = () => {
 
   const handleStatus = async () => {
     try {
-      const response = await fetch("http://localhost:3005/updateStatus", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email1: myEmail,
-          email2: friendEmail,
-        }),
-      });
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateStatus",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email1: myEmail,
+            email2: friendEmail,
+          }),
+        }
+      );
 
       if (response.ok) {
         setShowResult(false);
@@ -195,76 +216,17 @@ const Matchmaking = () => {
     }
   };
 
-  const handleLanguageChange = (lang) => {
-    setLanguage(lang);
-    setIsDropdownOpen(false);
-  };
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
   return (
     <div>
       <div
         style={{
-          height: "100vh",
           overflowY: "auto",
           backgroundColor: "black",
           color: "white",
-          width: "100vw",
           display: "flex",
           flexDirection: "column",
         }}
       >
-        <div
-          style={{ padding: "20px", textAlign: "center" }}
-          className="flex items-center justify-between p-4 border-b border-white border-opacity-35 ml-9"
-        >
-          <input
-            type="text"
-            placeholder="Search for games..."
-            className="w-8/12 py-2 pl-6 border rounded-md text-[16px] bg-transparent px-2"
-          />
-
-          <div className="flex items-center space-x-6 ">
-            <div className="flex items-center mr-4">
-              <div className="flex justify-center items-center bg-gray-800 rounded-full w-8 h-8">
-                <FaGem className="text-white" />
-              </div>
-              <div className="ml-0 flex flex-col text-white">
-                <span className="text-xs font-light">Coins</span>
-                <span className="text-sm font-bold">00</span>
-              </div>
-            </div>
-
-            <div className="relative ml-6">
-              <button
-                className="flex items-center bg-gray-800 text-white py-1 px-3 rounded-full"
-                onClick={toggleDropdown}
-              >
-                {language} <FaChevronDown className="ml-1" />
-              </button>
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 bg-white text-black rounded-md shadow-lg">
-                  <button
-                    className="block px-4 py-2 hover:bg-gray-200"
-                    onClick={() => handleLanguageChange("ENG")}
-                  >
-                    English
-                  </button>
-                  <button
-                    className="block px-4 py-2 hover:bg-gray-200"
-                    onClick={() => handleLanguageChange("HIN")}
-                  >
-                    Hindi
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
         <div
           className={`flex flex-col justify-center items-center pl-10 flex-1`}
           style={{
@@ -285,14 +247,8 @@ const Matchmaking = () => {
                 <span className="text-2xl font-bold">Sandhya Gupta</span>
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
-              <div className="flex items-center justify-center mr-4 pt-0">
-                <div className="flex justify-center items-center border-2 border-gray-300 bg-gray-800 rounded-full w-7 h-7 mr-1">
-                  <FaGem size={13} className="text-white" />
-                </div>
-                <div className="ml-0 flex flex-col text-white">
-                  <span className="text-xs font-light mb-0 pb-0">Coins</span>
-                  <span className="text-sm font-bold">00</span>
-                </div>
+              <div className=" pl-16">
+              <Coin />
               </div>
 
               <div className="flex flex-col items-center mt-4">
@@ -333,15 +289,10 @@ const Matchmaking = () => {
                 </span>
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
-              <div className="flex items-center justify-center mr-4 pt-0">
-                <div className="flex justify-center items-center border-2 border-gray-300 bg-gray-800 rounded-full w-7 h-7 mr-1">
-                  <FaGem size={13} className="text-white" />
-                </div>
-                <div className="ml-0 flex flex-col text-white">
-                  <span className="text-xs font-light mb-0 pb-0">Coins</span>
-                  <span className="text-sm font-bold">00</span>
-                </div>
+              <div className=" pl-16">
+              <Coin />
               </div>
+              
 
               <div className="flex flex-col items-center mt-4">
                 <input

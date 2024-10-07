@@ -1,6 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
-import g from "../images/g.webp";
-import f from "../images/f.webp";
+import React, {useState, useRef } from "react";
 import bg from "../assets/bg.svg";
 import OtpInput from "react-otp-input";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -15,6 +13,9 @@ export const Otp = () => {
   const otpRef = useRef(null);
 
   const correctOtp = location.state?.correctOtp;
+  const email = location.state?.email;
+  const password = location.state?.password;
+  const userName = location.state?.username;
 
   const resetOtp = () => {
     setOtp(["", "", "", ""]); // Reset the OTP state
@@ -23,9 +24,29 @@ export const Otp = () => {
     }
   };
 
-  const verifyOTP = () => {
+  const verifyOTP = async () => {
     if (otp.join("") === correctOtp.toString().trim()) {
-      navigate("/password");
+      let response = axios.post("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/signup", {
+        email,
+        password,
+        userName,
+      });
+
+      if ((await response).status === 409) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "User already exists. Try logging in.",
+          confirmButtonText: "Login",
+          didClose: () => {
+            navigate("/login");
+          },
+        });
+      } else {
+        navigate("/home",{
+          state: { email, userName },
+        });
+      }
     } else {
       Swal.fire({
         icon: "error",

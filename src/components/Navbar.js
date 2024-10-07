@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState } from "react"; 
 import { FaGem, FaSearch, FaChevronDown } from "react-icons/fa";
-import "./Navbar.css";
+import Coin from "./Coin";
 
 const Navbar = () => {
   const [language, setLanguage] = useState("ENG");
@@ -8,49 +8,58 @@ const Navbar = () => {
 
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
-    setIsDropdownOpen(false); // Close the dropdown after selection
+    setIsDropdownOpen(false);
   };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
   return (
-    <>
-      <div className="container">
-        <div className="search">
-          <div>
-            <FaSearch />
-          </div>
-          <div className="search-text">Search..</div>
-        </div>
-        <div className="coin">
-          <div className="coin-logo">
-            <FaGem />
-          </div>
-          <div className="total">
-            <div className="text">Coins</div>
-            <div className="digits">00</div>
-          </div>
-        </div>
-        <div className="lang">
-          <div className="lang-dropdown">
-            <button className="dropdown-button" onClick={toggleDropdown}>
-              {language} <FaChevronDown />
-            </button>
-            {isDropdownOpen && (
-              <div className="dropdown-content">
-                <button onClick={() => handleLanguageChange("ENG")}>
-                  English
-                </button>
-                <button onClick={() => handleLanguageChange("HIN")}>
-                  Hindi
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
+    <div className="bg-custom-gray text-white h-[90px] flex items-center justify-between px-8 fixed top-0 left-[300px] w-[calc(100%-300px)] z-50">
+      {/* Search Bar */}
+      <div className="flex items-center gap-3 bg-black px-5 py-3 rounded-md border border-gray-400 w-[732px] h-[65x]">
+        <FaSearch className="text-base" />
+        <input
+          type="text"
+          placeholder="Search..."
+          className="bg-transparent focus:outline-none text-white flex-1 placeholder-gray-400"
+        />
       </div>
-    </>
+
+      {/* Coins Section */}
+      <div className="pl-20">
+      <Coin />
+      </div>
+
+
+
+      {/* Language Selector */}
+      <div className="relative right-[40px]">
+        <button
+          className="bg-black py-2 px-4 rounded-full flex items-center gap-2"
+          onClick={toggleDropdown}
+        >
+          {language} <FaChevronDown className="text-sm text-custom-purple" />
+        </button>
+        {isDropdownOpen && (
+          <div className="absolute top-full right-0 mt-2 bg-custom-gray text-white rounded-md shadow-lg min-w-[100px]">
+            <button
+              className="block w-full text-md py-2 px-4 hover:bg-gray-600"
+              onClick={() => handleLanguageChange("ENG")}
+            >
+              English
+            </button>
+            <button
+              className="block w-full text-md py-2 px-4 hover:bg-gray-600"
+              onClick={() => handleLanguageChange("HIN")}
+            >
+              Hindi
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 
