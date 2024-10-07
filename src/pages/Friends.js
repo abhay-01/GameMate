@@ -2,14 +2,24 @@ import React, { useEffect, useState } from "react";
 import { data } from "../utils/Friends";
 import icon from "../assets/boy.png";
 import bg from "../assets/bg.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Friends = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const gameUrl = location.state?.gameUrl;
+  const email = location.state?.email;
 
   const handleClick = (name) => {
-    navigate("/allgames", { state: { friendName: name } });
-  };
+    if (gameUrl) {
+      navigate("/matchmaking", {
+        state: { friendName: name, email: email, gameUrl: gameUrl },
+      });
+    } else {
+      navigate("/allgames", { state: { friendName: name, email: email } });
+    }
+  };
 
   const color = {
     busy: "#F6EF07",
@@ -17,7 +27,6 @@ const Friends = () => {
     offline: "#E71919",
   };
 
-  const email = "test@gmail.com";
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -67,32 +76,18 @@ const Friends = () => {
   return (
     <div
       style={{
-        height: "100vh",
         overflowY: "auto",
         backgroundColor: "black",
         color: "white",
-        width: "100vw",
         display: "flex",
         flexDirection: "column",
       }}
     >
-      {/* Search Bar */}
-      <div
-        style={{ padding: "20px", textAlign: "center" }}
-        className="border-b border-white border-opacity-35 "
-      >
-        <input
-          type="text"
-          placeholder="Search for games..."
-          className="w-10/12 py-2 border  rounded-md text-[16px] bg-transparent px-2"
-        />
-      </div>
 
       {/* Header Image */}
       <div
         className={`flex flex-col items-start pl-[100px] min-h-screen`}
         style={{
-          width: "100%",
           backgroundImage: `url(${bg})`,
           backgroundRepeat: "repeat",
           backgroundSize: "cover",
@@ -107,7 +102,7 @@ const Friends = () => {
               onClick={() => handleClick(item.name)} // Use an arrow function to pass item.name
               key={item.name}
             >
-              <img src={icon} width="40px" height="40px" className="" />
+              <img src={icon} width="40px" height="40px" alt="Friends's icon" />
               <div className="flex flex-row justify-between w-full items-center">
                 <div>
                   <div className="text-lg font-bold">{item.userName}</div>
