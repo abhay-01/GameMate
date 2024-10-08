@@ -12,8 +12,8 @@ import { Otp } from "./pages/Otp";
 import { Password } from "./pages/Password";
 import AddFriends from "../src/pages/AddFriends";
 import MatchMaking from "../src/pages/MatchMaking";
-import InvitePage from "../src/pages/InvitePage";
 import NotificationProvider from "./components/NotificationProvider";
+import Profile from "./pages/Profile";
 
 const AppRoutes = () => {
   return (
@@ -28,6 +28,7 @@ const AppRoutes = () => {
       <Route path="install" element={<Install />} />
       <Route path="settings" element={<Settings />} />
       <Route path="faqs" element={<Faqs />} />
+      <Route path="profile" element={<Profile />} />
 
       <Route path="login" element={<Login />} />
       <Route path="signup" element={<SignUP />} />
