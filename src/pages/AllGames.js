@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { games } from "../utils/Games";
 import trophy from "../images/trophy.png";
 import group from "../images/group.png";
