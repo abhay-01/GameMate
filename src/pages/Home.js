@@ -25,16 +25,17 @@ const Home = () => {
   const [inviteUrl, setInviteUrl] = useState("");
   const [inviteType, setInviteType] = useState("");
   const [show, setShow] = useState(true);
+  const [queryMail, setQueryMail] = useState("");
 
   const getQueryParams = (query) => {
     return new URLSearchParams(query);
   };
 
   const location = useLocation();
-  const email = location.state?.email;
+  const email = location.state?.email; // optional state from previous route
   const userName = location.state?.userName;
 
-  const tempMail = "tom@gmail.com"; // TODO: Have to replace it with actual user email
+  const tempMail = "tom@gmail.com"; // TODO: Replace it with actual user email
 
   useEffect(() => {
     socket.on("matchmaking", (data) => {
@@ -125,43 +126,51 @@ const Home = () => {
   useEffect(() => {
     setWinner("");
     const queryParams = getQueryParams(location.search);
-    const email = queryParams.get("email");
+    const emailFromQuery = queryParams.get("email");
+    console.log("Received email from query string:", emailFromQuery);
+    setQueryMail(emailFromQuery);
 
-    const temp = "keshav"; // Temporary for now
-
-    if (temp) {
+    if (emailFromQuery) {
       setShow(true);
       const fetchResult = async () => {
         try {
-          const response = await fetch("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/postResults", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email: temp }),
-          });
+          const response = await fetch(
+            "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/postResults",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email: emailFromQuery }), // Use the email from query in the POST request
+            }
+          );
 
           const result = await response.json();
-          setWinner(result.winner === temp ? "Win" : "Lost");
+          setWinner(result.winner === emailFromQuery ? "Win" : "Lost");
         } catch (err) {
-          console.log("ERROR IN FETCHING RESULTS", err);
+          console.log("Error fetching results:", err);
         }
       };
 
       fetchResult();
+    } else {
+      console.log("No email found in query string.");
     }
   }, [location.search]);
 
   const handleClose = async () => {
     setShow(false);
     try {
-      const response = await fetch("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateStatus", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: "keshav" }),
-      });
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateStatus",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: queryMail }),
+        }
+      );
 
       if (response.ok) {
         setWinner("");

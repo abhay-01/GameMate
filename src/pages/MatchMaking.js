@@ -54,7 +54,8 @@ const Matchmaking = () => {
 
         if (response.ok) {
           const data = await response.json();
-          setAvailableCoins(data.coins); // Assuming the API returns available coins
+
+          setAvailableCoins(data);
         } else {
           console.error("Failed to fetch coin balance");
         }
@@ -310,7 +311,7 @@ const Matchmaking = () => {
                 position: "absolute",
                 top: "10%",
                 right: "10%",
-                background: "red", 
+                background: "red",
                 color: "white",
                 padding: "10px 20px",
                 borderRadius: "5px",

@@ -66,8 +66,8 @@ const AddFriends = () => {
   };
 
   // incase of data not showing
-  if (loading) return <div className="text-white font-bold text-center text-5xl">Loading...</div>;
-  if (error) return <div className="text-white font-bold text-center text-5xl">Error: {error}</div>;
+  if (loading) return <div className="text-black font-bold text-center text-5xl mt-4">Loading...</div>;
+  if (error) return <div className="text-black font-bold text-center text-5xl mt-4">Error: {error}</div>;
   
   return (
     <div

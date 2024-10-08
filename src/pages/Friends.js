@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { data } from "../utils/Friends";
 import icon from "../assets/boy.png";
 import bg from "../assets/bg.svg";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -7,32 +6,28 @@ import { useNavigate, useLocation } from "react-router-dom";
 const Friends = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const gameUrl = location.state?.gameUrl;
-  const email = location.state?.email;
-
-  const handleClick = (name) => {
-    if (gameUrl) {
-      navigate("/matchmaking", {
-        state: { friendName: name, email: email, gameUrl: gameUrl },
-      });
-    } else {
-      navigate("/allgames", { state: { friendName: name, email: email } });
-    }
-  };
-
-  const color = {
-    busy: "#F6EF07",
-    online: "#0DEF0D",
-    offline: "#E71919",
-  };
-
-  const [data, setData] = useState([]);
+  const [email, setEmail] = useState("");
+  const [friendsData, setFriendsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const gameUrl = location.state?.gameUrl;
+
   useEffect(() => {
-    const fetchData = async () => {
+    // Get the email only once when the component mounts
+    const storedCredentials = JSON.parse(
+      localStorage.getItem("userCredentials")
+    );
+
+    if (storedCredentials?.email) {
+      setEmail(storedCredentials.email);
+    } else if (location.state?.email) {
+      setEmail(location.state.email);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async (inputMail) => {
       try {
         const response = await fetch(
           "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/friends",
@@ -41,7 +36,7 @@ const Friends = () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ email }),
+            body: JSON.stringify({ email: inputMail }),
           }
         );
 
@@ -50,7 +45,9 @@ const Friends = () => {
         }
 
         const result = await response.json();
-        setData(result);
+
+        console.log("-->>", result);
+        setFriendsData(result);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -58,21 +55,34 @@ const Friends = () => {
       }
     };
 
-    fetchData();
-  }, []);
+    if (email) {
+      fetchData(email);
+    }
+  }, [email]);
+
+  const handleClick = (name) => {
+    if (gameUrl) {
+      navigate("/matchmaking", {
+        state: { friendName: name, email: email, gameUrl: gameUrl },
+      });
+    } else {
+      navigate("/allgames", { state: { friendName: name, email: email } });
+    }
+  };
 
   if (loading)
     return (
-      <div className="text-white font-bold text-center text-5xl">
+      <div className="text-black font-bold text-center text-5xl mt-4">
         Loading...
       </div>
     );
   if (error)
     return (
-      <div className="text-white font-bold text-center text-5xl">
+      <div className="text-black font-bold text-center text-5xl mt-4">
         Error: {error}
       </div>
     );
+
   return (
     <div
       style={{
@@ -83,10 +93,9 @@ const Friends = () => {
         flexDirection: "column",
       }}
     >
-
       {/* Header Image */}
       <div
-        className={`flex flex-col items-start pl-[100px] min-h-screen`}
+        className="flex flex-col items-start pl-[100px] min-h-screen"
         style={{
           backgroundImage: `url(${bg})`,
           backgroundRepeat: "repeat",
@@ -96,13 +105,13 @@ const Friends = () => {
       >
         <div className="font-semibold text-2xl my-4">All Friends</div>
         <div className="w-full flex flex-col items-center">
-          {data.map((item) => (
+          {friendsData.map((item) => (
             <div
               className="border flex flex-row rounded-xl items-center gap-x-4 my-4 py-4 px-8 w-10/12 transition duration-300 ease-in-out hover:scale-x-105"
-              onClick={() => handleClick(item.name)} // Use an arrow function to pass item.name
+              onClick={() => handleClick(item.userName)}
               key={item.name}
             >
-              <img src={icon} width="40px" height="40px" alt="Friends's icon" />
+              <img src={icon} width="40px" height="40px" alt="Friend's icon" />
               <div className="flex flex-row justify-between w-full items-center">
                 <div>
                   <div className="text-lg font-bold">{item.userName}</div>
@@ -111,10 +120,10 @@ const Friends = () => {
                 <div
                   className={`text-white rounded-full px-4 py-2 capitalize ${
                     item.currentStatus === "offline"
-                      ? "bg-[#E71919]" 
+                      ? "bg-[#E71919]"
                       : item.currentStatus === "busy"
-                      ? "bg-[#FFFF00]" 
-                      : "bg-[#0DEF0D]" 
+                      ? "bg-[#FFFF00]"
+                      : "bg-[#0DEF0D]"
                   }`}
                 >
                   {item.currentStatus}
