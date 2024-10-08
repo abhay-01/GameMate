@@ -8,9 +8,9 @@ function App() {
       <BrowserRouter>
         <div className="flex">
           <Sidebar />
-          <div className="flex-1 flex flex-col ml-[250px]">
+          <div className="flex-1 flex flex-col ml-0 lg:ml-[250px]">
             <Navbar />
-            <div className="mt-[70px]">
+            <div className="lg:mt-[70px]">
               {" "}
               {/* Adjusts to compensate for the fixed navbar */}
               <AppRoutes />

@@ -33,7 +33,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-custom-gray text-white h-[90px] flex items-center justify-between px-8 fixed top-0 left-[300px] w-[calc(100%-300px)] z-50">
+    <div className="bg-custom-gray text-white h-[90px] hidden lg:flex items-center justify-between px-8 fixed top-0 lg:left-[300px] lg:w-[calc(100%-300px)] z-50">
       {/* Search Bar */}
       <div className="flex items-center gap-3 bg-black px-5 py-3 rounded-md border border-gray-400 w-[732px] h-[65x]">
         <FaSearch className="text-base" />
