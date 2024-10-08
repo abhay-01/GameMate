@@ -78,14 +78,13 @@ const AddFriends = () => {
         display: "flex",
         flexDirection: "column",
       }}
-      className="h-screen w-screen overflow-x-hidden"
+      className="overflow-x-hidden"
     >
       
       {/* Header Image */}
       <div
-        className={`flex flex-col items-center pl-[50px] min-h-screen `}
+        className={`flex flex-col items-center pl-[50px] min-h-screen`}
         style={{
-          width: "100%",
           backgroundImage: `url(${bg})`,
           backgroundRepeat: "repeat",
           backgroundSize: "cover",
