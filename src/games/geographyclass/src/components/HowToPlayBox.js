@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 export default function HowToPlayBox() {
   const [clicked, setClicked] = useState(false);

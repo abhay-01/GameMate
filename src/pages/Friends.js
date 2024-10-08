@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { data } from "../utils/Friends";
 import icon from "../assets/boy.png";
 import bg from "../assets/bg.svg";
@@ -17,9 +17,9 @@ const Friends = () => {
         state: { friendName: name, email: email, gameUrl: gameUrl },
       });
     } else {
-      navigate("/allgames", { state: { friendName: name, email: email } });
-    }
-  };
+      navigate("/allgames", { state: { friendName: name, email: email } });
+    }
+  };
 
   const color = {
     busy: "#F6EF07",
@@ -27,6 +27,52 @@ const Friends = () => {
     offline: "#E71919",
   };
 
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/friends",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        setData(result);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading)
+    return (
+      <div className="text-white font-bold text-center text-5xl">
+        Loading...
+      </div>
+    );
+  if (error)
+    return (
+      <div className="text-white font-bold text-center text-5xl">
+        Error: {error}
+      </div>
+    );
   return (
     <div
       style={{
@@ -37,9 +83,10 @@ const Friends = () => {
         flexDirection: "column",
       }}
     >
+
       {/* Header Image */}
       <div
-        className={`flex flex-col items-start pl-[100px] `}
+        className={`flex flex-col items-start pl-[100px] min-h-screen`}
         style={{
           backgroundImage: `url(${bg})`,
           backgroundRepeat: "repeat",
@@ -52,21 +99,25 @@ const Friends = () => {
           {data.map((item) => (
             <div
               className="border flex flex-row rounded-xl items-center gap-x-4 my-4 py-4 px-8 w-10/12 transition duration-300 ease-in-out hover:scale-x-105"
-              onClick={() => handleClick(item.name)}
+              onClick={() => handleClick(item.name)} // Use an arrow function to pass item.name
               key={item.name}
             >
-              <img src={icon} width="40px" height="40px" alt="Friend's icon" />
+              <img src={icon} width="40px" height="40px" alt="Friends's icon" />
               <div className="flex flex-row justify-between w-full items-center">
                 <div>
-                  <div className="text-lg font-bold">{item.name}</div>
+                  <div className="text-lg font-bold">{item.userName}</div>
                   <div>Bio/Air</div>
                 </div>
                 <div
-                  className={`bg-[${
-                    color[item.status]
-                  }] text-white rounded-full px-4 py-2 capitalize`}
+                  className={`text-white rounded-full px-4 py-2 capitalize ${
+                    item.currentStatus === "offline"
+                      ? "bg-[#E71919]" 
+                      : item.currentStatus === "busy"
+                      ? "bg-[#FFFF00]" 
+                      : "bg-[#0DEF0D]" 
+                  }`}
                 >
-                  {item.status}
+                  {item.currentStatus}
                 </div>
               </div>
             </div>

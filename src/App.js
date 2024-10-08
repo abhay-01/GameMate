@@ -10,7 +10,7 @@ function App() {
           <Sidebar />
           <div className="flex-1 flex flex-col ml-[250px]">
             <Navbar />
-            <div className="mt-[70px] p-4">
+            <div className="mt-[70px]">
               {" "}
               {/* Adjusts to compensate for the fixed navbar */}
               <AppRoutes />
