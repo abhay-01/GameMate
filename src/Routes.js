@@ -35,7 +35,6 @@ const AppRoutes = () => {
       <Route path="password" element={<Password />} />
 
       <Route path="matchmaking" element={<MatchMaking />} />
-      <Route path="invite" element={<InvitePage />} />
     </Routes>
     </NotificationProvider>
   );

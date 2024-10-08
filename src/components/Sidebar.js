@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import { FaGamepad } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
-import logo from "../assets/Game-Mate-Logo.png"; 
+import logo from "../assets/Game-Mate-Logo.png";
 import userProfileImage from "../assets/boy.png";
 
 export const Sidebar = ({ children }) => {
@@ -54,11 +54,6 @@ export const Sidebar = ({ children }) => {
       icon: <FaDownload />,
     },
     {
-      path: "/invite",
-      name: "Settings",
-      icon: <FaCog />,
-    },
-    {
       path: "/faqs",
       name: "FAQs",
       icon: <FaQuestionCircle />,
@@ -74,7 +69,15 @@ export const Sidebar = ({ children }) => {
     <div className="fixed flex">
       <div className="min-h-screen w-80 text-white bg-custom-gradient h-screen">
         <div className="flex justify-center items-center py-4">
-          <img src={logo} alt="Game Mate" className="h-12" />
+          <img
+            src={logo}
+            alt="Game Mate"
+            className="h-12"
+            onClick={() => navigate("/home")}
+            style={{
+              cursor: "pointer",
+            }}
+          />
         </div>
 
         <div class="flex items-center space-x-2 bg-black p-4 rounded-lg border border-t-0 border-r-0 border-l-0 ml-6 mr-6 mb-4">

@@ -18,9 +18,9 @@ export const Otp = () => {
   const userName = location.state?.username;
 
   const resetOtp = () => {
-    setOtp(["", "", "", ""]); // Reset the OTP state
+    setOtp(["", "", "", ""]); 
     if (otpRef.current) {
-      otpRef.current.focus(); // Focus on the first input
+      otpRef.current.focus();
     }
   };
 
@@ -43,6 +43,7 @@ export const Otp = () => {
           },
         });
       } else {
+        localStorage.setItem("userCredentials", JSON.stringify({ email }));
         navigate("/home",{
           state: { email, userName },
         });

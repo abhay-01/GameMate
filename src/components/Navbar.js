@@ -1,11 +1,28 @@
-import React, { useState } from "react"; 
+import React, { useEffect, useState } from "react";
 import { FaGem, FaSearch, FaChevronDown } from "react-icons/fa";
 import Coin from "./Coin";
 
 const Navbar = () => {
   const [language, setLanguage] = useState("ENG");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [coins, setCoins] = useState(0);
 
+  const fetchCoins = async () => {
+    const response = await fetch(
+      "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/coins",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = await response.json();
+    console.log("COINS", data);
+  };
+ 
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
     setIsDropdownOpen(false);
@@ -29,10 +46,8 @@ const Navbar = () => {
 
       {/* Coins Section */}
       <div className="pl-20">
-      <Coin />
+        <Coin />
       </div>
-
-
 
       {/* Language Selector */}
       <div className="relative right-[40px]">
