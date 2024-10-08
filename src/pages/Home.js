@@ -3,9 +3,9 @@ import { FaTimes } from "react-icons/fa";
 import headerImage from "../images/headerImage.png";
 import io from "socket.io-client";
 import { useLocation } from "react-router-dom";
-import { FaGem } from "react-icons/fa";
 import Card from "../components/Card";
 import Carousels from "../components/Carousel";
+import Popup from "../components/PopUp";
 
 const socket = io(
   "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net",
@@ -24,15 +24,20 @@ const Home = () => {
   const [inviteTarget, setInviteTarget] = useState("");
   const [inviteUrl, setInviteUrl] = useState("");
   const [inviteType, setInviteType] = useState("");
+  const [show, setShow] = useState(true);
+
+  const getQueryParams = (query) => {
+    return new URLSearchParams(query);
+  };
 
   const location = useLocation();
   const email = location.state?.email;
   const userName = location.state?.userName;
 
-  const tempMail = "test2"; // TODO: Have to replace it with actual user email
+  const tempMail = "tom@gmail.com"; // TODO: Have to replace it with actual user email
 
   useEffect(() => {
-      socket.on("matchmaking", (data) => {
+    socket.on("matchmaking", (data) => {
       if (data.target === tempMail) {
         setMatchedInvite(true);
         setInviteSender(data.sender);
@@ -108,6 +113,65 @@ const Home = () => {
   const handleDeclineInvite = () => {
     setMatchedInvite(false);
     console.log("Invite Declined");
+
+    socket.emit("decline-matchmaking", {
+      sender: inviteTarget,
+      target: inviteSender,
+      url: inviteUrl,
+      type: inviteType,
+    });
+  };
+
+  useEffect(() => {
+    setWinner("");
+    const queryParams = getQueryParams(location.search);
+    const email = queryParams.get("email");
+
+    const temp = "keshav"; // Temporary for now
+
+    if (temp) {
+      setShow(true);
+      const fetchResult = async () => {
+        try {
+          const response = await fetch("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/postResults", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: temp }),
+          });
+
+          const result = await response.json();
+          setWinner(result.winner === temp ? "Win" : "Lost");
+        } catch (err) {
+          console.log("ERROR IN FETCHING RESULTS", err);
+        }
+      };
+
+      fetchResult();
+    }
+  }, [location.search]);
+
+  const handleClose = async () => {
+    setShow(false);
+    try {
+      const response = await fetch("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateStatus", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: "keshav" }),
+      });
+
+      if (response.ok) {
+        setWinner("");
+        setShow(false);
+      } else {
+        console.log("Failed to update match status");
+      }
+    } catch (error) {
+      console.error("Error in closing match", error);
+    }
   };
 
   return (
@@ -119,29 +183,36 @@ const Home = () => {
       <Carousels />
 
       {matchedInvite && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-          <div className="relative bg-white text-black p-6 rounded-lg shadow-lg">
+        <div className="fixed top-5 right-5 bg-black bg-opacity-70 z-50">
+          <div className="relative text-center p-6 w-[500px] h-[350px] flex-shrink-0 rounded-[20px] bg-[radial-gradient(circle, rgba(128,0,128,1)_0%, rgba(0,0,255,1)_70%)]">
             <button
-              className="absolute top-2 right-2 text-black"
+              className="absolute top-3 right-3 bg-red-500 text-white px-2 py-1 rounded flex items-center"
               onClick={() => setMatchedInvite(false)}
             >
-              <FaTimes size={24} />
+              <FaTimes size={20} />
             </button>
-            <h2 className="text-2xl font-bold mb-4">Game Invite</h2>
-            <p className="mb-4">
-              You have received a game invite from{" "}
-              <strong>{inviteSender}</strong>.
+
+            <h2 className="mb-4 text-white font-poppins text-[40px] font-bold uppercase">
+              Game Invite
+            </h2>
+
+            <p className="mb-4 text-[#FA8305] font-poppins text-[28px] font-bold uppercase">
+              Invite from {inviteSender}
             </p>
-            <p className="mb-4">Game Type: {inviteType}</p>
-            <div className="flex justify-end space-x-4">
+
+            <p className="mb-4 text-white text-[22px]">
+              Game Type: {inviteType}
+            </p>
+
+            <div className="flex justify-center space-x-6 mt-4">
               <button
-                className="bg-green-500 text-white px-4 py-2 rounded"
+                className="bg-green-500 text-white px-6 py-2 rounded-lg text-[20px] font-bold"
                 onClick={handleAcceptInvite}
               >
                 Accept
               </button>
               <button
-                className="bg-red-500 text-white px-4 py-2 rounded"
+                className="bg-red-500 text-white px-6 py-2 rounded-lg text-[20px] font-bold"
                 onClick={handleDeclineInvite}
               >
                 Decline
@@ -150,6 +221,8 @@ const Home = () => {
           </div>
         </div>
       )}
+
+      <Popup winner={winner} show={show} handleClose={handleClose} />
 
       {/* Upcoming Matches or Game Cards */}
       <Card />

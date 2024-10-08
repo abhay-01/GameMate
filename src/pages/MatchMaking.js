@@ -12,14 +12,13 @@ const socket = io(
     reconnection: true,
     reconnectionAttempts: 10,
     reconnectionDelay: 1000,
-    query: { email: "test2" },
   }
 );
 
 const Matchmaking = () => {
   const location = useLocation();
 
-  const [friendEmail, setFriendEmail] = useState("test2");
+  const [friendEmail, setFriendEmail] = useState("tom@gmail.com");
   const [selectedGame, setSelectedGame] = useState("chess");
   const [myEmail, setMyEmail] = useState("");
   const [result, setResult] = useState("");
@@ -30,12 +29,56 @@ const Matchmaking = () => {
   const [player2Stake, setPlayer2Stake] = useState(0);
   const [opponentName, setOpponentName] = useState("null");
   const [gameUrl, setGameUrl] = useState("");
+  const [availableCoins, setAvailableCoins] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   // const game_url = location.state?.gameUrl;
   // setGameUrl(game_url);
 
+  useEffect(() => {
+    const fetchAvailableCoins = async () => {
+      try {
+        const response = await fetch(
+          "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/coins",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: myEmail,
+            }),
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setAvailableCoins(data.coins); // Assuming the API returns available coins
+        } else {
+          console.error("Failed to fetch coin balance");
+        }
+      } catch (error) {
+        console.error("Error fetching coin balance:", error);
+      }
+    };
+
+    fetchAvailableCoins();
+  }, [myEmail]);
+
   const handleStakeChange = (player, value) => {
     const stakeValue = parseInt(value, 10) || 0;
+
+    if (stakeValue < 0) {
+      alert("Stake value cannot be negative.");
+      return;
+    }
+
+    if (stakeValue > availableCoins) {
+      alert("You cannot stake more coins than you have.");
+      return;
+    }
+
     if (player === 1) {
       setPlayer1Stake(stakeValue);
     } else {
@@ -59,7 +102,7 @@ const Matchmaking = () => {
     setMyEmail(email);
     setGameUrl(gameUrl);
     setOpponentName(friendName);
-  
+
     socket.on("accept-matchmaking", (data) => {
       if (data.url) {
         const url = data.url + `?email=${email}`;
@@ -144,7 +187,13 @@ const Matchmaking = () => {
       );
 
       if (response.ok) {
-        console.log("Matchmaking initiated successfully",myEmail, friendEmail, gameUrl, selectedGame);
+        console.log(
+          "Matchmaking initiated successfully",
+          myEmail,
+          friendEmail,
+          gameUrl,
+          selectedGame
+        );
         // console.log("SENDER MAIL-->", myEmail);
         // console.log("TARGET MAIL-->", friendEmail);
         // console.log("URL-->", gameUrl);
@@ -186,6 +235,8 @@ const Matchmaking = () => {
         setResult("lose");
         setShowResult(true);
       }
+    } else {
+      console.error("Failed to fetch results");
     }
   };
 
@@ -216,15 +267,31 @@ const Matchmaking = () => {
     }
   };
 
+  useEffect(() => {
+    socket.on("decline-matchmaking", (data) => {
+      console.log("Matchmaking declined by", data.target);
+      setAlertMessage(`Matchmaking invite declined by ${data.target}.`); // Set the alert message
+      setShowAlert(true);
+    });
+
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 5000);
+    return () => {
+      socket.off("decline-matchmaking");
+    };
+  }, [setAlertMessage, setShowAlert]);
   return (
     <div>
       <div
         style={{
-          overflowY: "auto",
+          backgroundPosition: "center",
           backgroundColor: "black",
           color: "white",
           display: "flex",
           flexDirection: "column",
+          height: "100vh",
+          width: "100%",
         }}
       >
         <div
@@ -237,6 +304,22 @@ const Matchmaking = () => {
             backgroundPosition: "center",
           }}
         >
+          {showAlert && (
+            <div
+              style={{
+                position: "absolute",
+                top: "10%",
+                right: "10%",
+                background: "red", 
+                color: "white",
+                padding: "10px 20px",
+                borderRadius: "5px",
+                marginTop: "10px",
+              }}
+            >
+              {alertMessage}
+            </div>
+          )}
           {/* Matchmaking UI */}
           <div className="flex p-2 pl-8 mb-4">
             <div className="flex flex-col border border-white w-[300px] h-[330px] m-2 m-r-2 rounded-lg p-10 pt-9">
@@ -248,7 +331,7 @@ const Matchmaking = () => {
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
               <div className=" pl-16">
-              <Coin />
+                <Coin />
               </div>
 
               <div className="flex flex-col items-center mt-4">
@@ -290,9 +373,8 @@ const Matchmaking = () => {
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
               <div className=" pl-16">
-              <Coin />
+                <Coin />
               </div>
-              
 
               <div className="flex flex-col items-center mt-4">
                 <input
@@ -302,6 +384,10 @@ const Matchmaking = () => {
                   className="w-20 text-center bg-gray-800 text-white rounded-md"
                   placeholder="Coins"
                 />
+
+                <p className="text-sm text-gray-300">
+                  Available Coins: {availableCoins}
+                </p>
                 <button
                   onClick={() => handleConfirmStake(2)}
                   className="bg-orange-500 w-20 h-8 rounded-lg mt-2"
