@@ -27,17 +27,18 @@ const Home = () => {
   const [show, setShow] = useState(true);
   const [queryMail, setQueryMail] = useState("");
 
-  const getQueryParams = (query) => {
-    return new URLSearchParams(query);
+  const location = useLocation();
+
+  // Function to get email from query parameters
+  const getEmailFromURL = () => {
+    const params = new URLSearchParams(location.search);
+    const email = params.get("email");
+    return email;
   };
 
-  const location = useLocation();
-  const email = location.state?.email; // optional state from previous route
-  const userName = location.state?.userName;
-
-  const tempMail = "tom@gmail.com"; // TODO: Replace it with actual user email
-
   useEffect(() => {
+    const storedCredentials = localStorage.getItem("userCredentials");
+    const tempMail = JSON.parse(storedCredentials).email;
     socket.on("matchmaking", (data) => {
       if (data.target === tempMail) {
         setMatchedInvite(true);
@@ -51,7 +52,46 @@ const Home = () => {
     return () => {
       socket.off("matchmaking");
     };
-  }, [email]);
+  }, []);
+  useEffect(() => {
+    // Extract email from the query and set it in state
+    const email = getEmailFromURL();
+    if (email) {
+      setQueryMail(email);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    if (queryMail) {
+      setWinner("");
+      setShow(true);
+
+      // Fetch the results and set winner
+      const fetchResult = async () => {
+        try {
+          const response = await fetch(
+            "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/postResults",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email: queryMail }),
+            }
+          );
+
+          const result = await response.json();
+          setWinner(result.winner === queryMail ? "Win" : "Lost");
+        } catch (err) {
+          console.log("Error fetching results:", err);
+        }
+      };
+
+      fetchResult();
+    } else {
+      console.log("No email found in query string.");
+    }
+  }, [queryMail]);
 
   const handleAcceptInvite = async () => {
     setMatchedInvite(false);
@@ -100,7 +140,7 @@ const Home = () => {
 
         if (createMatch.ok) {
           console.log("Match created successfully");
-          const url = inviteUrl + `?email=${email}`;
+          const url = inviteUrl + `?email=${inviteTarget}`;
           window.open(url, "_blank");
         }
       } else {
@@ -123,41 +163,6 @@ const Home = () => {
     });
   };
 
-  useEffect(() => {
-    setWinner("");
-    const queryParams = getQueryParams(location.search);
-    const emailFromQuery = queryParams.get("email");
-    console.log("Received email from query string:", emailFromQuery);
-    setQueryMail(emailFromQuery);
-
-    if (emailFromQuery) {
-      setShow(true);
-      const fetchResult = async () => {
-        try {
-          const response = await fetch(
-            "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/postResults",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ email: emailFromQuery }), // Use the email from query in the POST request
-            }
-          );
-
-          const result = await response.json();
-          setWinner(result.winner === emailFromQuery ? "Win" : "Lost");
-        } catch (err) {
-          console.log("Error fetching results:", err);
-        }
-      };
-
-      fetchResult();
-    } else {
-      console.log("No email found in query string.");
-    }
-  }, [location.search]);
-
   const handleClose = async () => {
     setShow(false);
     try {
@@ -175,6 +180,9 @@ const Home = () => {
       if (response.ok) {
         setWinner("");
         setShow(false);
+
+        const urlWithoutEmail = window.location.pathname;
+        window.history.replaceState(null, "", urlWithoutEmail);
       } else {
         console.log("Failed to update match status");
       }
@@ -235,7 +243,6 @@ const Home = () => {
 
       {/* Upcoming Matches or Game Cards */}
       <Card />
-      {/* Map your game cards here with component mapping json*/}
     </div>
   );
 };
