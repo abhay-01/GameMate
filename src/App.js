@@ -2,6 +2,8 @@ import { BrowserRouter } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import AppRoutes from "./Routes";
 import { Sidebar } from "./components/Sidebar";
+import TopBar from "./components/TopBar";
+import BottomBar from "./components/BottomBar";
 
 function App() {
   return (
@@ -10,6 +12,8 @@ function App() {
           <Sidebar />
           <div className="flex-1 flex flex-col ml-0 lg:ml-[250px]">
             <Navbar />
+            <TopBar />
+            <BottomBar />
             <div className="lg:mt-[70px]">
               {" "}
               {/* Adjusts to compensate for the fixed navbar */}
