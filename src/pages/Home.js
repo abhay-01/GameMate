@@ -4,7 +4,6 @@ import headerImage from "../images/headerImage.png";
 import io from "socket.io-client";
 import { useLocation } from "react-router-dom";
 import Card from "../components/Card";
-import Carousels from "../components/Carousel";
 import Popup from "../components/PopUp";
 
 const socket = io(
@@ -189,7 +188,7 @@ const Home = () => {
       <div>
         <img src={headerImage} alt="Header Game" />
       </div>
-      <Carousels />
+    
 
       {matchedInvite && (
         <div className="fixed top-5 right-5 bg-black bg-opacity-70 z-50">

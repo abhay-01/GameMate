@@ -34,16 +34,12 @@ const AllGames = () => {
   return (
     <div className="flex justify-center" style={{
       overflowY: "auto",
-      backgroundColor: "black",
-      color: "white",
+        backgroundColor: "black",
+        color: "white",
+        display: "flex",
+        // flexDirection: "column",
     }} >
-    <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2" style={{
-            backgroundImage: `url(${bg})`,
-            backgroundRepeat: "repeat",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            width: window.innerWidth >= 1024 ? "85%" : "auto",
-          }}>
+    <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2" >
       {availableGames.map((game) => (
         <div
           key={game.id}
