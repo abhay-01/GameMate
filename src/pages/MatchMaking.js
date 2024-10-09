@@ -297,7 +297,7 @@ const Matchmaking = () => {
   useEffect(() => {
     socket.on("decline-matchmaking", (data) => {
       console.log("Matchmaking declined by", data.target);
-      setAlertMessage(`Matchmaking invite declined by ${data.target}.`); // Set the alert message
+      setAlertMessage(`Matchmaking invite declined by ${data.target}.`);
       setShowAlert(true);
     });
     if (showAlert) {
