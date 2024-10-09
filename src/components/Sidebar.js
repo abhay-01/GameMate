@@ -32,11 +32,11 @@ export const Sidebar = ({ children }) => {
       name: "All Games",
       icon: <FaGamepad />,
     },
-    {
-      path: "/addgames",
-      name: "Add Games",
-      icon: <FaGamepad />,
-    },
+    // {
+    //   path: "/addgames",
+    //   name: "Add Games",
+    //   icon: <FaGamepad />,
+    // },
     {
       path: "/friends",
       name: "Friends",
@@ -47,16 +47,16 @@ export const Sidebar = ({ children }) => {
       name: "Add Friends",
       icon: <FaUserPlus />,
     },
-    {
-      path: "/insatll",
-      name: "Installed Games",
-      icon: <FaDownload />,
-    },
-    {
-      path: "/faqs",
-      name: "FAQs",
-      icon: <FaQuestionCircle />,
-    },
+    // {
+    //   path: "/insatll",
+    //   name: "Installed Games",
+    //   icon: <FaDownload />,
+    // },
+    // {
+    //   path: "/faqs",
+    //   name: "FAQs",
+    //   icon: <FaQuestionCircle />,
+    // },
     {
       path: "/profile",
       name: "Profile",
