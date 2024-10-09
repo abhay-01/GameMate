@@ -47,7 +47,7 @@ export const useGameLogic = (userEmail, friendName) => {
     } catch (error) {
       console.error("Error occurred:", error.message);
     }
-    const url = "https://geography-classes.netlify.app" + "?email=" + userEmail;
+    const url = `https://geography-classes.netlify.app?email=${userEmail}`;
     window.open(url, "_blank");
   };
 
@@ -56,7 +56,8 @@ export const useGameLogic = (userEmail, friendName) => {
       navigate("/matchmaking", {
         state: {
           friendName: friendName,
-          gameUrl: "http://tic-tac-toe-server-g2akb2bkf8hvdadz.centralindia-01.azurewebsites.net",
+          gameUrl:
+            "http://tic-tac-toe-server-g2akb2bkf8hvdadz.centralindia-01.azurewebsites.net",
           email: userEmail,
         },
       });
@@ -64,7 +65,8 @@ export const useGameLogic = (userEmail, friendName) => {
       navigate("/friends", {
         state: {
           email: userEmail,
-          gameUrl: "http://tic-tac-toe-server-g2akb2bkf8hvdadz.centralindia-01.azurewebsites.net",
+          gameUrl:
+            "http://tic-tac-toe-server-g2akb2bkf8hvdadz.centralindia-01.azurewebsites.net",
         },
       });
     }

@@ -5,7 +5,6 @@ import io from "socket.io-client";
 import { useLocation } from "react-router-dom";
 import Card from "../components/Card";
 import Popup from "../components/PopUp";
-import { useNavigate } from "react-router-dom";
 
 const socket = io(
   "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net",
@@ -18,7 +17,6 @@ const socket = io(
 );
 
 const Home = () => {
-  const navigate = useNavigate();
   const [winner, setWinner] = useState("");
   const [matchedInvite, setMatchedInvite] = useState(false);
   const [inviteSender, setInviteSender] = useState("");
@@ -31,11 +29,6 @@ const Home = () => {
   const location = useLocation();
 
   // Function to get email from query parameters
-  const getEmailFromURL = () => {
-    const params = new URLSearchParams(location.search);
-    const email = params.get("email");
-    return email;
-  };
 
   useEffect(() => {
     const storedCredentials = localStorage.getItem("userCredentials");
@@ -56,11 +49,17 @@ const Home = () => {
   }, []);
   useEffect(() => {
     // Extract email from the query and set it in state
+    const getEmailFromURL = () => {
+      const params = new URLSearchParams(location.search);
+      const email = params.get("email");
+      return email;
+    };
+
     const email = getEmailFromURL();
     if (email) {
       setQueryMail(email);
     }
-  }, [location]);
+  }, [location.search]);
 
   useEffect(() => {
     if (queryMail) {

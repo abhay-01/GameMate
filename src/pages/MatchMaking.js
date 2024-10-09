@@ -143,7 +143,7 @@ const Matchmaking = () => {
     return () => {
       socket.off("accept-matchmaking");
     };
-  }, []);
+  });
 
   const stakeCoins = async (email) => {
     try {
