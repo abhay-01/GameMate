@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { FaGem } from 'react-icons/fa';
+import React, { useEffect, useState } from "react";
+import { FaGem } from "react-icons/fa";
 
-function Coin() {
-  const [email, setEmail] = useState("");
+function Coin({ email }) {
   const [coins, setCoins] = useState(0);
 
   const fetchCoins = async (email) => {
@@ -23,7 +22,7 @@ function Coin() {
       if (response.ok) {
         const data = await response.json();
         console.log("COINS", data);
-        setCoins(data); 
+        setCoins(data);
       } else {
         console.error("Failed to fetch coins");
       }
@@ -33,15 +32,10 @@ function Coin() {
   };
 
   useEffect(() => {
-    const storedCredentials = JSON.parse(
-      localStorage.getItem("userCredentials")
-    );
-    if (storedCredentials && storedCredentials.email) {
-      setEmail(storedCredentials.email);
-      fetchCoins(storedCredentials.email); 
+    if (email) {
+      fetchCoins(email);
     }
-  }, []);
-
+  }, [email]);
 
   return (
     <div className="flex items-center gap-1">
@@ -50,7 +44,7 @@ function Coin() {
       </div>
       <div className="text-center">
         <span className=" text-xs text-gray-400 block">Coins</span>
-        <span className="text-sm font-medium">{coins}</span> {/* Display fetched coins */}
+        <span className="text-sm font-medium">{coins}</span>
       </div>
     </div>
   );

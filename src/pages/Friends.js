@@ -14,7 +14,6 @@ const Friends = () => {
   const gameUrl = location.state?.gameUrl;
 
   useEffect(() => {
-    // Get the email only once when the component mounts
     const storedCredentials = JSON.parse(
       localStorage.getItem("userCredentials")
     );
@@ -23,8 +22,11 @@ const Friends = () => {
       setEmail(storedCredentials.email);
     } else if (location.state?.email) {
       setEmail(location.state.email);
+    } else {
+      alert("Please login to access the Friends list.");
+      navigate("/login");
     }
-  }, []);
+  }, [location, navigate]);
 
   useEffect(() => {
     const fetchData = async (inputMail) => {
@@ -70,12 +72,6 @@ const Friends = () => {
     }
   };
 
-  // if (loading)
-  //   return (
-  //     <div className="text-white bg-black font-bold text-center text-5xl mt-4">
-  //       Loading...
-  //     </div>
-  //   );
   if (error)
     return (
       <div className="text-black font-bold text-center text-5xl mt-4">
