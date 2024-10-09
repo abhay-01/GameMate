@@ -8,11 +8,8 @@ const Friends = () => {
   const location = useLocation();
   const [email, setEmail] = useState("");
   const [friendsData, setFriendsData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
   const gameUrl = location.state?.gameUrl;
-
+  
   useEffect(() => {
     // Get the email only once when the component mounts
     const storedCredentials = JSON.parse(
@@ -49,9 +46,10 @@ const Friends = () => {
         console.log("-->>", result);
         setFriendsData(result);
       } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        console.log("Error message",err.message);
+      } 
+      finally{
+        console.log("Error message:Not fetching friends data")
       }
     };
 
@@ -70,18 +68,6 @@ const Friends = () => {
     }
   };
 
-  if (loading)
-    return (
-      <div className="text-black font-bold text-center text-5xl mt-4">
-        Loading...
-      </div>
-    );
-  if (error)
-    return (
-      <div className="text-black font-bold text-center text-5xl mt-4">
-        Error: {error}
-      </div>
-    );
 
   return (
     <div

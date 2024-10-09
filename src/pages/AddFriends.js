@@ -5,8 +5,7 @@ import bg from "../assets/bg.svg";
 const AddFriends = () => {
   const email="test@gmail.com"
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  
 
   // captitalize text function
   function capitalizeFirstLetter(text) {
@@ -33,9 +32,10 @@ const AddFriends = () => {
         const result = await response.json();
         setData(result);
       } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        console.log("Error message",err.message);
+      }
+      finally{
+        console.log("Error message :Not fetching data")
       }
     };
 
@@ -63,11 +63,12 @@ const AddFriends = () => {
     } catch (err) {
       console.log(`Failed to send friend request ${friendEmail}: ${err.message}`);
     }
+    finally{
+      console.log("Error message")
+    }
   };
 
-  // incase of data not showing
-  if (loading) return <div className="text-black font-bold text-center text-5xl mt-4">Loading...</div>;
-  if (error) return <div className="text-black font-bold text-center text-5xl mt-4">Error: {error}</div>;
+
   
   return (
     <div
