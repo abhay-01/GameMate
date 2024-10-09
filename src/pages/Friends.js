@@ -70,16 +70,6 @@ const Friends = () => {
     }
   };
 
-<<<<<<< HEAD
-  if (error)
-    return (
-      <div className="text-black font-bold text-center text-5xl mt-4">
-        Error: {error}
-      </div>
-    );
-
-=======
->>>>>>> b2a96dcbf3c153322ce15c1fe34af10be3963a3f
   return (
     <div
       style={{
