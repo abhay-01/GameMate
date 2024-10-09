@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react'
 
-const Addgames = () => {
-  return <div>
-    
-  </div>;
-};
+function Addgames() {
+  return (
+    <div>Addgames</div>
+  )
+}
 
 export default Addgames;

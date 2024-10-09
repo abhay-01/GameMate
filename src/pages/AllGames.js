@@ -4,7 +4,6 @@ import { useGameLogic } from "../hooks/useGameLogic";
 import trophy from "../images/trophy.png";
 import group from "../images/group.png";
 import { FaArrowRight } from "react-icons/fa";
-import bg from "../assets/bg.svg";
 import { useLocation } from "react-router-dom";
 
 const AllGames = () => {
