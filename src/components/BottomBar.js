@@ -1,5 +1,10 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import allGamesIcon from '../images/AllGamesIcon.png';
+import addGamesIcon from '../images/AddGamesIcon.png';
+import friendsIcon from '../images/FriendsIcon.png';
+import addFriendsIcon from '../images/AddFriendsIcon.png';
+import profileIcon from '../images/boy.png';
 
 
 
