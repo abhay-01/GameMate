@@ -1,21 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import bg from "../assets/bg.svg";
-import { FaGem, FaSearch, FaChevronDown } from "react-icons/fa";
+import { FaGem } from "react-icons/fa";
 import boy from "../images/boy.png";
 import cross from "../assets/cross.png";
+import Coin from "../components/Coin";
 
 function Profile() {
-  const [language, setLanguage] = useState("ENG");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const handleLanguageChange = (lang) => {
-    setLanguage(lang);
-    setIsDropdownOpen(false);
-  };
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
   return (
     <div>
       <div
@@ -29,7 +19,7 @@ function Profile() {
       >
 
         <div
-          className={`flex flex-col justify-center items-center   pl-10 flex-1`}
+          className={`flex flex-col justify-center items-center flex-1`}
           style={{
             backgroundImage: `url(${bg})`,
             backgroundRepeat: "repeat",
@@ -37,7 +27,7 @@ function Profile() {
             backgroundPosition: "center",
           }}
         >
-          <div className="flex flex-col p-4 w-full">
+          <div className="flex flex-col lg:pl-10 pt-5 w-full">
             <h1 className="text-xl self-start font-bold  text-white p-2 pl-8 ">
               Profile
             </h1>
@@ -46,16 +36,7 @@ function Profile() {
                 <div className="flex justify-center items-center p-4">
                   <img src={boy} alt="Boy" className="w-[90px] h-[90px]" />
                 </div>
-
-                <div className="flex items-center gap-x-4 justify-center mr-4 pt-0">
-                  <div className="flex justify-center items-center border-8 border-[#56585A]  p-2 rounded-full  ">
-                    <FaGem className="text-white" />
-                  </div>
-                  <div className="ml-0 flex flex-col text-white">
-                    <span className="text-xs font-light mb-0 pb-0">Coins</span>
-                    <span className="text-sm font-bold">00</span>
-                  </div>
-                </div>
+                <Coin />
               </div>
             </div>
             <div className="flex flex-row w-full justify-center items-center gap-x-4">
@@ -69,7 +50,7 @@ function Profile() {
                 <div className="bg-[#292b2d] rounded-md w-16 h-8"></div>
               </div>
             </div>
-            <div className="w-full flex flex-col items-center py-12 gap-y-8">
+            <div className="flex flex-col items-center py-12 gap-y-8">
               <div className="w-11/12 grid grid-cols-2 gap-x-6 gap-y-4  place-content-between  ">
                 <div className="w-full flex flex-col ">
                   <label for="firstname">First Name:</label>
