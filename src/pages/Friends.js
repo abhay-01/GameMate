@@ -95,7 +95,7 @@ const Friends = () => {
     >
       {/* Header Image */}
       <div
-        className="flex flex-col items-start pl-[100px] min-h-screen"
+        className="flex flex-col items-start min-h-screen"
         style={{
           backgroundImage: `url(${bg})`,
           backgroundRepeat: "repeat",
@@ -103,7 +103,7 @@ const Friends = () => {
           backgroundPosition: "center",
         }}
       >
-        <div className="font-semibold text-2xl my-4">All Friends</div>
+        <div className="font-semibold text-2xl my-4 pl-28">All Friends</div>
         <div className="w-full flex flex-col items-center">
           {friendsData.map((item) => (
             <div

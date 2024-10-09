@@ -1,7 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  FaCog,
   FaDownload,
   FaHome,
   FaQuestionCircle,
@@ -66,7 +65,7 @@ export const Sidebar = ({ children }) => {
   ];
 
   return (
-    <div className="fixed hidden lg:flex">
+    <div className="fixed hidden lg:flex z-10">
       <div className="min-h-screen w-80 text-white bg-custom-gradient h-screen">
         <div className="flex justify-center items-center py-4">
           <img
