@@ -8,11 +8,8 @@ const Friends = () => {
   const location = useLocation();
   const [email, setEmail] = useState("");
   const [friendsData, setFriendsData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
   const gameUrl = location.state?.gameUrl;
-
+  
   useEffect(() => {
     const storedCredentials = JSON.parse(
       localStorage.getItem("userCredentials")
@@ -51,9 +48,10 @@ const Friends = () => {
         console.log("-->>", result);
         setFriendsData(result);
       } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        console.log("Error message",err.message);
+      } 
+      finally{
+        console.log("Error message:Not fetching friends data")
       }
     };
 
@@ -72,6 +70,7 @@ const Friends = () => {
     }
   };
 
+<<<<<<< HEAD
   if (error)
     return (
       <div className="text-black font-bold text-center text-5xl mt-4">
@@ -79,6 +78,8 @@ const Friends = () => {
       </div>
     );
 
+=======
+>>>>>>> b2a96dcbf3c153322ce15c1fe34af10be3963a3f
   return (
     <div
       style={{
