@@ -70,12 +70,12 @@ const Friends = () => {
     }
   };
 
-  if (loading)
-    return (
-      <div className="text-black font-bold text-center text-5xl mt-4">
-        Loading...
-      </div>
-    );
+  // if (loading)
+  //   return (
+  //     <div className="text-white bg-black font-bold text-center text-5xl mt-4">
+  //       Loading...
+  //     </div>
+  //   );
   if (error)
     return (
       <div className="text-black font-bold text-center text-5xl mt-4">

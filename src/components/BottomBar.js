@@ -1,8 +1,5 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import allGamesIcon from '../images/AllGamesIcon.png';
-import addFriendsIcon from '../images/AddFriendsIcon.png';
-import profileIcon from '../images/boy.png';
 import { IoMdHome } from "react-icons/io";
 import { FaUserFriends } from "react-icons/fa";
 import { CgGames } from "react-icons/cg";
