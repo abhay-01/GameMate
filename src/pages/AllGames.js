@@ -43,7 +43,7 @@ const AllGames = () => {
       {availableGames.map((game) => (
         <div
           key={game.id}
-          className="h-[55vh] mx-3 w-[45vh] border border-white bg-[#171717] rounded-lg flex flex-col mt-5 hover:scale-105 transition-transform duration-700"
+          className="h-[55vh] mx-3 w-[45vh] border border-white bg-[#171717] rounded-lg flex flex-col mt-5 hover:scale-105 transition-transform duration-300"
           onClick={game.onClick} // Use the correct game logic function
         >
           <div className="p-2">

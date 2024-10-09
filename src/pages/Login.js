@@ -77,6 +77,7 @@ export const Login = () => {
           color: "white",
           display: "flex",
           flexDirection: "column",
+          height: '90vh'
         }}
       >
         {/* Header Image */}
