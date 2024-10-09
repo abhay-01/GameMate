@@ -9,6 +9,7 @@ export const useGameLogic = (userEmail, friendName) => {
         state: {
           friendName: friendName,
           gameUrl: "https://chess-gamemate.onrender.com",
+          email: userEmail,
         },
       });
     } else {
@@ -22,7 +23,7 @@ export const useGameLogic = (userEmail, friendName) => {
   };
 
   const openGeography = async () => {
-    const email = "test@gmail.com";
+    const email = userEmail;
     try {
       const response = await fetch(
         "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/createSoloMatch",
@@ -32,7 +33,7 @@ export const useGameLogic = (userEmail, friendName) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: "test@gmail.com",
+            email: email,
           }),
         }
       );
@@ -46,7 +47,7 @@ export const useGameLogic = (userEmail, friendName) => {
     } catch (error) {
       console.error("Error occurred:", error.message);
     }
-    const url = "https://geography-classes.netlify.app" + "?email=" + email;
+    const url = "https://geography-classes.netlify.app" + "?email=" + userEmail;
     window.open(url, "_blank");
   };
 
@@ -55,7 +56,7 @@ export const useGameLogic = (userEmail, friendName) => {
       navigate("/matchmaking", {
         state: {
           friendName: friendName,
-          gameUrl: "https://tic-tac-kpqi.onrender.com",
+          gameUrl: "http://tic-tac-toe-server-g2akb2bkf8hvdadz.centralindia-01.azurewebsites.net",
           email: userEmail,
         },
       });
@@ -63,7 +64,7 @@ export const useGameLogic = (userEmail, friendName) => {
       navigate("/friends", {
         state: {
           email: userEmail,
-          gameUrl: "https://tic-tac-kpqi.onrender.com",
+          gameUrl: "http://tic-tac-toe-server-g2akb2bkf8hvdadz.centralindia-01.azurewebsites.net",
         },
       });
     }

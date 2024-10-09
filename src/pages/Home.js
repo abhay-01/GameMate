@@ -5,6 +5,7 @@ import io from "socket.io-client";
 import { useLocation } from "react-router-dom";
 import Card from "../components/Card";
 import Popup from "../components/PopUp";
+import { useNavigate } from "react-router-dom";
 
 const socket = io(
   "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net",
@@ -17,6 +18,7 @@ const socket = io(
 );
 
 const Home = () => {
+  const navigate = useNavigate();
   const [winner, setWinner] = useState("");
   const [matchedInvite, setMatchedInvite] = useState(false);
   const [inviteSender, setInviteSender] = useState("");
@@ -81,6 +83,7 @@ const Home = () => {
 
           const result = await response.json();
           setWinner(result.winner === queryMail ? "Win" : "Lost");
+          handleResult(queryMail, result.winner === queryMail ? "win" : "loss");
         } catch (err) {
           console.log("Error fetching results:", err);
         }
@@ -91,6 +94,29 @@ const Home = () => {
       console.log("No email found in query string.");
     }
   }, [queryMail]);
+
+  const handleResult = async (email, result) => {
+    try {
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateStatus",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email, result: result }),
+        }
+      );
+
+      if (response.ok) {
+        console.log("Match status updated successfully");
+      } else {
+        console.error("Failed to update match status");
+      }
+    } catch (error) {
+      console.error("Error updating match status:", error);
+    }
+  };
 
   const handleAcceptInvite = async () => {
     setMatchedInvite(false);
@@ -139,6 +165,8 @@ const Home = () => {
 
         if (createMatch.ok) {
           console.log("Match created successfully");
+          stakeCoins(inviteTarget);
+
           const url = inviteUrl + `?email=${inviteTarget}`;
           window.open(url, "_blank");
         }
@@ -147,6 +175,32 @@ const Home = () => {
       }
     } catch (error) {
       console.error("Error accepting invite:", error);
+    }
+  };
+
+  const stakeCoins = async (email) => {
+    try {
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/configure-coins",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            coins: 500,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        console.log(`500 coins staked for ${email}`);
+      } else {
+        console.error(`Failed to stake coins for ${email}`);
+      }
+    } catch (err) {
+      console.error(`Error staking coins:`, err);
     }
   };
 
@@ -196,7 +250,6 @@ const Home = () => {
       <div>
         <img src={headerImage} alt="Header Game" />
       </div>
-    
 
       {matchedInvite && (
         <div className="fixed top-5 right-5 bg-black bg-opacity-70 z-50">
