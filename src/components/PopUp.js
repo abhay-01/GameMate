@@ -23,7 +23,7 @@ const PopUp = ({ winner, show, handleClose }) => {
 
         <div className="flex flex-col items-center mb-6">
           <div className="flex items-center justify-center rounded bg-orange-600 w-[80px] mx-auto sm:w-[100px] md:w-[120px] lg:w-[140px] xl:w-[160px]">
-            {winner === "Win" ? "+ Coins" : "- Coins"}
+            {winner === "Win" ? "+ 500 Coins" : "- 500 Coins"}
           </div>
           <div className="flex items-center mt-8">
             <div className="flex justify-center items-center rounded-full w-12 h-12">

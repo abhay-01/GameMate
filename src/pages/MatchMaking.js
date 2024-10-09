@@ -106,6 +106,7 @@ const Matchmaking = () => {
 
     socket.on("accept-matchmaking", (data) => {
       if (data.url) {
+        stakeCoins(myEmail);
         const url = data.url + `?email=${email}`;
         window.open(url, "_blank");
         stopCountdown();
@@ -144,6 +145,31 @@ const Matchmaking = () => {
     };
   }, []);
 
+  const stakeCoins = async (email) => {
+    try {
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/configure-coins",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            coins: 500,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        console.log(`500 coins staked for ${email}`);
+      } else {
+        console.error(`Failed to stake coins for ${email}`);
+      }
+    } catch (err) {
+      console.error(`Error staking coins:`, err);
+    }
+  };
   // Countdown timer logic
   useEffect(() => {
     let timer;
@@ -274,7 +300,9 @@ const Matchmaking = () => {
       setAlertMessage(`Matchmaking invite declined by ${data.target}.`); // Set the alert message
       setShowAlert(true);
     });
-
+    if (showAlert) {
+      setIsCountingDown(false);
+    }
     setTimeout(() => {
       setShowAlert(false);
     }, 5000);

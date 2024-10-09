@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { games } from "../utils/Games"; // Import the game data
-import { useGameLogic } from "../hooks/useGameLogic"; // Import the custom hook
+import { games } from "../utils/Games";
+import { useGameLogic } from "../hooks/useGameLogic";
 import trophy from "../images/trophy.png";
 import group from "../images/group.png";
 import { FaArrowRight } from "react-icons/fa";
@@ -10,7 +10,7 @@ import { useLocation } from "react-router-dom";
 const AllGames = () => {
   const location = useLocation();
   const [userEmail, setUserEmail] = useState("");
-  const [availableGames, setAvailableGames] = useState([]); // Store games here
+  const [availableGames, setAvailableGames] = useState([]);
 
   const email = location.state?.email;
   const friendName = location.state?.friendName;
