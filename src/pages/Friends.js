@@ -68,7 +68,6 @@ const Friends = () => {
     }
   };
 
-
   return (
     <div
       style={{

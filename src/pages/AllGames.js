@@ -4,7 +4,6 @@ import { useGameLogic } from "../hooks/useGameLogic";
 import trophy from "../images/trophy.png";
 import group from "../images/group.png";
 import { FaArrowRight } from "react-icons/fa";
-import bg from "../assets/bg.svg";
 import { useLocation } from "react-router-dom";
 
 const AllGames = () => {
@@ -43,7 +42,7 @@ const AllGames = () => {
       {availableGames.map((game) => (
         <div
           key={game.id}
-          className="h-[55vh] mx-3 w-[45vh] border border-white bg-[#171717] rounded-lg flex flex-col mt-5 hover:scale-105 transition-transform duration-300"
+          className="h-[57vh] mx-2 w-[45vh] border border-white bg-[#171717] rounded-lg flex flex-col mt-5 hover:scale-105 transition-transform duration-300"
           onClick={game.onClick} // Use the correct game logic function
         >
           <div className="p-2">

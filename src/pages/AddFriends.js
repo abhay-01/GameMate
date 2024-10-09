@@ -78,13 +78,11 @@ const AddFriends = () => {
         color: "white",
         display: "flex",
         flexDirection: "column",
+        height: '90vh'
       }}
-      className="overflow-x-hidden"
     >
-      
-      {/* Header Image */}
       <div
-        className={`flex flex-col items-center pl-[50px] min-h-screen`}
+        className={`flex flex-col items-center flex-1`}
         style={{
           backgroundImage: `url(${bg})`,
           backgroundRepeat: "repeat",
@@ -92,7 +90,7 @@ const AddFriends = () => {
           backgroundPosition: "center",
         }}
       >
-        <div className="font-semibold text-xl my-4 ml-8 self-start ">Recommended</div>
+        <div className="font-semibold text-xl my-4 ml-8 self-start pl-12 pt-4">Recommended</div>
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 w-full md:pr-10 md:pl-20 pr-5 pl-10">
         {data.map((item) => (
           <div className="border flex flex-col rounded-xl items-center gap-y-4 my-4 py-4 px-8 w-10/12 transition duration-300 ease-in-out hover:scale-105 ">
