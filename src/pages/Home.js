@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import headerImage from "../images/headerImage.png";
 import io from "socket.io-client";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import Popup from "../components/PopUp";
+import SoloGamePopup from "../components/SoloGamePopup";
+import LoginAlert from "../components/LoginAlert";
 
 const socket = io(
   "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net",
@@ -25,14 +27,27 @@ const Home = () => {
   const [inviteType, setInviteType] = useState("");
   const [show, setShow] = useState(true);
   const [queryMail, setQueryMail] = useState("");
+  const [showSoloPopUp, setShowSoloPopUp] = useState(false);
+  const [showLoginBanner, setShowLoginBanner] = useState(false);
 
+  const handleLoginClick = () => {
+    setShowLoginBanner(false);
+    navigate("/login");
+  };
+  
+const navigate = useNavigate();
   const location = useLocation();
 
-  // Function to get email from query parameters
 
   useEffect(() => {
-    const storedCredentials = age.getItem("userCredentials");
+    const storedCredentials = localStorage.getItem("userCredentials");
+
+    if (!storedCredentials) {
+      setShowLoginBanner(true);
+    }else{
+
     const tempMail = JSON.parse(storedCredentials).email;
+
     socket.on("matchmaking", (data) => {
       if (data.target === tempMail) {
         setMatchedInvite(true);
@@ -42,13 +57,13 @@ const Home = () => {
         setInviteType(data.type);
       }
     });
-
+  }
     return () => {
       socket.off("matchmaking");
     };
-  }, []);
+  }, [navigate]);
+
   useEffect(() => {
-    // Extract email from the query and set it in state
     const getEmailFromURL = () => {
       const params = new URLSearchParams(location.search);
       const email = params.get("email");
@@ -58,15 +73,20 @@ const Home = () => {
     const email = getEmailFromURL();
     if (email) {
       setQueryMail(email);
+      setShowSoloPopUp(true);
     }
   }, [location.search]);
+
+  const handleClosePopup = () => {
+    setShowSoloPopUp(false);
+    setQueryMail(""); 
+  };
 
   useEffect(() => {
     if (queryMail) {
       setWinner("");
       setShow(true);
 
-      // Fetch the results and set winner
       const fetchResult = async () => {
         try {
           const response = await fetch(
@@ -245,6 +265,8 @@ const Home = () => {
 
   return (
     <div className="overflow-y-auto bg-black text-white md:pr-10 md:pl-20 pr-5 pl-10">
+            {showLoginBanner && <LoginAlert onLoginClick={handleLoginClick} />}
+
       {/* Header Image */}
       <div>
         <img src={headerImage} alt="Header Game" />
@@ -272,15 +294,15 @@ const Home = () => {
               Game Type: {inviteType}
             </p>
 
-            <div className="flex justify-center space-x-6 mt-4">
+            <div className="flex justify-center gap-8">
               <button
-                className="bg-green-500 text-white px-6 py-2 rounded-lg text-[20px] font-bold"
+                className="text-white bg-green-500 py-2 px-4 rounded hover:bg-green-600"
                 onClick={handleAcceptInvite}
               >
                 Accept
               </button>
               <button
-                className="bg-red-500 text-white px-6 py-2 rounded-lg text-[20px] font-bold"
+                className="text-white bg-red-500 py-2 px-4 rounded hover:bg-red-600"
                 onClick={handleDeclineInvite}
               >
                 Decline
@@ -290,9 +312,15 @@ const Home = () => {
         </div>
       )}
 
-      <Popup winner={winner} show={show} handleClose={handleClose} />
+      {/* Popup for winner/loser */}
+      {show && (
+        <Popup onClose={handleClose}>
+          <h1 className="text-[40px] font-bold text-center mb-5">{winner}</h1>
+        </Popup>
+      )}
 
-      {/* Upcoming Matches or Game Cards */}
+{showSoloPopUp && <SoloGamePopup email={queryMail} onClose={handleClosePopup} />}
+
       <Card />
     </div>
   );

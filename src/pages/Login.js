@@ -18,7 +18,7 @@ export const Login = () => {
     );
 
     if (storedCredentials && storedCredentials.email) {
-      navigate("/home", {
+      navigate("/profile", {
         state: { email: storedCredentials.email },
       });
     }else{
@@ -48,7 +48,6 @@ export const Login = () => {
           "userCredentials",
           JSON.stringify(userCredentials)
         );
-
         navigate("/home", {
           state: { email },
         });
@@ -150,11 +149,11 @@ export const Login = () => {
               onClick={closeModal}
             >
               <div
-                className="bg-white p-4 rounded-lg shadow-lg w-90"
+                className="bg-custom-gray p-4 rounded-lg shadow-lg w-90"
                 onClick={(e) => e.stopPropagation()}
               >
                 <h2 className="text-red-500 text-xl mx-40 mb-4">Error</h2>
-                <p className="text-black ml-5">{error}</p>
+                <p className="text-center text-white">{error}</p>
                 <button
                   onClick={closeModal}
                   className="mt-4 mx-40 px-4 py-2 bg-blue-950 text-white rounded-md"

@@ -2,12 +2,29 @@ import React ,{ useState, useEffect }from "react";
 import { data } from "../utils/Friends";
 import icon from "../assets/boy.png";
 import bg from "../assets/bg.svg";
+import { useNavigate } from "react-router-dom";
+
+
 const AddFriends = () => {
-  const email="test@gmail.com"
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    const storedCredentials = localStorage.getItem('userCredentials');
+
+    if(storedCredentials && storedCredentials.length > 0) {
+      const credentials = JSON.parse(storedCredentials);
+      setEmail(credentials.email);
+    }else{
+      alert("Please login to continue");
+      navigate('/login');
+    }
+  }, []);
+
+
   
 
-  // captitalize text function
   function capitalizeFirstLetter(text) {
     if (!text) return '';
     return text.charAt(0).toUpperCase() + text.slice(1);
