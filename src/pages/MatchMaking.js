@@ -18,7 +18,7 @@ const socket = io(
 const Matchmaking = () => {
   const location = useLocation();
 
-  const [friendEmail, setFriendEmail] = useState("tom@gmail.com");
+  const [friendEmail, setFriendEmail] = useState("");
   const [selectedGame, setSelectedGame] = useState("chess");
   const [myEmail, setMyEmail] = useState("");
   const [result, setResult] = useState("");
@@ -35,6 +35,7 @@ const Matchmaking = () => {
     const friendName = location.state?.friendName;
     const gameUrl = location.state?.gameUrl;
     const email = location.state?.email;
+    setFriendEmail(location.state?.friendEmail);
 
     setMyEmail(email);
     setGameUrl(gameUrl);
@@ -162,7 +163,7 @@ const Matchmaking = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setMyUsername(data.userName); // Assuming the API returns { "username": "..." }
+        setMyUsername(data.userName);
       } else {
         console.error("Failed to fetch username");
       }

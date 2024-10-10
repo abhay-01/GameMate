@@ -60,13 +60,13 @@ const Friends = () => {
     }
   }, [email]);
 
-  const handleClick = (name) => {
+  const handleClick = (name,friendEmail) => {
     if (gameUrl) {
       navigate("/matchmaking", {
-        state: { friendName: name, email: email, gameUrl: gameUrl },
+        state: { friendName: name, email: email, gameUrl: gameUrl,friendEmail:friendEmail },
       });
     } else {
-      navigate("/allgames", { state: { friendName: name, email: email } });
+      navigate("/allgames", { state: { friendName: name, email: email,friendEmail:friendEmail } });
     }
   };
 
@@ -95,7 +95,7 @@ const Friends = () => {
           {friendsData.map((item) => (
             <div
               className="border flex flex-row rounded-xl items-center gap-x-4 my-4 py-4 px-8 w-10/12 transition duration-300 ease-in-out hover:scale-x-105"
-              onClick={() => handleClick(item.userName)}
+              onClick={() => handleClick(item.userName,item.email)}
               key={item.name}
             >
               <img src={icon} width="40px" height="40px" alt="Friend's icon" />
