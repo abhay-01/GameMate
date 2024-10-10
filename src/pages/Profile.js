@@ -6,6 +6,7 @@ import cross from "../assets/cross.png";
 import Coin from "../components/Coin";
 
 function Profile() {
+  // directly using email for now (need to change)
   const [email, setEmail] = useState("aliza@gmail.com");
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState({
@@ -42,6 +43,8 @@ function Profile() {
           noOfLosses:data.numberOfLosses||"0",
           coins:data.coins||""
         });
+        console.log(data)
+        console.log("User Data",userData)
       } else {
         console.error("User not found");
       }
@@ -61,8 +64,9 @@ function Profile() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: userData.email, // Assuming email is unchanged
-          name: name,            // Sending full name
+          email: userData.email, 
+          name: name,    
+          userName:userData.userName       
         }),
       });
 
@@ -75,6 +79,10 @@ function Profile() {
           lastName: updatedNameParts.slice(1).join(' ') || '-',
         });
         setIsEditing(false); // Disable edit mode after submission
+
+        // checking updated data
+        console.log("data updated",updatedUser)
+        console.log(userData)
       } else {
         console.error('Failed to update user');
       }
@@ -140,7 +148,7 @@ function Profile() {
             <div className="flex flex-col items-center py-12 gap-y-8">
               <div className="w-11/12 grid grid-cols-2 gap-x-6 gap-y-4  place-content-between  ">
                 <div className="w-full flex flex-col ">
-                  <label for="firstname">First Name:</label>
+                  <label htmlFor="firstname">First Name:</label>
                   <input
                     type="text"
                     id="firstname"
@@ -153,7 +161,7 @@ function Profile() {
                 </div>
 
                 <div className="w-full flex flex-col ">
-                  <label for="lastname">Last Name:</label>
+                  <label htmlFor="lastname">Last Name:</label>
                   <input
                     type="text"
                     id="lastname"
@@ -165,7 +173,7 @@ function Profile() {
                   />
                 </div>
                 <div className="w-full flex flex-col ">
-                  <label for="lastname">User Name:</label>
+                  <label htmlFor="lastname">User Name:</label>
                   <input
                     type="text"
                     id="userid"
@@ -177,7 +185,7 @@ function Profile() {
                   />
                 </div>
                 <div className="w-full flex flex-col ">
-                  <label for="lastname">Email Id:</label>
+                  <label htmlFor="lastname">Email Id:</label>
                   <input
                     type="email"
                     id="emailid"
@@ -189,9 +197,9 @@ function Profile() {
                 </div>
               </div>
               <div className="w-11/12 flex flex-col items-start gap-y-8">
-                <buttton className="px-8 py-2 rounded-md font-bold bg-white bg-opacity-10 cursor-pointer" onClick={handleEditClick}>
+                <button className="px-8 py-2 rounded-md font-bold bg-white bg-opacity-10 cursor-pointer" onClick={handleEditClick}>
                    {isEditing ? 'Submit' : 'Edit Profile'}
-                </buttton>
+                </button>
               </div>
             </div>
           </div>
