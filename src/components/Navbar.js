@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect,useState } from "react";
 import { FaSearch, FaChevronDown } from "react-icons/fa";
 import Coin from "./Coin";
 

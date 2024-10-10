@@ -18,7 +18,6 @@ const socket = io(
 );
 
 const Home = () => {
-  const navigate = useNavigate();
   const [winner, setWinner] = useState("");
   const [matchedInvite, setMatchedInvite] = useState(false);
   const [inviteSender, setInviteSender] = useState("");
@@ -28,15 +27,11 @@ const Home = () => {
   const [show, setShow] = useState(true);
   const [queryMail, setQueryMail] = useState("");
   const [showSoloPopUp, setShowSoloPopUp] = useState(false);
-
+  
+const navigate = useNavigate();
   const location = useLocation();
 
   // Function to get email from query parameters
-  const getEmailFromURL = () => {
-    const params = new URLSearchParams(location.search);
-    const email = params.get("email");
-    return email;
-  };
 
   useEffect(() => {
     const storedCredentials = localStorage.getItem("userCredentials");
@@ -66,12 +61,18 @@ const Home = () => {
   }, [navigate]);
 
   useEffect(() => {
+    const getEmailFromURL = () => {
+      const params = new URLSearchParams(location.search);
+      const email = params.get("email");
+      return email;
+    };
+
     const email = getEmailFromURL();
     if (email) {
       setQueryMail(email);
       setShowSoloPopUp(true);
     }
-  }, [location]);
+  }, [location.search]);
 
   const handleClosePopup = () => {
     setShowSoloPopUp(false);

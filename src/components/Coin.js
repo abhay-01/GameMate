@@ -32,10 +32,13 @@ function Coin({ email }) {
   };
 
   useEffect(() => {
-    if (email) {
-      fetchCoins(email);
+    const storedCredentials = JSON.parse(
+      localStorage.getItem("userCredentials")
+    );
+    if (storedCredentials && storedCredentials.email) {
+      fetchCoins(storedCredentials.email);
     }
-  }, [email]);
+  }, []);
 
   return (
     <div className="flex items-center gap-1">
