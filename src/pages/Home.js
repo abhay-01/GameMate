@@ -7,6 +7,7 @@ import Card from "../components/Card";
 import Popup from "../components/PopUp";
 import SoloGamePopup from "../components/SoloGamePopup";
 import LoginAlert from "../components/LoginAlert";
+import AllGames from "./AllGames";
 
 const socket = io(
   "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net",
@@ -34,30 +35,28 @@ const Home = () => {
     setShowLoginBanner(false);
     navigate("/login");
   };
-  
-const navigate = useNavigate();
-  const location = useLocation();
 
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const storedCredentials = localStorage.getItem("userCredentials");
 
     if (!storedCredentials) {
       setShowLoginBanner(true);
-    }else{
+    } else {
+      const tempMail = JSON.parse(storedCredentials).email;
 
-    const tempMail = JSON.parse(storedCredentials).email;
-
-    socket.on("matchmaking", (data) => {
-      if (data.target === tempMail) {
-        setMatchedInvite(true);
-        setInviteSender(data.sender);
-        setInviteTarget(data.target);
-        setInviteUrl(data.url);
-        setInviteType(data.type);
-      }
-    });
-  }
+      socket.on("matchmaking", (data) => {
+        if (data.target === tempMail) {
+          setMatchedInvite(true);
+          setInviteSender(data.sender);
+          setInviteTarget(data.target);
+          setInviteUrl(data.url);
+          setInviteType(data.type);
+        }
+      });
+    }
     return () => {
       socket.off("matchmaking");
     };
@@ -79,7 +78,7 @@ const navigate = useNavigate();
 
   const handleClosePopup = () => {
     setShowSoloPopUp(false);
-    setQueryMail(""); 
+    setQueryMail("");
   };
 
   useEffect(() => {
@@ -265,7 +264,7 @@ const navigate = useNavigate();
 
   return (
     <div className="overflow-y-auto bg-black text-white md:pr-10 md:pl-20 pr-5 pl-10">
-            {showLoginBanner && <LoginAlert onLoginClick={handleLoginClick} />}
+      {showLoginBanner && <LoginAlert onLoginClick={handleLoginClick} />}
 
       {/* Header Image */}
       <div>
@@ -319,7 +318,11 @@ const navigate = useNavigate();
         </Popup>
       )}
 
-{showSoloPopUp && <SoloGamePopup email={queryMail} onClose={handleClosePopup} />}
+      {showSoloPopUp && (
+        <SoloGamePopup email={queryMail} onClose={handleClosePopup} />
+      )}
+
+      <AllGames />
 
       <Card />
     </div>
