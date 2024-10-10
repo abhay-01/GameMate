@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import bg from "../assets/bg.svg";
-import { FaGem } from "react-icons/fa";
 import boy from "../images/boy.png";
 import cross from "../assets/cross.png";
 import Coin from "../components/Coin";
@@ -13,9 +12,9 @@ function Profile() {
     email: "",
     firstName: "",
     lastName: "",
-    noOfWins:"",
-    noOfLosses:"",
-    coins:""
+    noOfWins: "",
+    noOfLosses: "",
+    coins: "",
   });
   const fetchUserData = async () => {
     try {
@@ -26,21 +25,21 @@ function Profile() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email: email }), 
+          body: JSON.stringify({ email: email }),
         }
       );
 
       if (response.ok) {
         const data = await response.json();
-        const nameParts = data.name ? data.name.split(' ') : ['-', '-'];
+        const nameParts = data.name ? data.name.split(" ") : ["-", "-"];
         setUserData({
-          userName: data.userName || "", 
+          userName: data.userName || "",
           email: data.email || "",
           firstName: nameParts[0] || "--",
-          lastName: nameParts.slice(1).join(' ') || '-', 
-          noOfWins:data.numberOfWins||"0",
-          noOfLosses:data.numberOfLosses||"0",
-          coins:data.coins||""
+          lastName: nameParts.slice(1).join(" ") || "-",
+          noOfWins: data.numberOfWins || "0",
+          noOfLosses: data.numberOfLosses || "0",
+          coins: data.coins || "",
         });
       } else {
         console.error("User not found");
@@ -50,50 +49,51 @@ function Profile() {
     }
   };
 
-
   const handleProfileUpdate = async () => {
     const name = `${userData.firstName} ${userData.lastName}`.trim(); // Combine first and last name
 
     try {
-      const response = await fetch('https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/edit-account', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: userData.email, // Assuming email is unchanged
-          name: name,            // Sending full name
-        }),
-      });
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/edit-account",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: userData.email, // Assuming email is unchanged
+            name: name, // Sending full name
+          }),
+        }
+      );
 
       if (response.ok) {
         const updatedUser = await response.json();
-        const updatedNameParts = updatedUser.name.split(' '); 
+        const updatedNameParts = updatedUser.name.split(" ");
         setUserData({
           ...userData,
-          firstName:  updatedNameParts[0]  || '-',
-          lastName: updatedNameParts.slice(1).join(' ') || '-',
+          firstName: updatedNameParts[0] || "-",
+          lastName: updatedNameParts.slice(1).join(" ") || "-",
         });
         setIsEditing(false); // Disable edit mode after submission
       } else {
-        console.error('Failed to update user');
+        console.error("Failed to update user");
       }
     } catch (error) {
-      console.error('Error updating user:', error);
+      console.error("Error updating user:", error);
     }
   };
 
-  
   const handleEditClick = () => {
     if (isEditing) {
-      handleProfileUpdate(); 
+      handleProfileUpdate();
     } else {
-      setIsEditing(true); 
+      setIsEditing(true);
     }
   };
   useEffect(() => {
     fetchUserData();
-  }, []);
+  });
   return (
     <div>
       <div
@@ -129,12 +129,16 @@ function Profile() {
             <div className="flex flex-row w-full justify-center items-center gap-x-4">
               <div className="gap-y-2 flex flex-col items-center">
                 <div className="text-white">Win</div>
-                <div className="bg-[#292b2d] rounded-md w-16 h-8 text-white text-xl text-center">{userData.noOfWins}</div>
+                <div className="bg-[#292b2d] rounded-md w-16 h-8 text-white text-xl text-center">
+                  {userData.noOfWins}
+                </div>
               </div>
-              <img src={cross} className="w-8 h-8" />
+              <img src={cross} className="w-8 h-8" alt="Cross icon" />
               <div className="gap-y-2 flex flex-col items-center">
                 <div className="text-white">Loose</div>
-                <div className="bg-[#292b2d] rounded-md w-16 h-8 text-white text-xl text-center">{userData.noOfLosses}</div>
+                <div className="bg-[#292b2d] rounded-md w-16 h-8 text-white text-xl text-center">
+                  {userData.noOfLosses}
+                </div>
               </div>
             </div>
             <div className="flex flex-col items-center py-12 gap-y-8">
@@ -147,7 +151,9 @@ function Profile() {
                     name="firstname"
                     value={userData.firstName}
                     readOnly={!isEditing}
-                    onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
+                    onChange={(e) =>
+                      setUserData({ ...userData, firstName: e.target.value })
+                    }
                     className="w-full py-2 border bg-[#56585A] border-none focus:outline-none focus:ring-0   rounded-md text-[16px] text-black px-2 placeholder-black"
                   />
                 </div>
@@ -160,7 +166,9 @@ function Profile() {
                     name="lastname"
                     value={userData.lastName}
                     readOnly={!isEditing}
-                    onChange={(e) => setUserData({ ...userData, lastName: e.target.value })}
+                    onChange={(e) =>
+                      setUserData({ ...userData, lastName: e.target.value })
+                    }
                     className="w-full py-2 border bg-[#56585A] border-none focus:outline-none focus:ring-0   rounded-md text-[16px] text-black px-2 placeholder-black"
                   />
                 </div>
@@ -188,8 +196,11 @@ function Profile() {
                 </div>
               </div>
               <div className="w-11/12 flex flex-col items-start gap-y-8">
-                <buttton className="px-8 py-2 rounded-md font-bold bg-white bg-opacity-10 cursor-pointer" onClick={handleEditClick}>
-                   {isEditing ? 'Submit' : 'Edit Profile'}
+                <buttton
+                  className="px-8 py-2 rounded-md font-bold bg-white bg-opacity-10 cursor-pointer"
+                  onClick={handleEditClick}
+                >
+                  {isEditing ? "Submit" : "Edit Profile"}
                 </buttton>
               </div>
             </div>
