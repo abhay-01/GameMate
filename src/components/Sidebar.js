@@ -2,7 +2,6 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   FaHome,
-  FaQuestionCircle,
   FaSearch,
   FaUserFriends,
   FaUserPlus,
@@ -10,6 +9,7 @@ import {
 import { FaGamepad } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import logo from "../assets/Game-Mate-Logo.png";
+import { CgProfile } from "react-icons/cg";
 import { SlLogin } from "react-icons/sl";
 
 export const Sidebar = ({ children }) => {
@@ -59,7 +59,7 @@ export const Sidebar = ({ children }) => {
     {
       path: "/profile",
       name: "Profile",
-      icon: <FaQuestionCircle />,
+      icon: <CgProfile className="-ml-1" /> ,
     },
   ];
 
