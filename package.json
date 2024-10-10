@@ -7,20 +7,14 @@
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^5.16.7",
     "@mui/styles": "^6.0.1",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.7",
-    "chess.js": "^1.0.0-beta.8",
     "cors": "^2.8.5",
-    "ejs": "^3.1.10",
     "framer-motion": "^11.3.19",
     "nodemon": "^3.1.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.3.0",
     "react-konva": "^18.2.10",
-    "react-material-ui-carousel": "^3.4.2",
     "react-otp-input": "^3.1.1",
     "react-router-dom": "^6.25.1",
     "react-scripts": "5.0.1",
@@ -29,12 +23,10 @@
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
     "sweetalert2": "^11.12.4",
-    "uuid": "^10.0.0",
-    "web-vitals": "^2.1.4"
+    "uuid": "^10.0.0"
   },
   "scripts": {
-    "start": "npm run start:react",
-    "start:react": "react-scripts start",
+    "start": "react-scripts start",
     "build": "CI=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -58,7 +50,6 @@
     ]
   },
   "devDependencies": {
-    "concurrently": "^8.2.2",
     "tailwindcss": "^3.4.7"
   }
 }

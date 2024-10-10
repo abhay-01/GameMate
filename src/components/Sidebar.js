@@ -10,7 +10,7 @@ import {
 import { FaGamepad } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import logo from "../assets/Game-Mate-Logo.png";
-import userProfileImage from "../assets/boy.png";
+import { SlLogin } from "react-icons/sl";
 
 export const Sidebar = ({ children }) => {
   const navigate = useNavigate();
@@ -106,11 +106,7 @@ export const Sidebar = ({ children }) => {
           className="absolute bottom-4 left-4 w-[280px] flex items-center py-2 border-t border-gray-700"
           onClick={handleLoginClick}
         >
-          <img
-            src={userProfileImage}
-            alt="User Profile"
-            className="h-10 w-10 rounded-full mr-2"
-          />
+          <SlLogin className='h-6 w-6 mr-2' />
           <div>
             <div className="text-white font-semibold">Login/SignUP</div>
             <div className="text-xs text-gray-400">Bio/AIR</div>

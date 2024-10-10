@@ -63,31 +63,19 @@ export const Otp = () => {
     <>
       <div
         style={{
-          height: "100vh",
+          height: "90vh",
           overflowY: "auto",
           backgroundColor: "black",
           color: "white",
-          width: "100vw",
           display: "flex",
           flexDirection: "column",
         }}
       >
-        {/* Search Bar */}
-        <div
-          style={{ padding: "20px", textAlign: "center" }}
-          className="border-b border-white border-opacity-35 "
-        >
-          <input
-            type="text"
-            placeholder="Search for games..."
-            className="w-8/12 py-2 pl-6 border  rounded-md text-[16px] bg-transparent px-2"
-          />
-        </div>
+
         {/* Header Image */}
         <div
           className={`flex flex-col   items-center justify-center flex-1`}
           style={{
-            width: "100%",
             backgroundImage: `url(${bg})`,
             backgroundRepeat: "repeat",
             backgroundSize: "cover",

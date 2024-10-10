@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaGem } from "react-icons/fa";
 
-function Coin() {
+function Coin({ email }) {
   const [coins, setCoins] = useState(0);
 
   const fetchCoins = async (email) => {
@@ -47,8 +47,7 @@ function Coin() {
       </div>
       <div className="text-center">
         <span className=" text-xs text-gray-400 block">Coins</span>
-        <span className="text-sm font-medium">{coins}</span>{" "}
-        {/* Display fetched coins */}
+        <span className="text-sm font-medium">{coins}</span>
       </div>
     </div>
   );

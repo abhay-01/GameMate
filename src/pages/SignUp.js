@@ -57,11 +57,10 @@ export const SignUP = () => {
     <>
       <div
         style={{
-          height: "100vh",
+          height: "90vh",
           overflowY: "auto",
           backgroundColor: "black",
           color: "white",
-          width: "100vw",
           display: "flex",
           flexDirection: "column",
         }}
