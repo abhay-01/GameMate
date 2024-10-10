@@ -43,7 +43,7 @@ const Navbar = () => {
       </div>
 
       {/* Coins Section */}
-      <div className="pl-20">
+      <div className="pl-20 mr-14">
         <Coin />
       </div>
 
