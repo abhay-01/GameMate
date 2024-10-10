@@ -151,10 +151,11 @@ function Profile() {
                     name="firstname"
                     value={userData.firstName}
                     readOnly={!isEditing}
-                    onChange={(e) =>
-                      setUserData({ ...userData, firstName: e.target.value })
-                    }
-                    className="w-full py-2 border bg-[#56585A] border-none focus:outline-none focus:ring-0   rounded-md text-[16px] text-black px-2 placeholder-black"
+
+                    onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
+                    className={`w-full py-2 border ${isEditing ? 'bg-white' : 'bg-[#56585A]'} border-none focus:outline-none focus:ring-0 rounded-md text-[16px] text-black px-2 placeholder-black`}
+
+
                   />
                 </div>
 
@@ -166,21 +167,22 @@ function Profile() {
                     name="lastname"
                     value={userData.lastName}
                     readOnly={!isEditing}
-                    onChange={(e) =>
-                      setUserData({ ...userData, lastName: e.target.value })
-                    }
-                    className="w-full py-2 border bg-[#56585A] border-none focus:outline-none focus:ring-0   rounded-md text-[16px] text-black px-2 placeholder-black"
+
+                    onChange={(e) => setUserData({ ...userData, lastName: e.target.value })}
+                    className={`w-full py-2 border ${isEditing ? 'bg-white' : 'bg-[#56585A]'} border-none focus:outline-none focus:ring-0 rounded-md text-[16px] text-black px-2 placeholder-black`}
+
                   />
                 </div>
                 <div className="w-full flex flex-col ">
-                  <label for="lastname">User Id:</label>
+                  <label for="lastname">User Name:</label>
                   <input
                     type="text"
                     id="userid"
                     name="userid"
                     value={userData.userName}
-                    readOnly
-                    className="w-full py-2 border bg-[#56585A] border-none focus:outline-none focus:ring-0   rounded-md text-[16px] text-black px-2 placeholder-black"
+                    readOnly={!isEditing}
+                    onChange={(e) => setUserData({ ...userData, userName: e.target.value })}
+                    className={`w-full py-2 border ${isEditing ? 'bg-white' : 'bg-[#56585A]'} border-none focus:outline-none focus:ring-0 rounded-md text-[16px] text-black px-2 placeholder-black`}
                   />
                 </div>
                 <div className="w-full flex flex-col ">
