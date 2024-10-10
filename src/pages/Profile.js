@@ -164,7 +164,7 @@ function Profile() {
                     type="text"
                     id="firstname"
                     name="firstname"
-                    value={userData.firstName}
+                    placeholder={userData.firstName}
                     readOnly={!isEditing}
 
                     onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
@@ -180,7 +180,7 @@ function Profile() {
                     type="text"
                     id="lastname"
                     name="lastname"
-                    value={userData.lastName}
+                    placeholder={userData.lastName}
                     readOnly={!isEditing}
 
                     onChange={(e) => setUserData({ ...userData, lastName: e.target.value })}
