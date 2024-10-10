@@ -18,95 +18,32 @@ const socket = io(
 const Matchmaking = () => {
   const location = useLocation();
 
-  const [friendEmail, setFriendEmail] = useState("tom@gmail.com");
+  const [friendEmail, setFriendEmail] = useState("");
   const [selectedGame, setSelectedGame] = useState("chess");
   const [myEmail, setMyEmail] = useState("");
   const [result, setResult] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [countdown, setCountdown] = useState(60);
   const [isCountingDown, setIsCountingDown] = useState(false);
-  const [player1Stake, setPlayer1Stake] = useState(0);
-  const [player2Stake, setPlayer2Stake] = useState(0);
   const [opponentName, setOpponentName] = useState("null");
   const [gameUrl, setGameUrl] = useState("");
-  const [availableCoins, setAvailableCoins] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-
-  // const game_url = location.state?.gameUrl;
-  // setGameUrl(game_url);
-
-  useEffect(() => {
-    const fetchAvailableCoins = async () => {
-      try {
-        const response = await fetch(
-          "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/coins",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email: myEmail,
-            }),
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-
-          setAvailableCoins(data);
-        } else {
-          console.error("Failed to fetch coin balance");
-        }
-      } catch (error) {
-        console.error("Error fetching coin balance:", error);
-      }
-    };
-
-    fetchAvailableCoins();
-  }, [myEmail]);
-
-  const handleStakeChange = (player, value) => {
-    const stakeValue = parseInt(value, 10) || 0;
-
-    if (stakeValue < 0) {
-      alert("Stake value cannot be negative.");
-      return;
-    }
-
-    if (stakeValue > availableCoins) {
-      alert("You cannot stake more coins than you have.");
-      return;
-    }
-
-    if (player === 1) {
-      setPlayer1Stake(stakeValue);
-    } else {
-      setPlayer2Stake(stakeValue);
-    }
-  };
-
-  const handleConfirmStake = (player) => {
-    console.log(
-      `Player ${player} staked: ${
-        player === 1 ? player1Stake : player2Stake
-      } coins`
-    );
-  };
+  const [myUsername, setMyUsername] = useState("");
 
   useEffect(() => {
     const friendName = location.state?.friendName;
     const gameUrl = location.state?.gameUrl;
     const email = location.state?.email;
+    setFriendEmail(location.state?.friendEmail);
 
     setMyEmail(email);
     setGameUrl(gameUrl);
     setOpponentName(friendName);
 
+    fetchUsername(email);
     socket.on("accept-matchmaking", (data) => {
       if (data.url) {
-        stakeCoins(myEmail);
         const url = data.url + `?email=${email}`;
         window.open(url, "_blank");
         stopCountdown();
@@ -127,7 +64,6 @@ const Matchmaking = () => {
       console.log("Game status received:", data);
     });
 
-    // Parsing URL parameters
     const params = new URLSearchParams(window.location.search);
     const resultParam = params.get("result");
 
@@ -143,12 +79,77 @@ const Matchmaking = () => {
     return () => {
       socket.off("accept-matchmaking");
     };
-  });
+  }, [location.state]);
 
-  const stakeCoins = async (email) => {
+  const fetchResults = async () => {
+    try {
+      let response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/postResults",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: myEmail,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+
+        // Check if data and winner are defined before proceeding
+        if (data && data.length > 0 && data[0].winner) {
+          if (data[0].winner === myEmail) {
+            setResult("win");
+          } else {
+            setResult("lose");
+          }
+          setShowResult(true);
+        } else {
+          console.log("No result data available yet.");
+          setShowResult(false); // Hide result display if no valid data
+        }
+      } else {
+        console.error("Failed to fetch results");
+      }
+    } catch (error) {
+      console.error("Error fetching results:", error);
+    }
+  };
+
+  const handleStatus = async () => {
     try {
       const response = await fetch(
-        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/configure-coins",
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateStatus",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email1: myEmail,
+            email2: friendEmail,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        setShowResult(false);
+        console.log("Status updated successfully");
+      } else {
+        console.error("Failed to update status");
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  const fetchUsername = async (email) => {
+    try {
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/account",
         {
           method: "POST",
           headers: {
@@ -156,20 +157,38 @@ const Matchmaking = () => {
           },
           body: JSON.stringify({
             email: email,
-            coins: 500,
           }),
         }
       );
 
       if (response.ok) {
-        console.log(`500 coins staked for ${email}`);
+        const data = await response.json();
+        setMyUsername(data.userName);
       } else {
-        console.error(`Failed to stake coins for ${email}`);
+        console.error("Failed to fetch username");
       }
-    } catch (err) {
-      console.error(`Error staking coins:`, err);
+    } catch (error) {
+      console.error("Error fetching username:", error);
     }
   };
+
+  useEffect(() => {
+    socket.on("decline-matchmaking", (data) => {
+      console.log("Matchmaking declined by", data.target);
+      setAlertMessage(`Matchmaking invite declined by ${data.target}.`);
+      setShowAlert(true);
+    });
+    if (showAlert) {
+      setIsCountingDown(false);
+    }
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 5000);
+    return () => {
+      socket.off("decline-matchmaking");
+    };
+  }, [setAlertMessage, setShowAlert]);
+
   // Countdown timer logic
   useEffect(() => {
     let timer;
@@ -214,16 +233,6 @@ const Matchmaking = () => {
       );
 
       if (response.ok) {
-        console.log(
-          "Matchmaking initiated successfully",
-          myEmail,
-          friendEmail,
-          gameUrl,
-          selectedGame
-        );
-        // console.log("SENDER MAIL-->", myEmail);
-        // console.log("TARGET MAIL-->", friendEmail);
-        // console.log("URL-->", gameUrl);
         socket.emit("matchmaking", {
           sender: myEmail,
           target: friendEmail,
@@ -238,78 +247,6 @@ const Matchmaking = () => {
     }
   };
 
-  const fetchResults = async () => {
-    let response = await fetch(
-      "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/postResults",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: myEmail,
-        }),
-      }
-    );
-
-    if (response.ok) {
-      response = await response.json();
-
-      if (response[0].winner === myEmail) {
-        setResult("win");
-        setShowResult(true);
-      } else {
-        setResult("lose");
-        setShowResult(true);
-      }
-    } else {
-      console.error("Failed to fetch results");
-    }
-  };
-
-  const handleStatus = async () => {
-    try {
-      const response = await fetch(
-        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateStatus",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email1: myEmail,
-            email2: friendEmail,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        setShowResult(false);
-        console.log("Status updated successfully");
-      } else {
-        console.error("Failed to update status");
-      }
-    } catch (error) {
-      console.error("Error updating status:", error);
-    }
-  };
-
-  useEffect(() => {
-    socket.on("decline-matchmaking", (data) => {
-      console.log("Matchmaking declined by", data.target);
-      setAlertMessage(`Matchmaking invite declined by ${data.target}.`);
-      setShowAlert(true);
-    });
-    if (showAlert) {
-      setIsCountingDown(false);
-    }
-    setTimeout(() => {
-      setShowAlert(false);
-    }, 5000);
-    return () => {
-      socket.off("decline-matchmaking");
-    };
-  }, [setAlertMessage, setShowAlert]);
   return (
     <div>
       <div
@@ -356,28 +293,15 @@ const Matchmaking = () => {
                 <img src={boy} alt="Boy" className="w-[55px] h-[55px]" />
               </div>
               <div className="flex flex-col justify-center items-center p-5">
-                <span className="text-2xl font-bold">Sandhya Gupta</span>
+                <span className="text-2xl font-bold">{myUsername}</span>
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
-              <div className=" pl-16">
+              <div className="pl-16">
                 <Coin />
               </div>
-
-              <div className="flex flex-col items-center mt-4">
-                <input
-                  type="number"
-                  value={player1Stake}
-                  onChange={(e) => handleStakeChange(1, e.target.value)}
-                  className="w-20 text-center bg-gray-800 text-white rounded-md"
-                  placeholder="Coins"
-                />
-                <button
-                  onClick={() => handleConfirmStake(1)}
-                  className="bg-orange-500 w-20 h-8 rounded-lg mt-2"
-                >
-                  STAKE
-                </button>
-              </div>
+              <span className="text-yellow-500 font-bold pt-2 ml-6">
+                500 Coins on Stakes
+              </span>
             </div>
             <div className="flex justify-center">
               <span className="text-5xl mt-20 -ml-10 text-red-600 font-rubik">
@@ -391,42 +315,33 @@ const Matchmaking = () => {
               </span>
             </div>
 
-            <div className="flex flex-col border border-white w-[300px] h-[330px] m-2 m-r-2 rounded-lg p-10 pt-9 -ml-5">
+            <div className="flex flex-col border border-white w-[300px] h-[330px] m-2 m-r-2 rounded-lg p-10 pt-9">
               <div className="flex justify-center items-center">
                 <img src={boy} alt="Boy" className="w-[55px] h-[55px]" />
               </div>
               <div className="flex flex-col justify-center items-center p-5">
-                <span className="text-2xl font-bold">
-                  {opponentName !== null ? `${opponentName}` : "TEST"}
-                </span>
+                <span className="text-2xl font-bold">{opponentName}</span>
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
-              <div className=" pl-16">
+              <div className="pl-16">
                 <Coin />
               </div>
 
-              <div className="flex flex-col items-center mt-4">
-                <input
-                  type="number"
-                  value={player2Stake}
-                  onChange={(e) => handleStakeChange(2, e.target.value)}
-                  className="w-20 text-center bg-gray-800 text-white rounded-md"
-                  placeholder="Coins"
-                />
-
-                <p className="text-sm text-gray-300">
-                  Available Coins: {availableCoins}
-                </p>
-                <button
-                  onClick={() => handleConfirmStake(2)}
-                  className="bg-orange-500 w-20 h-8 rounded-lg mt-2"
-                >
-                  STAKE
-                </button>
-              </div>
+              <span className="text-yellow-500 font-bold pt-2 ml-6">
+                500 Coins on Stakes
+              </span>
             </div>
           </div>
 
+          {result && (
+            <div className="text-white text-center">
+              {result === "win" ? (
+                <p>Congrats! You won the game!</p>
+              ) : (
+                <p>Sorry! You lost the game.</p>
+              )}
+            </div>
+          )}
           {/* Match Button and Timer */}
           <div className="flex flex-col items-center mt-4">
             <button
@@ -444,29 +359,6 @@ const Matchmaking = () => {
               </div>
             )}
           </div>
-
-          {/*DISPLAY GAME RESULT*/}
-
-          {showResult && (
-            <div className="game-result">
-              <div className="bg-gray-800 p-4 rounded-lg shadow-lg text-white">
-                <h2 className="text-2xl font-bold mb-2">Game Over</h2>
-                {result === "win" ? (
-                  <p className="text-lg">Congratulations! You won the game.</p>
-                ) : (
-                  <p className="text-lg">
-                    Sorry, you lost the game. Better luck next time!
-                  </p>
-                )}
-                <button
-                  className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={() => handleStatus()}
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
