@@ -8,51 +8,46 @@ const AddFriends = () => {
   const [data, setData] = useState([]);
   const [email, setEmail] = useState("");
 
-  useEffect(() => {
-    const storedCredentials = localStorage.getItem("userCredentials");
-
-    if (storedCredentials && storedCredentials.length > 0) {
-      const credentials = JSON.parse(storedCredentials);
-      setEmail(credentials.email);
-    } else {
-      alert("Please login to continue");
-      navigate("/login");
-    }
-  }, [navigate]);
-
   function capitalizeFirstLetter(text) {
     if (!text) return "";
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
 
-  // Fetch data on initial load
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/get-users`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email }),
+      const storedCredentials = localStorage.getItem("userCredentials");
+
+      if (storedCredentials && storedCredentials.length > 0) {
+        const credentials = JSON.parse(storedCredentials);
+        try {
+          const response = await fetch(
+            `${process.env.REACT_APP_API_URL}/get-users`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email: credentials.email }),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
           }
-        );
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const result = await response.json();
+          setData(result.map((user) => ({ ...user, isFriend: false })));
+        } catch (err) {
+          console.log("Error message", err.message);
         }
-
-        const result = await response.json();
-        setData(result.map((user) => ({ ...user, isFriend: false }))); // Add isFriend field
-      } catch (err) {
-        console.log("Error message", err.message);
+      } else {
+        alert("Please login to continue");
+        navigate("/login");
       }
     };
 
     fetchData();
-  }, [email]);
+  }, [email, navigate]);
 
   // Handle add friend functionality
   const handleAddFriend = async (friendEmail) => {
