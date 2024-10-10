@@ -3,9 +3,11 @@ import bg from "../assets/bg.svg";
 import boy from "../images/boy.png";
 import cross from "../assets/cross.png";
 import Coin from "../components/Coin";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
-  const [email, setEmail] = useState("aliza@gmail.com");
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState({
     userName: "",
@@ -16,6 +18,19 @@ function Profile() {
     noOfLosses: "",
     coins: "",
   });
+
+  useEffect(() => {
+    const storedCredentials = localStorage.getItem('userCredentials');
+
+    if(storedCredentials && storedCredentials.length > 0) {
+      const credentials = JSON.parse(storedCredentials);
+      setEmail(credentials.email);
+    }else{
+      alert("Please login to continue");
+      navigate('/login');
+    }
+  }, [navigate]);
+  
   const fetchUserData = async () => {
     try {
       const response = await fetch(
@@ -149,7 +164,7 @@ function Profile() {
                     type="text"
                     id="firstname"
                     name="firstname"
-                    value={userData.firstName}
+                    placeholder={userData.firstName}
                     readOnly={!isEditing}
 
                     onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
@@ -165,7 +180,7 @@ function Profile() {
                     type="text"
                     id="lastname"
                     name="lastname"
-                    value={userData.lastName}
+                    placeholder={userData.lastName}
                     readOnly={!isEditing}
 
                     onChange={(e) => setUserData({ ...userData, lastName: e.target.value })}
