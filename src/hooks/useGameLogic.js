@@ -72,5 +72,9 @@ export const useGameLogic = (userEmail, friendName) => {
     }
   };
 
-  return { startChessServer, openGeography, openTicTacToe };
+  const openMemory = () => {
+    alert("Memory Game is coming soon!");
+  };
+
+  return { startChessServer, openGeography, openTicTacToe, openMemory };
 };
