@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import Popup from "../components/PopUp";
 import SoloGamePopup from "../components/SoloGamePopup";
+import LoginAlert from "../components/LoginAlert";
 
 const socket = io(
   "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net",
@@ -27,21 +28,23 @@ const Home = () => {
   const [show, setShow] = useState(true);
   const [queryMail, setQueryMail] = useState("");
   const [showSoloPopUp, setShowSoloPopUp] = useState(false);
+  const [showLoginBanner, setShowLoginBanner] = useState(false);
+
+  const handleLoginClick = () => {
+    setShowLoginBanner(false);
+    navigate("/login");
+  };
   
 const navigate = useNavigate();
   const location = useLocation();
 
-  // Function to get email from query parameters
 
   useEffect(() => {
     const storedCredentials = localStorage.getItem("userCredentials");
 
     if (!storedCredentials) {
-      // If user is not logged in, show an alert
-      alert("Please login to access this page.");
-      navigate("/login"); // Redirect to login page
-      return;
-    }
+      setShowLoginBanner(true);
+    }else{
 
     const tempMail = JSON.parse(storedCredentials).email;
 
@@ -54,7 +57,7 @@ const navigate = useNavigate();
         setInviteType(data.type);
       }
     });
-
+  }
     return () => {
       socket.off("matchmaking");
     };
@@ -262,6 +265,8 @@ const navigate = useNavigate();
 
   return (
     <div className="overflow-y-auto bg-black text-white md:pr-10 md:pl-20 pr-5 pl-10">
+            {showLoginBanner && <LoginAlert onLoginClick={handleLoginClick} />}
+
       {/* Header Image */}
       <div>
         <img src={headerImage} alt="Header Game" />
