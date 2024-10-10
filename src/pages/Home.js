@@ -5,6 +5,7 @@ import io from "socket.io-client";
 import { useLocation, useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import Popup from "../components/PopUp";
+import SoloGamePopup from "../components/SoloGamePopup";
 
 const socket = io(
   "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net",
@@ -26,6 +27,7 @@ const Home = () => {
   const [inviteType, setInviteType] = useState("");
   const [show, setShow] = useState(true);
   const [queryMail, setQueryMail] = useState("");
+  const [showSoloPopUp, setShowSoloPopUp] = useState(false);
 
   const location = useLocation();
 
@@ -67,8 +69,14 @@ const Home = () => {
     const email = getEmailFromURL();
     if (email) {
       setQueryMail(email);
+      setShowSoloPopUp(true);
     }
   }, [location]);
+
+  const handleClosePopup = () => {
+    setShowSoloPopUp(false);
+    setQueryMail(""); 
+  };
 
   useEffect(() => {
     if (queryMail) {
@@ -304,6 +312,9 @@ const Home = () => {
           <h1 className="text-[40px] font-bold text-center mb-5">{winner}</h1>
         </Popup>
       )}
+
+{showSoloPopUp && <SoloGamePopup email={queryMail} onClose={handleClosePopup} />}
+
       <Card />
     </div>
   );
