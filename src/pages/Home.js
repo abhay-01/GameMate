@@ -31,7 +31,7 @@ const Home = () => {
   // Function to get email from query parameters
 
   useEffect(() => {
-    const storedCredentials = localStorage.getItem("userCredentials");
+    const storedCredentials = age.getItem("userCredentials");
     const tempMail = JSON.parse(storedCredentials).email;
     socket.on("matchmaking", (data) => {
       if (data.target === tempMail) {
