@@ -21,7 +21,7 @@ const Friends = () => {
     } else if (location.state?.email) {
       setEmail(location.state.email);
     }
-  }, []);
+  }, [location.state]);
 
   useEffect(() => {
     const fetchData = async (inputMail) => {
@@ -59,7 +59,7 @@ const Friends = () => {
   }, [email]);
 
   const handleClick = (name,friendEmail) => {
-    console.log("FRIENDS PAGE",friendEmail);
+    console.log("FRIENDS PAGE",email);
     if (gameUrl) {
       navigate("/matchmaking", {
         state: { friendName: name, email: email, gameUrl: gameUrl,friendEmail:friendEmail },

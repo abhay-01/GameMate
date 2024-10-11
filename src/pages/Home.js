@@ -42,11 +42,14 @@ const Home = () => {
     const storedCredentials = localStorage.getItem("userCredentials");
 
     if (!storedCredentials) {
+      console.log("No user credentials found");
       setShowLoginBanner(true);
     } else {
       const tempMail = JSON.parse(storedCredentials).email;
+      console.log("User credentials found:", tempMail);
 
       socket.on("matchmaking", (data) => {
+        console.log("Matchmaking AA YAA:", data);
         if (data.target === tempMail) {
           setMatchedInvite(true);
           setInviteSender(data.sender);
@@ -59,7 +62,7 @@ const Home = () => {
     return () => {
       socket.off("matchmaking");
     };
-  }, [navigate]);
+  }, [navigate,socket]);
 
   useEffect(() => {
     const getEmailFromURL = () => {
@@ -165,14 +168,16 @@ const Home = () => {
       );
 
       if (response.ok) {
-        console.log("Invite accepted successfully");
+        console.log("Invite accepted successfully", inviteTarget,inviteSender,inviteUrl,inviteType);
 
+      
         socket.emit("accept-matchmaking", {
           sender: inviteTarget,
           target: inviteSender,
           url: inviteUrl,
           type: inviteType,
         });
+        
 
         const createMatch = await fetch(
           "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/createMatch",

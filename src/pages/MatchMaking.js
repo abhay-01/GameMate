@@ -31,24 +31,35 @@ const Matchmaking = () => {
   const [alertMessage, setAlertMessage] = useState("");
   const [myUsername, setMyUsername] = useState("");
 
+  const friendName = location.state?.friendName;
+  const game_Url = location.state?.gameUrl;
+  const email = location.state?.email;
+  const friend_email = location.state?.friendEmail;
+
   useEffect(() => {
-    const friendName = location.state?.friendName;
-    const gameUrl = location.state?.gameUrl;
-    const email = location.state?.email;
-    const friend_email = location.state?.friendEmail;
-    console.log("PASSED MATCH", friend_email);
+    // Retrieve and set the user's email from local storage during the initial mount
+    const storedCredentials = JSON.parse(localStorage.getItem("userCredentials"));
+    if (storedCredentials && storedCredentials.email) {
+      setMyEmail(storedCredentials.email);
+      console.log("User email set from local storage:", storedCredentials.email);
+    } else {
+      console.error("No email found in local storage");
+    }
+  }, []); // Empty dependency array ensures this runs only once on component mount
+
+  useEffect(() => {
     setFriendEmail(friend_email);
-
-    
-
-    setMyEmail(email);
-    setGameUrl(gameUrl);
+    setGameUrl(game_Url);
     setOpponentName(friendName);
 
-    fetchUsername(email);
+    fetchUsername(myEmail);
+
     socket.on("accept-matchmaking", (data) => {
+      console.log("Matchmaking accepted by", data.url);
+      const stored_email = JSON.parse(localStorage.getItem("userCredentials")).email;
+
       if (data.url) {
-        const url = data.url + `?email=${email}`;
+        const url = data.url + `?email=${stored_email}`;
         window.open(url, "_blank");
         stopCountdown();
       }
@@ -59,7 +70,6 @@ const Matchmaking = () => {
     socket.on("gameOver", (data) => {
       console.log(`${data.email} has ${data.result} the game`);
     });
-
 
     socket.on("gameStatus", (data) => {
       console.log("Game status received:", data);
@@ -73,14 +83,10 @@ const Matchmaking = () => {
       setShowResult(true);
     }
 
-    const storedCredentials = JSON.parse(
-      localStorage.getItem("userCredentials")
-    );
-    console.log(storedCredentials);
     return () => {
       socket.off("accept-matchmaking");
     };
-  }, [location.state]);
+  }, [location.state, socket]);
 
   const fetchResults = async () => {
     try {
@@ -100,7 +106,6 @@ const Matchmaking = () => {
       if (response.ok) {
         const data = await response.json();
 
-        // Check if data and winner are defined before proceeding
         if (data && data.length > 0 && data[0].winner) {
           if (data[0].winner === myEmail) {
             setResult("win");
@@ -110,7 +115,7 @@ const Matchmaking = () => {
           setShowResult(true);
         } else {
           console.log("No result data available yet.");
-          setShowResult(false); // Hide result display if no valid data
+          setShowResult(false);
         }
       } else {
         console.error("Failed to fetch results");
@@ -147,7 +152,7 @@ const Matchmaking = () => {
     }
   };
 
-  const fetchUsername = async (email) => {
+  const fetchUsername = async (myEmail) => {
     try {
       const response = await fetch(
         "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/account",
@@ -157,13 +162,16 @@ const Matchmaking = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: email,
+            email: myEmail
           }),
         }
       );
 
+      console.log("RESPONSE USERNAME", response);
+
       if (response.ok) {
         const data = await response.json();
+        console.log("Username data:", data);  
         setMyUsername(data.userName);
       } else {
         console.error("Failed to fetch username");
@@ -192,7 +200,6 @@ const Matchmaking = () => {
     };
   }, [setAlertMessage, setShowAlert]);
 
-  // Countdown timer logic
   useEffect(() => {
     let timer;
     if (isCountingDown && countdown > 0) {
@@ -249,6 +256,7 @@ const Matchmaking = () => {
       console.error("Error initiating matchmaking:", error);
     }
   };
+
 
   return (
     <div>
