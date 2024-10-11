@@ -271,6 +271,10 @@ const Home = () => {
         <img src={headerImage} alt="Header Game" />
       </div>
 
+      <div className="text-2xl font-bold pl-6 pt-2 lg:pl-20">
+        All Games
+      </div>
+
       {matchedInvite && (
         <div className="fixed top-5 right-5 bg-black bg-opacity-70 z-50">
           <div className="relative text-center p-6 w-[500px] h-[350px] flex-shrink-0 rounded-[20px] bg-[radial-gradient(circle, rgba(128,0,128,1)_0%, rgba(0,0,255,1)_70%)]">
