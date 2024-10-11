@@ -16,7 +16,7 @@ const AllGames = () => {
   console.log("PASSED EMAIL", location.state?.friendEmail);
 
   // Use the custom game logic hook
-  const gameLogic = useGameLogic(userEmail, friendName);
+  const gameLogic = useGameLogic(userEmail, friendName,location.state?.friendEmail);
 
   useEffect(() => {
     const storedCredentials = JSON.parse(
@@ -117,4 +117,4 @@ const AllGames = () => {
   );
 };
 
-export default AllGames;
+export default AllGames;
