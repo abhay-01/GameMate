@@ -22,12 +22,15 @@ const AllGames = () => {
       localStorage.getItem("userCredentials")
     );
     const userEmailFromStorage = storedCredentials?.email || email;
-
+    if(userEmailFromStorage && userEmail === ""){
     setUserEmail(userEmailFromStorage);
+    }
 
     // Get the games and pass the game logic
     const gameList = games(gameLogic); // Fetch games with logic
+    if(gameList && availableGames.length === 0){
     setAvailableGames(gameList); // Store fetched games
+  }
   }, [email, friendName, gameLogic]);
 
   return (
