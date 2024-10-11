@@ -6,7 +6,7 @@ import boy from "../images/boy.png";
 import Coin from "../components/Coin";
 
 const socket = io(
-  "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/",
+  "https://gamemateserver3-eresf4e6c0drdnaf.southindia-01.azurewebsites.net",
   {
     transports: ["websocket"],
     reconnection: true,
@@ -33,109 +33,74 @@ const Matchmaking = () => {
 
   const friendName = location.state?.friendName;
   const game_Url = location.state?.gameUrl;
+  // const email = location.state?.email;
   const friend_email = location.state?.friendEmail;
 
-  // Fetch email from localStorage and pass to the account API
   useEffect(() => {
-    const storedCredentials = JSON.parse(localStorage.getItem("userCredentials"));
+    // Retrieve and set the user's email from local storage during the initial mount
+    const storedCredentials = JSON.parse(
+      localStorage.getItem("userCredentials")
+    );
     if (storedCredentials && storedCredentials.email) {
       setMyEmail(storedCredentials.email);
-      fetchUsername(storedCredentials.email); // Fetch username after setting email
+      console.log(
+        "User email set from local storage:",
+        storedCredentials.email
+      );
     } else {
       console.error("No email found in local storage");
     }
-  }, []);
-
-  // Fetch the userName from the server using the email
-  const fetchUsername = async (email) => {
-    try {
-      const response = await fetch(
-        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/account",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email
-          }),
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setMyUsername(data.userName);
-      } else {
-        console.error("Failed to fetch username");
-      }
-    } catch (error) {
-      console.error("Error fetching username:", error);
-    }
-  };
+  }, []); // Empty dependency array ensures this runs only once on component mount
 
   useEffect(() => {
     setFriendEmail(friend_email);
     setGameUrl(game_Url);
     setOpponentName(friendName);
-  
-    // Listen for accept-matchmaking event
+
+    // Listen for matchmaking acceptance
     socket.on("accept-matchmaking", (data) => {
       console.log("Matchmaking accepted by", data.url);
-      
-      const storedCredentials = JSON.parse(localStorage.getItem("userCredentials"));
-      const storedEmail = storedCredentials?.email;
-  
-      if (data.url && storedEmail) {
-        // Append the email as a query parameter to the game URL
-        const urlWithEmail = `${data.url}?email=${storedEmail}`;
-        
-        // Redirect the user to the game
-        window.open(urlWithEmail, "_blank");
+
+      const stored_email = JSON.parse(
+        localStorage.getItem("userCredentials")
+      ).email;
+
+      if (data.url) {
+        const gameUrlWithEmail = data.url + ?email=${stored_email};
+
+        // Check if the user is either the initiator (myEmail) or the opponent (friendEmail)
+        if (stored_email === myEmail || stored_email === friendEmail) {
+          console.log("Opening URL for:", stored_email);
+          window.open(gameUrlWithEmail, "_blank");
+          stopCountdown(); // Stop the countdown once the game URL is opened
+        }
       } else {
-        console.error("URL or email missing for matchmaking");
+        console.error("No URL received");
       }
     });
-  
+
     fetchResults();
-  
+
     socket.on("gameOver", (data) => {
-      console.log(`${data.email} has ${data.result} the game`);
+      console.log(${data.email} has ${data.result} the game);
     });
-  
+
     socket.on("gameStatus", (data) => {
       console.log("Game status received:", data);
     });
-  
+
     const params = new URLSearchParams(window.location.search);
     const resultParam = params.get("result");
-  
+
     if (resultParam) {
       setResult(resultParam);
       setShowResult(true);
     }
-  
+
     return () => {
       socket.off("accept-matchmaking");
     };
-  }, [location.state, socket]);
-  
-
-  const startCountdown = () => {
-    setIsCountingDown(true);
-    const interval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev === 0) {
-          clearInterval(interval);
-          setIsCountingDown(false);
-          setShowAlert(true);
-          setAlertMessage("Matchmaking timed out.");
-          return 60;
-        } else {
-          return prev - 1;
-        }
-      });
-    }, 1000);
-  };
+  }, [friendName, friendEmail, game_Url, myEmail, socket]);
 
   const fetchResults = async () => {
     try {
@@ -174,12 +139,112 @@ const Matchmaking = () => {
     }
   };
 
+  const handleStatus = async () => {
+    try {
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateStatus",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email1: myEmail,
+            email2: friendEmail,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        setShowResult(false);
+        console.log("Status updated successfully");
+      } else {
+        console.error("Failed to update status");
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  useEffect(() => {
+    (async function fetchUsername() {
+      console.log("FETCHING USERNAME", myEmail);
+      try {
+        const response = await fetch(
+          "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/account",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: myEmail,
+            }),
+          }
+        );
+
+        console.log("RESPONSE USERNAME", response);
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Username data:", data);
+          setMyUsername(data.userName);
+        } else {
+          console.error("Failed to fetch username");
+        }
+      } catch (error) {
+        console.error("Error fetching username:", error);
+      }
+    })(); // <-- This makes it a self-invoked function
+  }, [myEmail]); // <-- Adding dependency on myEmail so it runs when myEmail changes
+
+  useEffect(() => {
+    socket.on("decline-matchmaking", (data) => {
+      console.log("Matchmaking declined by", data.target);
+      setAlertMessage(Matchmaking invite declined by ${data.target}.);
+      setShowAlert(true);
+      setIsCountingDown(false);
+    });
+    if (showAlert) {
+      setIsCountingDown(false);
+    }
+    setTimeout(() => {
+      setShowAlert(false);
+      stopCountdown();
+    }, 5000);
+    return () => {
+      socket.off("decline-matchmaking");
+    };
+  }, [setAlertMessage, setShowAlert, socket]);
+
+  useEffect(() => {
+    let timer;
+    if (isCountingDown && countdown > 0) {
+      timer = setInterval(() => {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      }, 1000);
+    } else if (countdown <= 0) {
+      stopCountdown();
+    }
+    return () => clearInterval(timer);
+  }, [isCountingDown, countdown]);
+
+  const startCountdown = () => {
+    setCountdown(60);
+    setIsCountingDown(true);
+  };
+
+  const stopCountdown = () => {
+    setIsCountingDown(false);
+    setCountdown(0);
+  };
+
   const handleInitiateMatchmaking = async () => {
     startCountdown();
     console.log("PRESSED", myEmail, friendEmail, gameUrl, selectedGame);
     try {
       const response = await fetch(
-        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/initiate-matchmaking",
+        "https://gamemateserver3-eresf4e6c0drdnaf.southindia-01.azurewebsites.net/initiate-matchmaking",
         {
           method: "POST",
           headers: {
@@ -221,14 +286,31 @@ const Matchmaking = () => {
         }}
       >
         <div
-          className={`flex flex-col justify-center items-center`}
+          className={flex flex-col justify-center items-center}
           style={{
-            backgroundImage: `url(${bg})`,
+            // width: "100%",
+            backgroundImage: url(${bg}),
             backgroundRepeat: "repeat",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
+          {showAlert && (
+            <div
+              style={{
+                position: "absolute",
+                top: "10%",
+                right: "10%",
+                background: "red",
+                color: "white",
+                padding: "10px 20px",
+                borderRadius: "5px",
+                marginTop: "10px",
+              }}
+            >
+              {alertMessage}
+            </div>
+          )}
           {/* Matchmaking UI */}
           <div className="flex flex-col md:flex-row p-2 mb-4 lg:pt-48">
             <div className="flex flex-col border border-white w-[300px] h-[330px] m-2 m-r-2 rounded-lg p-10 pt-9">
@@ -236,7 +318,9 @@ const Matchmaking = () => {
                 <img src={boy} alt="Boy" className="w-[55px] h-[55px]" />
               </div>
               <div className="flex flex-col justify-center items-center p-5">
-                <span className="text-lg md:text-2xl font-bold">{myUsername}</span>
+                <span className="text-lg md:text-2xl font-bold">
+                  {myUsername}
+                </span>
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
               <div className="pl-16">
@@ -251,12 +335,15 @@ const Matchmaking = () => {
               <span className="text-7xl text-red-600 font-rubik">/</span>
               <span className="text-5xl mt-4 text-red-600 font-rubik">S</span>
             </div>
+
             <div className="flex flex-col border border-white w-[300px] h-[330px] m-2 m-r-2 rounded-lg p-10 pt-9">
               <div className="flex justify-center items-center">
                 <img src={boy} alt="Boy" className="w-[55px] h-[55px]" />
               </div>
               <div className="flex flex-col justify-center items-center p-5">
-                <span className="text-lg md:text-2xl font-bold">{opponentName}</span>
+                <span className="text-lg md:text-2xl font-bold">
+                  {opponentName}
+                </span>
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
               <div className="pl-16">
@@ -269,6 +356,16 @@ const Matchmaking = () => {
             </div>
           </div>
 
+          {result && (
+            <div className="text-white text-center">
+              {result === "win" ? (
+                <p>Congrats! You won the game!</p>
+              ) : (
+                <p>Sorry! You lost the game.</p>
+              )}
+            </div>
+          )}
+          {/* Match Button and Timer */}
           <div className="flex flex-col items-center mt-4">
             <button
               onClick={handleInitiateMatchmaking}
@@ -281,7 +378,7 @@ const Matchmaking = () => {
             </button>
             {isCountingDown && (
               <div className="mt-2 text-white font-bold">
-                {`Time remaining: ${countdown} seconds`}
+                {Time remaining: ${countdown} seconds}
               </div>
             )}
           </div>
@@ -291,4 +388,4 @@ const Matchmaking = () => {
   );
 };
 
-export default Matchmaking;
+export default Matchmaking;

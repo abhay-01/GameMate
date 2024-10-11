@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  FaHome,
-  FaSearch,
-  FaUserFriends,
-  FaUserPlus,
-} from "react-icons/fa";
+import { FaHome, FaSearch, FaUserFriends, FaUserPlus } from "react-icons/fa";
 import { FaGamepad } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import logo from "../assets/Game-Mate-Logo.png";
@@ -19,56 +14,60 @@ export const Sidebar = ({ children }) => {
   const [userName, setUserName] = useState("");
   const userCredentials = localStorage.getItem("userCredentials");
 
-
   const handleLogOut = () => {
     localStorage.removeItem("userCredentials");
     window.location.reload();
   };
-  
 
   useEffect(() => {
-    const storedCredentials = JSON.parse(localStorage.getItem("userCredentials"));
-    console.log('stored Cred-->', storedCredentials)
+    const storedCredentials = JSON.parse(
+      localStorage.getItem("userCredentials")
+    );
+    console.log("stored Cred-->", storedCredentials);
 
     const emailFromCredentials = storedCredentials?.email || email;
 
-    if (emailFromCredentials){
+    if (emailFromCredentials) {
       // console.log(emailFromCredentials);
-      fetchUserName(emailFromCredentials)
+      fetchUserName(emailFromCredentials);
     }
-  }, [email]);
+  });
 
-  const fetchUserName = async(email) => {
+  const fetchUserName = async (email) => {
     try {
-      const response = await fetch("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/account",{
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: email}),
-      });
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/account",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email }),
+        }
+      );
 
-      if (response.ok){
+      if (response.ok) {
         // console.log(response);
         const data = await response.json();
         setUserName(data.userName);
-        console.log(userName)
-      }else{
-        console.log('Error Fetching UserName')
+        console.log(userName);
+      } else {
+        console.log("Error Fetching UserName");
       }
-    } catch(error){
+    } catch (error) {
       console.error("Error fetching user Name:", error);
     }
-  }
+  };
 
   const handleLoginClick = () => {
     if (userCredentials) {
-      navigate("/profile", { state: { email: JSON.parse(userCredentials).email } });
+      navigate("/profile", {
+        state: { email: JSON.parse(userCredentials).email },
+      });
     } else {
       navigate("/login");
     }
   };
-
 
   const menuItem = [
     {
@@ -109,7 +108,7 @@ export const Sidebar = ({ children }) => {
     {
       path: "/profile",
       name: "Profile",
-      icon: <CgProfile className="-ml-1" /> ,
+      icon: <CgProfile className="-ml-1" />,
     },
   ];
 
@@ -158,23 +157,22 @@ export const Sidebar = ({ children }) => {
         >
           {userName ? (
             <>
-            <div className="flex items-center space-x-2">
-              <CgProfile className="h-6 w-6 mr-2" />
-              <div>
-              
-              <div className="text-white font-semibold">{userName}</div>
-                <div className="text-xs text-gray-400">Bio/AIR</div>
+              <div className="flex items-center space-x-2">
+                <CgProfile className="h-6 w-6 mr-2" />
+                <div>
+                  <div className="text-white font-semibold">{userName}</div>
+                  <div className="text-xs text-gray-400">Bio/AIR</div>
+                </div>
+                <div className="relative">
+                  <div className="bg-green-500 rounded-full h-3 w-3 border-2 border-gray-700 animate-flicker"></div>
+                </div>
               </div>
-              <div className="relative">
-                <div className="bg-green-500 rounded-full h-3 w-3 border-2 border-gray-700 animate-flicker"></div>
-              </div>
-            </div>
-            <button
-              className=" ml-28 text-sm text-red-500 hover:text-red-700"
-              onClick={handleLogOut}
-            >
-              Logout
-            </button>
+              <button
+                className=" ml-28 text-sm text-red-500 hover:text-red-700"
+                onClick={handleLogOut}
+              >
+                Logout
+              </button>
             </>
           ) : (
             <>
