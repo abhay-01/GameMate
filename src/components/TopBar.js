@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from "../assets/Game-Mate-Logo.png";
 import { useNavigate } from 'react-router-dom';
 import { SlLogin } from "react-icons/sl";
+import { CgProfile } from 'react-icons/cg';
 
 
 function TopBar() {
@@ -9,6 +10,44 @@ function TopBar() {
   const handleLoginClick = () => {
     navigate("/login");
   };
+  const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  
+
+  useEffect(() => {
+    const storedCredentials = JSON.parse(localStorage.getItem("userCredentials"));
+    console.log('stored Cred-->', storedCredentials)
+
+    const emailFromCredentials = storedCredentials?.email || email;
+
+    if (emailFromCredentials){
+      // console.log(emailFromCredentials);
+      fetchUserName(emailFromCredentials)
+    }
+  }, [email]);
+
+  const fetchUserName = async(email) => {
+    try {
+      const response = await fetch("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/account",{
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email}),
+      });
+
+      if (response.ok){
+        // console.log(response);
+        const data = await response.json();
+        setUserName(data.userName);
+        console.log(userName)
+      }else{
+        console.log('Error Fetching UserName')
+      }
+    } catch(error){
+      console.error("Error fetching user Name:", error);
+    }
+  }
   return (
     <div className='lg:hidden bg-black w-full fixed z-10'>
       <div className="flex items-center justify-between px-4 bg-custom-gradient">
@@ -21,13 +60,20 @@ function TopBar() {
               cursor: "pointer",
             }}
           />
-          <button
-          className="flex items-center text-white"
-          onClick={handleLoginClick}
-          >
-          <SlLogin className="h-6 w-6 mr-2" />
-          <span>Login</span>
+          {userName ? (
+          <div className="flex items-center space-x-2 text-white">
+            <CgProfile className="h-6 w-6 mr-2" />
+            <div className="font-semibold">{userName}</div>
+            <div className="relative">
+              <div className="bg-green-500 rounded-full h-3 w-3 border-2 border-gray-700 animate-pulse"></div>
+            </div>
+          </div>
+        ) : (
+          <button className="flex items-center text-white" onClick={handleLoginClick}>
+            <SlLogin className="h-6 w-6 mr-2" />
+            <span>Login</span>
           </button>
+        )}
     </div>
     </div>
   )

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   FaHome,
@@ -15,6 +15,44 @@ import { SlLogin } from "react-icons/sl";
 export const Sidebar = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  
+
+  useEffect(() => {
+    const storedCredentials = JSON.parse(localStorage.getItem("userCredentials"));
+    console.log('stored Cred-->', storedCredentials)
+
+    const emailFromCredentials = storedCredentials?.email || email;
+
+    if (emailFromCredentials){
+      // console.log(emailFromCredentials);
+      fetchUserName(emailFromCredentials)
+    }
+  }, [email]);
+
+  const fetchUserName = async(email) => {
+    try {
+      const response = await fetch("https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/account",{
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email}),
+      });
+
+      if (response.ok){
+        // console.log(response);
+        const data = await response.json();
+        setUserName(data.userName);
+        console.log(userName)
+      }else{
+        console.log('Error Fetching UserName')
+      }
+    } catch(error){
+      console.error("Error fetching user Name:", error);
+    }
+  }
 
   const handleLoginClick = () => {
     navigate("/login");
@@ -106,11 +144,25 @@ export const Sidebar = ({ children }) => {
           className="absolute bottom-4 left-4 w-[280px] flex items-center py-2 border-t border-gray-700"
           onClick={handleLoginClick}
         >
-          <SlLogin className='h-6 w-6 mr-2' />
-          <div>
-            <div className="text-white font-semibold">Login/SignUP</div>
-            <div className="text-xs text-gray-400">Bio/AIR</div>
-          </div>
+          {userName ? (
+            <>
+            <div className="flex items-center space-x-2">
+              <CgProfile className="h-6 w-6 mr-2" />
+              <div className="text-white font-semibold">{userName}</div>
+              <div className="relative">
+                <div className="bg-green-500 rounded-full h-3 w-3 border-2 border-gray-700 animate-flicker"></div>
+              </div>
+            </div>
+            </>
+          ) : (
+            <>
+              <SlLogin className="h-6 w-6 mr-2" />
+              <div>
+                <div className="text-white font-semibold">Login/SignUP</div>
+                <div className="text-xs text-gray-400">Bio/AIR</div>
+              </div>
+            </>
+          )}
         </div>
       </div>
       <main className="main-content flex-1 p-4">{children}</main>
