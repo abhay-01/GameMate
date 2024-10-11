@@ -35,7 +35,10 @@ const Matchmaking = () => {
     const friendName = location.state?.friendName;
     const gameUrl = location.state?.gameUrl;
     const email = location.state?.email;
-    setFriendEmail(location.state?.friendEmail);
+    const friend_email = location.state?.friendEmail;
+    setFriendEmail(friend_email);
+
+    
 
     setMyEmail(email);
     setGameUrl(gameUrl);
@@ -56,9 +59,6 @@ const Matchmaking = () => {
       console.log(`${data.email} has ${data.result} the game`);
     });
 
-    socket.on("redirect", (data) => {
-      console.log("redir", data);
-    });
 
     socket.on("gameStatus", (data) => {
       console.log("Game status received:", data);
@@ -177,12 +177,14 @@ const Matchmaking = () => {
       console.log("Matchmaking declined by", data.target);
       setAlertMessage(`Matchmaking invite declined by ${data.target}.`);
       setShowAlert(true);
+      setIsCountingDown(false);
     });
     if (showAlert) {
       setIsCountingDown(false);
     }
     setTimeout(() => {
       setShowAlert(false);
+      stopCountdown();
     }, 5000);
     return () => {
       socket.off("decline-matchmaking");

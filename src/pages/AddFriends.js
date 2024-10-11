@@ -21,8 +21,7 @@ const AddFriends = () => {
 
       if (storedCredentials && storedCredentials.length > 0) {
         const credentials = JSON.parse(storedCredentials);
-        setEmail(credentials.email); // Set the current user email
-
+        setEmail(credentials.email);
         try {
           const response = await fetch(
             `${process.env.REACT_APP_API_URL}/get-users`,
@@ -72,7 +71,7 @@ const AddFriends = () => {
       }
 
       const result = await response.text();
-      console.log(`Friend request sent to ${friendEmail}: ${result}`);
+      console.log(`Friend request sent to ${friendEmail} : ${result}`);
 
       // Update the UI to hide added friend by filtering out the added friend from the list
       setData((prevData) =>
