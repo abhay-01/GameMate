@@ -13,6 +13,7 @@ const AllGames = () => {
 
   const email = location.state?.email;
   const friendName = location.state?.friendName;
+  console.log("PASSED EMAIL", location.state?.friendEmail);
 
   // Use the custom game logic hook
   const gameLogic = useGameLogic(userEmail, friendName);

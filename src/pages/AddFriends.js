@@ -19,6 +19,7 @@ const AddFriends = () => {
 
       if (storedCredentials && storedCredentials.length > 0) {
         const credentials = JSON.parse(storedCredentials);
+        setEmail(credentials.email);
         try {
           const response = await fetch(
             `${process.env.REACT_APP_API_URL}/get-users`,
@@ -68,7 +69,7 @@ const AddFriends = () => {
       }
 
       const result = await response.text();
-      console.log(`Friend request sent to ${friendEmail}: ${result}`);
+      console.log(`Friend request sent to ${friendEmail} : ${result}`);
 
       setData((prevData) =>
         prevData.map((user) =>
