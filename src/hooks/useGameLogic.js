@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export const useGameLogic = (userEmail, friendName) => {
+export const useGameLogic = (userEmail, friendName,friendEmail) => {
   const navigate = useNavigate();
 
   const startChessServer = () => {
@@ -10,6 +10,7 @@ export const useGameLogic = (userEmail, friendName) => {
           friendName: friendName,
           gameUrl: "https://chess-gamemate.onrender.com",
           email: userEmail,
+          friendEmail: friendEmail,
         },
       });
     } else {
@@ -17,6 +18,8 @@ export const useGameLogic = (userEmail, friendName) => {
         state: {
           email: userEmail,
           gameUrl: "https://chess-gamemate.onrender.com",
+          friendEmail: friendEmail,
+
         },
       });
     }
@@ -59,6 +62,8 @@ export const useGameLogic = (userEmail, friendName) => {
           gameUrl:
             "https://tic-tac-kpqi.onrender.com/",
           email: userEmail,
+          friendEmail: friendEmail,
+
         },
       });
     } else {
@@ -67,6 +72,7 @@ export const useGameLogic = (userEmail, friendName) => {
           email: userEmail,
           gameUrl:
             "https://tic-tac-kpqi.onrender.com/",
+           friendEmail: friendEmail,
         },
       });
     }
@@ -76,5 +82,5 @@ export const useGameLogic = (userEmail, friendName) => {
     alert("Memory Game is coming soon!");
   };
 
-  return { startChessServer, openGeography, openTicTacToe, openMemory };
+  return { startChessServer, openGeography, openTicTacToe, openMemory };
 };

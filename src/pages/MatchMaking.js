@@ -36,6 +36,7 @@ const Matchmaking = () => {
     const gameUrl = location.state?.gameUrl;
     const email = location.state?.email;
     const friend_email = location.state?.friendEmail;
+    console.log("PASSED MATCH", friend_email);
     setFriendEmail(friend_email);
 
     
