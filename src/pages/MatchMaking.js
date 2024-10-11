@@ -6,7 +6,7 @@ import boy from "../images/boy.png";
 import Coin from "../components/Coin";
 
 const socket = io(
-  "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/",
+  "https://gamemateserver3-eresf4e6c0drdnaf.southindia-01.azurewebsites.net",
   {
     transports: ["websocket"],
     reconnection: true,
@@ -57,16 +57,23 @@ const Matchmaking = () => {
     setGameUrl(game_Url);
     setOpponentName(friendName);
 
+    // Listen for matchmaking acceptance
     socket.on("accept-matchmaking", (data) => {
       console.log("Matchmaking accepted by", data.url);
+
       const stored_email = JSON.parse(
         localStorage.getItem("userCredentials")
       ).email;
 
       if (data.url) {
-        const url = data.url + `?email=${stored_email}`;
-        window.open(url, "_blank");
-        stopCountdown();
+        const gameUrlWithEmail = data.url + `?email=${stored_email}`;
+
+        // Check if the user is either the initiator (myEmail) or the opponent (friendEmail)
+        if (stored_email === myEmail || stored_email === friendEmail) {
+          console.log("Opening URL for:", stored_email);
+          window.open(gameUrlWithEmail, "_blank");
+          stopCountdown(); // Stop the countdown once the game URL is opened
+        }
       } else {
         console.error("No URL received");
       }
@@ -93,7 +100,7 @@ const Matchmaking = () => {
     return () => {
       socket.off("accept-matchmaking");
     };
-  }, [friendName, friendEmail, game_Url, socket]);
+  }, [friendName, friendEmail, game_Url, myEmail, socket]);
 
   const fetchResults = async () => {
     try {
@@ -237,7 +244,7 @@ const Matchmaking = () => {
     console.log("PRESSED", myEmail, friendEmail, gameUrl, selectedGame);
     try {
       const response = await fetch(
-        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/initiate-matchmaking",
+        "https://gamemateserver3-eresf4e6c0drdnaf.southindia-01.azurewebsites.net/initiate-matchmaking",
         {
           method: "POST",
           headers: {

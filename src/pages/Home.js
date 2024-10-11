@@ -9,7 +9,7 @@ import LoginAlert from "../components/LoginAlert";
 import AllGames from "./AllGames";
 
 const socket = io(
-  "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net",
+  "https://gamemateserver3-eresf4e6c0drdnaf.southindia-01.azurewebsites.net",
   {
     transports: ["websocket"],
     reconnection: true,
@@ -19,7 +19,7 @@ const socket = io(
 );
 
 const Home = () => {
-  const [winner, setWinner] = useState(""); 
+  const [winner, setWinner] = useState("");
   const [matchedInvite, setMatchedInvite] = useState(false);
   const [inviteSender, setInviteSender] = useState("");
   const [inviteTarget, setInviteTarget] = useState("");
@@ -62,7 +62,7 @@ const Home = () => {
     return () => {
       socket.off("matchmaking");
     };
-  }, [navigate,socket]);
+  }, [navigate, socket]);
 
   useEffect(() => {
     const getEmailFromURL = () => {
@@ -152,7 +152,7 @@ const Home = () => {
     console.log("Invite Accepted:", inviteUrl);
     try {
       const response = await fetch(
-        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/accept-matchmaking",
+        "https://gamemateserver3-eresf4e6c0drdnaf.southindia-01.azurewebsites.net/accept-matchmaking",
         {
           method: "POST",
           headers: {
@@ -168,16 +168,20 @@ const Home = () => {
       );
 
       if (response.ok) {
-        console.log("Invite accepted successfully", inviteTarget,inviteSender,inviteUrl,inviteType);
+        console.log(
+          "Invite accepted successfully",
+          inviteTarget,
+          inviteSender,
+          inviteUrl,
+          inviteType
+        );
 
-      
         socket.emit("accept-matchmaking", {
           sender: inviteTarget,
           target: inviteSender,
           url: inviteUrl,
           type: inviteType,
         });
-        
 
         const createMatch = await fetch(
           "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/createMatch",
@@ -262,14 +266,14 @@ const Home = () => {
           body: JSON.stringify({ email: queryMail }),
         }
       );
-  
+
       if (response.ok) {
         setWinner("");
         setShow(false);
-  
+
         const urlWithoutEmail = window.location.pathname;
         window.history.replaceState(null, "", urlWithoutEmail); // This will update the URL without the query string
-  
+
         setQueryMail("");
       } else {
         console.log("Failed to update match status");
@@ -298,7 +302,9 @@ const Home = () => {
           </div>
           <div>
             <h3 className="text-lg font-bold mb-2">Game Invite</h3>
-            <p>{inviteSender} has invited you to a {inviteType} game.</p>
+            <p>
+              {inviteSender} has invited you to a {inviteType} game.
+            </p>
             <div className="flex justify-center mt-4">
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
