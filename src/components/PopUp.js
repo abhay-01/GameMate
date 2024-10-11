@@ -5,7 +5,7 @@ const PopUp = ({ winner, show, handleClose }) => {
   if (!show || !winner) return null;
 
   return (
-    <div className="absolute inset-0 bg-black bg-opacity-70 flex flex-col justify-center items-center z-20">
+    <div className="absolute inset-0 bg-black bg-opacity-70 flex flex-col justify-center items-center z-50">
       <div className="relative text-center p-8 w-[992.818px] h-[653.747px] flex-shrink-0 rounded-[32.525px] bg-[radial-gradient(circle,rgba(128,0,128,1)_0%,rgba(0,0,0,1)_70%)]">
         <button
           onClick={handleClose}

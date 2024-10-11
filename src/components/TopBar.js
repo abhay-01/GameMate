@@ -63,7 +63,10 @@ function TopBar() {
           {userName ? (
           <div className="flex items-center space-x-2 text-white">
             <CgProfile className="h-6 w-6 mr-2" />
+            <div>
             <div className="font-semibold">{userName}</div>
+            <div className="text-xs text-gray-400">Bio/AIR</div>
+            </div>
             <div className="relative">
               <div className="bg-green-500 rounded-full h-3 w-3 border-2 border-gray-700 animate-pulse"></div>
             </div>
