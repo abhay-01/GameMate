@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import bg from "../assets/bg.svg";
-import { FaGem } from "react-icons/fa";
 import boy from "../images/boy.png";
 import cross from "../assets/cross.png";
 import Coin from "../components/Coin";
 
 function Profile() {
-  const [email, setEmail] = useState("aliza@gmail.com");
+  const [email, setEmail] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState({
     userName: "",
@@ -18,8 +17,8 @@ function Profile() {
     coins: "",
   });
 
-  // Fetch user data when the component mounts
-  const fetchUserData = async () => {
+  // Fetch user data once the email is set
+  const fetchUserData = async (userEmail) => {
     try {
       const response = await fetch(
         "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/account",
@@ -28,7 +27,7 @@ function Profile() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email: email }),
+          body: JSON.stringify({ email: userEmail }),
         }
       );
 
@@ -52,6 +51,19 @@ function Profile() {
       console.error("Error fetching user data:", error);
     }
   };
+
+  // Get email from local storage when the component mounts
+  useEffect(() => {
+    const storedCredentials = JSON.parse(
+      localStorage.getItem("userCredentials")
+    );
+    const userEmailFromStorage = storedCredentials?.email || email;
+
+    if (userEmailFromStorage) {
+      setEmail(userEmailFromStorage);
+      fetchUserData(userEmailFromStorage); // Fetch user data only if email is found
+    }
+  }, [email]); // Only runs once when the component mounts
 
   // Profile update logic
   const handleProfileUpdate = async () => {
@@ -101,11 +113,6 @@ function Profile() {
       setIsEditing(true); // Enable edit mode
     }
   };
-
-  // Fetch user data once when the component is mounted
-  useEffect(() => {
-    fetchUserData();
-  }, []); // Empty dependency array ensures it runs only once on mount
 
   return (
     <div>
@@ -224,7 +231,7 @@ function Profile() {
                   className="px-8 py-2 rounded-md font-bold bg-white bg-opacity-10 cursor-pointer"
                   onClick={handleEditClick}
                 >
-                  {isEditing ? "Submit" : "Edit Profile"}
+                  {isEditing ? "Submit" : "Edit"}
                 </button>
               </div>
             </div>
