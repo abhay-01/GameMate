@@ -118,7 +118,7 @@ function Profile() {
     <div>
       <div
         style={{
-          overflowY: "auto",
+          overflowY: "hidden",
           backgroundColor: "black",
           color: "white",
           display: "flex",

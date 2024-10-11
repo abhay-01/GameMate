@@ -79,7 +79,7 @@ const AllGames = () => {
               <hr className="w-[245px] ml-2.5 border-gray-300" />
             </div>
 
-            <div className="bottom flex justify-between text-center text-white pl-3 pr-3 pt-1.5 pb-1.5">
+            <div className="bottom flex justify-between text-center text-white pl-3 pr-3 lg:pt-1.5 lg:pb-1.5">
               <div className="flex flex-col">
                 <span className="text-white opacity-50">Win Price</span>
                 <div className="flex">

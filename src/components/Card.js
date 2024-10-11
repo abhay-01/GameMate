@@ -45,7 +45,7 @@ const OneCard = ({ card }) => {
 const Card = () => {
   return (
     <div className="p-5">
-      <div className="text-2xl font-bold mb-5 ml-[55px]">
+      <div className="text-2xl font-bold">
         Upcoming Matches
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 py-4 gap-x-10 gap-y-8">

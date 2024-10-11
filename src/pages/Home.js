@@ -263,7 +263,7 @@ const Home = () => {
   };
 
   return (
-    <div className="overflow-y-auto bg-black text-white md:pr-10 md:pl-20 pr-5 pl-10">
+    <div className=" bg-black text-white md:pr-10 ">
       {showLoginBanner && <LoginAlert onLoginClick={handleLoginClick} />}
 
       {/* Header Image */}
