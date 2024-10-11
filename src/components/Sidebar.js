@@ -17,6 +17,13 @@ export const Sidebar = ({ children }) => {
   const location = useLocation();
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
+  const userCredentials = localStorage.getItem("userCredentials");
+
+
+  const handleLogOut = () => {
+    localStorage.removeItem("userCredentials");
+    window.location.reload();
+  };
   
 
   useEffect(() => {
@@ -55,8 +62,13 @@ export const Sidebar = ({ children }) => {
   }
 
   const handleLoginClick = () => {
-    navigate("/login");
+    if (userCredentials) {
+      navigate("/profile", { state: { email: JSON.parse(userCredentials).email } });
+    } else {
+      navigate("/login");
+    }
   };
+
 
   const menuItem = [
     {
@@ -157,6 +169,12 @@ export const Sidebar = ({ children }) => {
                 <div className="bg-green-500 rounded-full h-3 w-3 border-2 border-gray-700 animate-flicker"></div>
               </div>
             </div>
+            <button
+              className=" ml-28 text-sm text-red-500 hover:text-red-700"
+              onClick={handleLogOut}
+            >
+              Logout
+            </button>
             </>
           ) : (
             <>

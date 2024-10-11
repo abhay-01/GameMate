@@ -273,8 +273,6 @@ const Home = () => {
       console.error("Error in closing match", error);
     }
   };
-  
-
   return (
     <div className=" bg-black text-white md:pr-10 ">
       {showLoginBanner && <LoginAlert onLoginClick={handleLoginClick} />}
