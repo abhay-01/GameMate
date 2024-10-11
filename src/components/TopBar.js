@@ -12,6 +12,11 @@ function TopBar() {
   };
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
+
+  const handleLogOut = () => {
+    localStorage.removeItem("userCredentials");
+    window.location.reload();
+  };
   
 
   useEffect(() => {
@@ -70,6 +75,12 @@ function TopBar() {
             <div className="relative">
               <div className="bg-green-500 rounded-full h-3 w-3 border-2 border-gray-700 animate-pulse"></div>
             </div>
+            <button
+              className=" ml-28 text-sm text-red-500 hover:text-red-700"
+              onClick={handleLogOut}
+            >
+              Logout
+            </button>
           </div>
         ) : (
           <button className="flex items-center text-white" onClick={handleLoginClick}>

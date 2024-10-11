@@ -8,23 +8,24 @@ import axios from "axios";
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false); // State to track login in progress
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const storedCredentials = JSON.parse(
-      localStorage.getItem("userCredentials")
-    );
+  // useEffect(() => {
+  //   const storedCredentials = JSON.parse(
+  //     localStorage.getItem("userCredentials")
+  //   );
 
-    if (storedCredentials && storedCredentials.email) {
-      navigate("/profile", {
-        state: { email: storedCredentials.email },
-      });
-    }else{
-      navigate("/login");
-    }
-  }, [navigate]);
+  //   if (storedCredentials && storedCredentials.email) {
+  //     navigate("/profile", {
+  //       state: { email: storedCredentials.email },
+  //     });
+  //   }else{
+  //     navigate("/login");
+  //   }
+  // }, [navigate]);
 
   const handleSignup = () => {
     navigate("/signup");
@@ -32,6 +33,7 @@ export const Login = () => {
 
   const handleLogin = async () => {
     try {
+      setLoading(true); // Start loading process
       const response = await axios.post(
         "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/login",
         {
@@ -51,6 +53,7 @@ export const Login = () => {
         navigate("/home", {
           state: { email },
         });
+        window.location.reload();
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -60,6 +63,8 @@ export const Login = () => {
       } else {
         setError("Failed to login. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -115,9 +120,11 @@ export const Login = () => {
             <button
               onClick={handleLogin}
               className="bg-blue-950 w-full mt-2 p-2 rounded-md text-white"
+              disabled={loading}
             >
-              Sign in
+              {loading ? "Signing in..." : "Sign in"}
             </button>
+            {error && <p>{error}</p>}
 
             <div className="flex items-center my-4-full">
               <hr className="flex-grow h-px bg-gray-500 " />
