@@ -66,7 +66,7 @@ const Matchmaking = () => {
       ).email;
 
       if (data.url) {
-        const gameUrlWithEmail = data.url + `?email=${stored_email}`;
+        const gameUrlWithEmail = data.url + ?email=${stored_email};
 
         // Check if the user is either the initiator (myEmail) or the opponent (friendEmail)
         if (stored_email === myEmail || stored_email === friendEmail) {
@@ -82,7 +82,7 @@ const Matchmaking = () => {
     fetchResults();
 
     socket.on("gameOver", (data) => {
-      console.log(`${data.email} has ${data.result} the game`);
+      console.log(${data.email} has ${data.result} the game);
     });
 
     socket.on("gameStatus", (data) => {
@@ -201,7 +201,7 @@ const Matchmaking = () => {
   useEffect(() => {
     socket.on("decline-matchmaking", (data) => {
       console.log("Matchmaking declined by", data.target);
-      setAlertMessage(`Matchmaking invite declined by ${data.target}.`);
+      setAlertMessage(Matchmaking invite declined by ${data.target}.);
       setShowAlert(true);
       setIsCountingDown(false);
     });
@@ -286,10 +286,10 @@ const Matchmaking = () => {
         }}
       >
         <div
-          className={`flex flex-col justify-center items-center`}
+          className={flex flex-col justify-center items-center}
           style={{
             // width: "100%",
-            backgroundImage: `url(${bg})`,
+            backgroundImage: url(${bg}),
             backgroundRepeat: "repeat",
             backgroundSize: "cover",
             backgroundPosition: "center",
@@ -378,7 +378,7 @@ const Matchmaking = () => {
             </button>
             {isCountingDown && (
               <div className="mt-2 text-white font-bold">
-                {`Time remaining: ${countdown} seconds`}
+                {Time remaining: ${countdown} seconds}
               </div>
             )}
           </div>
@@ -388,4 +388,4 @@ const Matchmaking = () => {
   );
 };
 
-export default Matchmaking;
+export default Matchmaking;
