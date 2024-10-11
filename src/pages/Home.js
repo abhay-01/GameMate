@@ -320,6 +320,7 @@ const Home = () => {
         <Popup show={show} winner={winner} handleClose={handleClose} />
       )}
 
+      <Card />
       {/* Popup for Solo Game */}
       {/* {showSoloPopUp && (
         <SoloGamePopup onClose={handleClosePopup} email={queryMail} />
