@@ -8,17 +8,20 @@ const AddFriends = () => {
   const [data, setData] = useState([]);
   const [email, setEmail] = useState("");
 
+  // Helper to capitalize first letter
   function capitalizeFirstLetter(text) {
     if (!text) return "";
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
 
   useEffect(() => {
+    // Fetching the current user's email and available users for friendship
     const fetchData = async () => {
       const storedCredentials = localStorage.getItem("userCredentials");
 
       if (storedCredentials && storedCredentials.length > 0) {
         const credentials = JSON.parse(storedCredentials);
+        setEmail(credentials.email);
         try {
           const response = await fetch(
             `${process.env.REACT_APP_API_URL}/get-users`,
@@ -27,7 +30,7 @@ const AddFriends = () => {
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ email: credentials.email }),
+              body: JSON.stringify({ email: credentials.email }), // Send current user's email
             }
           );
 
@@ -36,7 +39,7 @@ const AddFriends = () => {
           }
 
           const result = await response.json();
-          setData(result.map((user) => ({ ...user, isFriend: false })));
+          setData(result.map((user) => ({ ...user, isFriend: false }))); // Initialize user list with 'isFriend' status
         } catch (err) {
           console.log("Error message", err.message);
         }
@@ -49,7 +52,7 @@ const AddFriends = () => {
     fetchData();
   }, [email, navigate]);
 
-  // Handle add friend functionality
+  // Handle the add friend functionality
   const handleAddFriend = async (friendEmail) => {
     try {
       const response = await fetch(
@@ -59,7 +62,7 @@ const AddFriends = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email, friendEmail }),
+          body: JSON.stringify({ email, friendEmail }), // Send both current user and friend's email
         }
       );
 
@@ -68,16 +71,15 @@ const AddFriends = () => {
       }
 
       const result = await response.text();
-      console.log(`Friend request sent to ${friendEmail}: ${result}`);
+      console.log(`Friend request sent to ${friendEmail} : ${result}`);
 
+      // Update the UI to hide added friend by filtering out the added friend from the list
       setData((prevData) =>
-        prevData.map((user) =>
-          user.email === friendEmail ? { ...user, isFriend: true } : user
-        )
+        prevData.filter((user) => user.email !== friendEmail)
       );
     } catch (err) {
       console.log(
-        `Failed to send friend request ${friendEmail}: ${err.message}`
+        `Failed to send friend request to ${friendEmail}: ${err.message}`
       );
     }
   };
@@ -124,18 +126,12 @@ const AddFriends = () => {
               <div className="text-white text-opacity-40">Bio/Air</div>
 
               {/* Conditionally render friend button or added text */}
-              {!item.isFriend ? (
-                <div
-                  className="bg-[#202320] text-white text-opacity-70 text-lg py-1 px-2 rounded-2xl cursor-pointer"
-                  onClick={() => handleAddFriend(item.email)}
-                >
-                  +Friend
-                </div>
-              ) : (
-                <div className="text-green-500 text-lg py-1 px-2 rounded-2xl">
-                  Friend Added
-                </div>
-              )}
+              <div
+                className="bg-[#202320] text-white text-opacity-70 text-lg py-1 px-2 rounded-2xl cursor-pointer"
+                onClick={() => handleAddFriend(item.email)}
+              >
+                +Friend
+              </div>
             </div>
           ))}
         </div>

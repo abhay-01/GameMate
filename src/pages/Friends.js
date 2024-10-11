@@ -59,6 +59,7 @@ const Friends = () => {
   }, [email]);
 
   const handleClick = (name,friendEmail) => {
+    console.log("FRIENDS PAGE",friendEmail);
     if (gameUrl) {
       navigate("/matchmaking", {
         state: { friendName: name, email: email, gameUrl: gameUrl,friendEmail:friendEmail },

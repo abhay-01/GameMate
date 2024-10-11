@@ -57,7 +57,7 @@ export const useGameLogic = (userEmail, friendName) => {
         state: {
           friendName: friendName,
           gameUrl:
-            "http://tic-tac-toe-server-g2akb2bkf8hvdadz.centralindia-01.azurewebsites.net",
+            "https://tic-tac-kpqi.onrender.com/",
           email: userEmail,
         },
       });
@@ -66,7 +66,7 @@ export const useGameLogic = (userEmail, friendName) => {
         state: {
           email: userEmail,
           gameUrl:
-            "http://tic-tac-toe-server-g2akb2bkf8hvdadz.centralindia-01.azurewebsites.net",
+            "https://tic-tac-kpqi.onrender.com/",
         },
       });
     }
