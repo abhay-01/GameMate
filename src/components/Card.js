@@ -44,7 +44,7 @@ const OneCard = ({ card }) => {
 
 const Card = () => {
   return (
-    <div className="p-5">
+    <div className="p-4 lg:pl-20 lg:pt-6">
       <div className="text-2xl font-bold">
         Upcoming Matches
       </div>
