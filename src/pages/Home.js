@@ -5,7 +5,6 @@ import io from "socket.io-client";
 import { useLocation, useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import Popup from "../components/PopUp";
-import SoloGamePopup from "../components/SoloGamePopup";
 import LoginAlert from "../components/LoginAlert";
 import AllGames from "./AllGames";
 
@@ -20,13 +19,13 @@ const socket = io(
 );
 
 const Home = () => {
-  const [winner, setWinner] = useState("");
+  const [winner, setWinner] = useState(""); 
   const [matchedInvite, setMatchedInvite] = useState(false);
   const [inviteSender, setInviteSender] = useState("");
   const [inviteTarget, setInviteTarget] = useState("");
   const [inviteUrl, setInviteUrl] = useState("");
   const [inviteType, setInviteType] = useState("");
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   const [queryMail, setQueryMail] = useState("");
   const [showSoloPopUp, setShowSoloPopUp] = useState(false);
   const [showLoginBanner, setShowLoginBanner] = useState(false);
@@ -83,35 +82,42 @@ const Home = () => {
 
   useEffect(() => {
     if (queryMail) {
-      setWinner("");
-      setShow(true);
-
-      const fetchResult = async () => {
-        try {
-          const response = await fetch(
-            "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/postResults",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ email: queryMail }),
-            }
-          );
-
-          const result = await response.json();
-          setWinner(result.winner === queryMail ? "Win" : "Lost");
-          handleResult(queryMail, result.winner === queryMail ? "win" : "loss");
-        } catch (err) {
-          console.log("Error fetching results:", err);
-        }
-      };
-
-      fetchResult();
+      console.log("Fetching result for:", queryMail);
+      setWinner(""); // Reset winner state before fetching
+      fetchResult(queryMail); // Fetch result based on the email
     } else {
       console.log("No email found in query string.");
     }
   }, [queryMail]);
+
+  // Fetch result and handle the response
+  const fetchResult = async (queryMail) => {
+    try {
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/postResults",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: queryMail }),
+        }
+      );
+
+      const result = await response.json();
+      console.log("Result:", result.winner);
+
+      if (result && result.winner) {
+        setWinner(result.winner === queryMail ? "Win" : "Lost"); // Update winner status
+        setShow(true); // Show the popup when we have the result
+        handleResult(queryMail, result.winner === queryMail ? "win" : "loss");
+      } else {
+        console.log("No result found for the email.");
+      }
+    } catch (err) {
+      console.log("Error fetching results:", err);
+    }
+  };
 
   const handleResult = async (email, result) => {
     try {
@@ -125,6 +131,8 @@ const Home = () => {
           body: JSON.stringify({ email: email, result: result }),
         }
       );
+
+      console.log("Response updateStatus:", response);
 
       if (response.ok) {
         console.log("Match status updated successfully");
@@ -180,6 +188,8 @@ const Home = () => {
             }),
           }
         );
+
+        console.log("createMatch", createMatch);
 
         if (createMatch.ok) {
           console.log("Match created successfully");
@@ -247,13 +257,15 @@ const Home = () => {
           body: JSON.stringify({ email: queryMail }),
         }
       );
-
+  
       if (response.ok) {
         setWinner("");
         setShow(false);
-
+  
         const urlWithoutEmail = window.location.pathname;
-        window.history.replaceState(null, "", urlWithoutEmail);
+        window.history.replaceState(null, "", urlWithoutEmail); // This will update the URL without the query string
+  
+        setQueryMail("");
       } else {
         console.log("Failed to update match status");
       }
@@ -261,6 +273,7 @@ const Home = () => {
       console.error("Error in closing match", error);
     }
   };
+  
 
   return (
     <div className=" bg-black text-white md:pr-10 ">
@@ -271,41 +284,27 @@ const Home = () => {
         <img src={headerImage} alt="Header Game" />
       </div>
 
-      <div className="text-2xl font-bold pl-6 pt-2 lg:pl-20">
-        All Games
-      </div>
+      <div className="text-2xl font-bold pl-6 pt-2 lg:pl-20">All Games</div>
 
       {matchedInvite && (
-        <div className="fixed top-5 right-5 bg-black bg-opacity-70 z-50">
-          <div className="relative text-center p-6 w-[500px] h-[350px] flex-shrink-0 rounded-[20px] bg-[radial-gradient(circle, rgba(128,0,128,1)_0%, rgba(0,0,255,1)_70%)]">
-            <button
-              className="absolute top-3 right-3 bg-red-500 text-white px-2 py-1 rounded flex items-center"
-              onClick={() => setMatchedInvite(false)}
-            >
-              <FaTimes size={20} />
+        <div className="fixed top-5 right-5 bg-black bg-opacity-70 z-50 p-4 text-white rounded-lg shadow-lg">
+          <div className="flex justify-end">
+            <button onClick={() => setMatchedInvite(false)}>
+              <FaTimes className="text-white" />
             </button>
-
-            <h2 className="mb-4 text-white font-poppins text-[40px] font-bold uppercase">
-              Game Invite
-            </h2>
-
-            <p className="mb-4 text-[#FA8305] font-poppins text-[28px] font-bold uppercase">
-              Invite from {inviteSender}
-            </p>
-
-            <p className="mb-4 text-white text-[22px]">
-              Game Type: {inviteType}
-            </p>
-
-            <div className="flex justify-center gap-8">
+          </div>
+          <div>
+            <h3 className="text-lg font-bold mb-2">Game Invite</h3>
+            <p>{inviteSender} has invited you to a {inviteType} game.</p>
+            <div className="flex justify-center mt-4">
               <button
-                className="text-white bg-green-500 py-2 px-4 rounded hover:bg-green-600"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 onClick={handleAcceptInvite}
               >
                 Accept
               </button>
               <button
-                className="text-white bg-red-500 py-2 px-4 rounded hover:bg-red-600"
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-4"
                 onClick={handleDeclineInvite}
               >
                 Decline
@@ -315,20 +314,18 @@ const Home = () => {
         </div>
       )}
 
-      {/* Popup for winner/loser */}
-      {show && (
-        <Popup onClose={handleClose}>
-          <h1 className="text-[40px] font-bold text-center mb-5">{winner}</h1>
-        </Popup>
-      )}
-
-      {showSoloPopUp && (
-        <SoloGamePopup email={queryMail} onClose={handleClosePopup} />
-      )}
-
+      {/* All Games Section */}
       <AllGames />
 
-      <Card />
+      {/* Popup for Result */}
+      {showSoloPopUp && show && (
+        <Popup show={show} winner={winner} handleClose={handleClose} />
+      )}
+
+      {/* Popup for Solo Game */}
+      {/* {showSoloPopUp && (
+        <SoloGamePopup onClose={handleClosePopup} email={queryMail} />
+      )} */}
     </div>
   );
 };

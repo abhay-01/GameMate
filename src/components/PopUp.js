@@ -1,8 +1,12 @@
 import React from "react";
 import { FaTimes, FaGem } from "react-icons/fa";
+import Coin from "./Coin";
 
 const PopUp = ({ winner, show, handleClose }) => {
   if (!show || !winner) return null;
+
+  const email = JSON.parse(localStorage.getItem("userCredentials")).email;
+  
 
   return (
     <div className="absolute inset-0 bg-black bg-opacity-70 flex flex-col justify-center items-center z-50">
@@ -26,12 +30,9 @@ const PopUp = ({ winner, show, handleClose }) => {
             {winner === "Win" ? "+ 500 Coins" : "- 500 Coins"}
           </div>
           <div className="flex items-center mt-8">
-            <div className="flex justify-center items-center rounded-full w-12 h-12">
-              <FaGem className="text-white" size="2x" />
-            </div>
             <div className="ml-3 flex flex-col text-white">
-              <span className="text-xs font-light">Coins</span>
-              <span className="text-lg font-bold">00</span>
+            <Coin email={email} />
+
             </div>
           </div>
         </div>
