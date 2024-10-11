@@ -259,14 +259,12 @@ const Matchmaking = () => {
           color: "white",
           display: "flex",
           flexDirection: "column",
-          height: "100vh",
-          width: "100%",
         }}
       >
         <div
-          className={`flex flex-col justify-center items-center pl-10 flex-1`}
+          className={`flex flex-col justify-center items-center`}
           style={{
-            width: "100%",
+            // width: "100%",
             backgroundImage: `url(${bg})`,
             backgroundRepeat: "repeat",
             backgroundSize: "cover",
@@ -290,13 +288,13 @@ const Matchmaking = () => {
             </div>
           )}
           {/* Matchmaking UI */}
-          <div className="flex p-2 pl-8 mb-4">
+          <div className="flex flex-col md:flex-row p-2 mb-4 lg:pt-48">
             <div className="flex flex-col border border-white w-[300px] h-[330px] m-2 m-r-2 rounded-lg p-10 pt-9">
               <div className="flex justify-center items-center">
                 <img src={boy} alt="Boy" className="w-[55px] h-[55px]" />
               </div>
               <div className="flex flex-col justify-center items-center p-5">
-                <span className="text-2xl font-bold">{myUsername}</span>
+                <span className="text-lg md:text-2xl font-bold">{myUsername}</span>
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
               <div className="pl-16">
@@ -306,24 +304,19 @@ const Matchmaking = () => {
                 500 Coins on Stakes
               </span>
             </div>
-            <div className="flex justify-center">
-              <span className="text-5xl mt-20 -ml-10 text-red-600 font-rubik">
-                V
-              </span>
-              <span className="text-7xl -ml-2 mt-20 text-red-600 font-rubik">
-                /
-              </span>
-              <span className="text-5xl mt-28 -ml-2 text-red-600 font-rubik">
-                S
-              </span>
+            <div className="flex justify-center lg:pt-32">
+              <span className="text-5xl text-red-600 font-rubik">V</span>
+              <span className="text-7xl text-red-600 font-rubik">/</span>
+              <span className="text-5xl mt-4 text-red-600 font-rubik">S</span>
             </div>
+
 
             <div className="flex flex-col border border-white w-[300px] h-[330px] m-2 m-r-2 rounded-lg p-10 pt-9">
               <div className="flex justify-center items-center">
                 <img src={boy} alt="Boy" className="w-[55px] h-[55px]" />
               </div>
               <div className="flex flex-col justify-center items-center p-5">
-                <span className="text-2xl font-bold">{opponentName}</span>
+                <span className="text-lg md:text-2xl font-bold">{opponentName}</span>
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
               <div className="pl-16">
@@ -349,7 +342,7 @@ const Matchmaking = () => {
           <div className="flex flex-col items-center mt-4">
             <button
               onClick={handleInitiateMatchmaking}
-              className="bg-yellow-400 text-black font-bold py-3 px-16 rounded-full"
+              className="bg-yellow-400 text-black font-bold py-2 px-10 md:py-3 md:px-16 rounded-full"
               style={{
                 background: "linear-gradient(to right, #FFCC00, #FF9900)",
               }}

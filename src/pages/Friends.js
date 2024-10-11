@@ -72,11 +72,13 @@ const Friends = () => {
   return (
     <div
       style={{
-        overflowY: "auto",
+        overflowY: "hidden",
         backgroundColor: "black",
         color: "white",
         display: "flex",
         flexDirection: "column",
+        height: '90vh',
+        width: 'auto'
       }}
     >
       {/* Header Image */}

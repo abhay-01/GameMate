@@ -15,7 +15,7 @@ function App() {
             <div className="" >
             <TopBar />
             </div>
-            <div className="flex-1 max-lg:mb-[60px]  max-lg:mt-[40px] lg:mt-[70px]">
+            <div className="flex-1 max-lg:mb-[9vh]  max-lg:mt-[40px] lg:mt-[70px]">
             {/* <div className="flex-1 sm:mt-[80px] lg:mt-[70px]"> */}
 
               {" "}
