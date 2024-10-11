@@ -77,7 +77,6 @@ const Friends = () => {
         color: "white",
         display: "flex",
         flexDirection: "column",
-        height: '90vh',
         width: 'auto'
       }}
     >

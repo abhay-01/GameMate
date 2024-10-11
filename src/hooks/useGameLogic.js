@@ -8,7 +8,7 @@ export const useGameLogic = (userEmail, friendName,friendEmail) => {
       navigate("/matchmaking", {
         state: {
           friendName: friendName,
-          gameUrl: "https://chess-gamemate.onrender.com",
+          gameUrl: "http://chess-dthzeaazb3afaqdx.southindia-01.azurewebsites.net",
           email: userEmail,
           friendEmail: friendEmail,
         },
@@ -17,7 +17,7 @@ export const useGameLogic = (userEmail, friendName,friendEmail) => {
       navigate("/friends", {
         state: {
           email: userEmail,
-          gameUrl: "https://chess-gamemate.onrender.com",
+          gameUrl: "http://chess-dthzeaazb3afaqdx.southindia-01.azurewebsites.net",
           friendEmail: friendEmail,
 
         },
@@ -60,7 +60,7 @@ export const useGameLogic = (userEmail, friendName,friendEmail) => {
         state: {
           friendName: friendName,
           gameUrl:
-            "https://tic-tac-kpqi.onrender.com/",
+            "https://salmon-bay-02f093e00.5.azurestaticapps.net",
           email: userEmail,
           friendEmail: friendEmail,
 
@@ -71,7 +71,7 @@ export const useGameLogic = (userEmail, friendName,friendEmail) => {
         state: {
           email: userEmail,
           gameUrl:
-            "https://tic-tac-kpqi.onrender.com/",
+            "https://salmon-bay-02f093e00.5.azurestaticapps.net",
            friendEmail: friendEmail,
         },
       });
