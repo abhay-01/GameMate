@@ -34,21 +34,14 @@ const AllGames = () => {
   }, [email, friendName, gameLogic]);
 
   return (
-    <div
-      className="flex justify-center"
-      style={{
-        overflowY: "auto",
-        backgroundColor: "black",
-        color: "white",
-        display: "flex",
-        // flexDirection: "column",
-      }}
-    >
-      <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2">
+    <div>
+    <div className="text-2xl bg-black text-white font-bold pt-8 lg:pl-20">All Games</div>
+    <div className="bg-black items-center justify-center min-h-screen flex">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 py-4 gap-x-2 gap-y-8 lg:ml-[10vh]">
         {availableGames.map((game) => (
           <div
             key={game.id}
-            className="h-[57vh] mx-2 w-[45vh] border border-white bg-[#171717] rounded-lg flex flex-col mt-5 hover:scale-105 transition-transform duration-300"
+            className="h-[57vh]  w-[45vh] border border-white bg-[#171717] rounded-lg flex flex-col mt-5 hover:scale-105 transition-transform duration-300"
             onClick={game.onClick} // Use the correct game logic function
           >
             <div className="p-2">
@@ -115,6 +108,7 @@ const AllGames = () => {
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 };

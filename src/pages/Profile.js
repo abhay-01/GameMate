@@ -121,6 +121,7 @@ function Profile() {
 
   return (
     <div>
+        <div className="text-2xl bg-black text-white font-bold pt-8 lg:pl-20">Profile</div>
       <div
         style={{
           overflowY: "hidden",
@@ -140,9 +141,6 @@ function Profile() {
           }}
         >
           <div className="flex flex-col lg:pl-10 pt-5 w-full">
-            <h1 className="text-xl self-start font-bold text-white p-2 pl-8">
-              Profile
-            </h1>
             <div className="flex flex-col items-center p-2 pl-8 mb-4">
               <div className="flex flex-col items-center m-2 m-r-2 rounded-lg p-10">
                 <div className="flex justify-center items-center p-4">
@@ -160,7 +158,7 @@ function Profile() {
               </div>
               <img src={cross} alt="Cross icon" className="w-8 h-8" />
               <div className="gap-y-2 flex flex-col items-center">
-                <div className="text-white">Loose</div>
+                <div className="text-white">Lose</div>
                 <div className="bg-[#292b2d] rounded-md w-16 h-8 text-white text-xl text-center">
                   {userData.noOfLosses}
                 </div>

@@ -301,12 +301,12 @@ const Home = () => {
     <div className=" bg-black text-white md:pr-10 ">
       {showLoginBanner && <LoginAlert onLoginClick={handleLoginClick} />}
 
+      <div className="text-2xl bg-custom-gray text-white font-bold pt-8 lg:pl-20">Home</div>
+
       {/* Header Image */}
       <div>
         <img src={headerImage} alt="Header Game" />
       </div>
-
-      <div className="text-2xl font-bold pl-6 pt-2 lg:pl-20">All Games</div>
 
       {matchedInvite && (
         <div className="fixed top-5 right-5 bg-black bg-opacity-70 z-50 p-4 text-white rounded-lg shadow-lg">
