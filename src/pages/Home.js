@@ -7,6 +7,7 @@ import Card from "../components/Card";
 import Popup from "../components/PopUp";
 import LoginAlert from "../components/LoginAlert";
 import AllGames from "./AllGames";
+import DrawCard from "../components/DrawCard";
 
 const socket = io(
   "https://gamemateserver3-eresf4e6c0drdnaf.southindia-01.azurewebsites.net",
@@ -29,6 +30,7 @@ const Home = () => {
   const [queryMail, setQueryMail] = useState("");
   const [showSoloPopUp, setShowSoloPopUp] = useState(false);
   const [showLoginBanner, setShowLoginBanner] = useState(false);
+  const [isDraw, setIsDraw] = useState(false);
 
   const handleLoginClick = () => {
     setShowLoginBanner(false);
@@ -68,10 +70,17 @@ const Home = () => {
     const getEmailFromURL = () => {
       const params = new URLSearchParams(location.search);
       const email = params.get("email");
-      return email;
+      const result = params.get("result");
+      return email, result;
     };
 
+
     const email = getEmailFromURL();
+    const result = getEmailFromURL();
+
+    if(result){
+      setIsDraw(true);
+    }
     if (email) {
       setQueryMail(email);
       setShowSoloPopUp(true);
@@ -282,6 +291,12 @@ const Home = () => {
       console.error("Error in closing match", error);
     }
   };
+
+  const handleDraw = () => {
+    setIsDraw(false);
+    const urlWithoutEmail = window.location.pathname;
+        window.history.replaceState(null, "", urlWithoutEmail);
+  }
   return (
     <div className=" bg-black text-white md:pr-10 ">
       {showLoginBanner && <LoginAlert onLoginClick={handleLoginClick} />}
@@ -325,6 +340,11 @@ const Home = () => {
 
       {/* All Games Section */}
       <AllGames />
+
+      {/* Popup for Draw */}
+      {isDraw && (
+        <DrawCard onClose={() => handleDraw()} />
+      )}
 
       {/* Popup for Result */}
       {showSoloPopUp && show && (
