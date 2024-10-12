@@ -9,19 +9,22 @@ const Friends = () => {
   const [email, setEmail] = useState("");
   const [friendsData, setFriendsData] = useState([]);
   const gameUrl = location.state?.gameUrl;
-  
+
   useEffect(() => {
     // Get the email only once when the component mounts
     const storedCredentials = JSON.parse(
       localStorage.getItem("userCredentials")
     );
 
-    if (storedCredentials?.email) {
+    if (storedCredentials && storedCredentials?.email) {
       setEmail(storedCredentials.email);
     } else if (location.state?.email) {
       setEmail(location.state.email);
+    } else {
+      alert("Please login to continue");
+      navigate("/login");
     }
-  }, [location.state]);
+  }, [location.state, navigate]);
 
   useEffect(() => {
     const fetchData = async (inputMail) => {
@@ -46,10 +49,9 @@ const Friends = () => {
         console.log("-->>", result);
         setFriendsData(result);
       } catch (err) {
-        console.log("Error message",err.message);
-      } 
-      finally{
-        console.log("Error message:Not fetching friends data")
+        console.log("Error message", err.message);
+      } finally {
+        console.log("Error message:Not fetching friends data");
       }
     };
 
@@ -58,14 +60,21 @@ const Friends = () => {
     }
   }, [email]);
 
-  const handleClick = (name,friendEmail) => {
-    console.log("FRIENDS PAGE",email);
+  const handleClick = (name, friendEmail) => {
+    console.log("FRIENDS PAGE", email);
     if (gameUrl) {
       navigate("/matchmaking", {
-        state: { friendName: name, email: email, gameUrl: gameUrl,friendEmail:friendEmail },
+        state: {
+          friendName: name,
+          email: email,
+          gameUrl: gameUrl,
+          friendEmail: friendEmail,
+        },
       });
     } else {
-      navigate("/allgames", { state: { friendName: name, email: email,friendEmail:friendEmail } });
+      navigate("/allgames", {
+        state: { friendName: name, email: email, friendEmail: friendEmail },
+      });
     }
   };
 
@@ -77,7 +86,7 @@ const Friends = () => {
         color: "white",
         display: "flex",
         flexDirection: "column",
-        width: 'auto'
+        width: "auto",
       }}
     >
       {/* Header Image */}
@@ -95,7 +104,7 @@ const Friends = () => {
           {friendsData.map((item) => (
             <div
               className="border flex flex-row rounded-xl items-center gap-x-4 my-4 py-4 px-8 w-10/12 transition duration-300 ease-in-out hover:scale-x-105"
-              onClick={() => handleClick(item.userName,item.email)}
+              onClick={() => handleClick(item.userName, item.email)}
               key={item.name}
             >
               <img src={icon} width="40px" height="40px" alt="Friend's icon" />

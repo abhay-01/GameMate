@@ -3,8 +3,10 @@ import bg from "../assets/bg.svg";
 import boy from "../images/boy.png";
 import cross from "../assets/cross.png";
 import Coin from "../components/Coin";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState({
@@ -62,6 +64,9 @@ function Profile() {
     if (userEmailFromStorage) {
       setEmail(userEmailFromStorage);
       fetchUserData(userEmailFromStorage); // Fetch user data only if email is found
+    }else {
+      alert("Please login to continue");
+      navigate("/login");
     }
   }, [email]); // Only runs once when the component mounts
 
