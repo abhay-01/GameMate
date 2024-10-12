@@ -53,12 +53,18 @@ const Matchmaking = () => {
   }, []); // Empty dependency array ensures this runs only once on component mount
 
   useEffect(() => {
+    let redirect = false;
     setFriendEmail(friend_email);
     setGameUrl(game_Url);
     setOpponentName(friendName);
 
     // Listen for matchmaking acceptance
     socket.on("accept-matchmaking", (data) => {
+
+      if(redirect){
+        return;
+      }
+
       console.log("Matchmaking accepted by", data.url);
 
       const stored_email = JSON.parse(
@@ -72,7 +78,9 @@ const Matchmaking = () => {
         if (stored_email === myEmail || stored_email === friendEmail) {
           console.log("Opening URL for:", stored_email);
           window.open(gameUrlWithEmail, "_blank");
-          stopCountdown(); // Stop the countdown once the game URL is opened
+          stopCountdown();
+
+          redirect = true;
         }
       } else {
         console.error("No URL received");
