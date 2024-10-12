@@ -48,8 +48,8 @@ const Card = () => {
       <div className="text-2xl font-bold">
         Upcoming Matches
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 py-4 gap-x-10 gap-y-8">
-        {cardData.map((card) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 py-4 gap-x-10 gap-y-8">
+      {cardData.map((card) => (
           <OneCard key={card.id} card={card} />
         ))}
       </div>

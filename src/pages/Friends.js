@@ -90,7 +90,7 @@ const Friends = () => {
           backgroundPosition: "center",
         }}
       >
-        <div className="font-semibold text-2xl my-4 pl-28">All Friends</div>
+        <div className="text-2xl bg-black text-white font-bold pt-8 lg:pl-20">All Friends</div>
         <div className="w-full flex flex-col items-center">
           {friendsData.map((item) => (
             <div

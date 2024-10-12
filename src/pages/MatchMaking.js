@@ -283,6 +283,9 @@ const Matchmaking = () => {
           color: "white",
           display: "flex",
           flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
         }}
       >
         <div
@@ -293,6 +296,7 @@ const Matchmaking = () => {
             backgroundRepeat: "repeat",
             backgroundSize: "cover",
             backgroundPosition: "center",
+            minHeight: "100vh",
           }}
         >
           {showAlert && (
@@ -312,7 +316,7 @@ const Matchmaking = () => {
             </div>
           )}
           {/* Matchmaking UI */}
-          <div className="flex flex-col md:flex-row p-2 mb-4 lg:pt-48">
+          <div className="flex flex-col md:flex-row p-2 mb-4">
             <div className="flex flex-col border border-white w-[300px] h-[330px] m-2 m-r-2 rounded-lg p-10 pt-9">
               <div className="flex justify-center items-center">
                 <img src={boy} alt="Boy" className="w-[55px] h-[55px]" />

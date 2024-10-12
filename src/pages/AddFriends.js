@@ -85,6 +85,10 @@ const AddFriends = () => {
   };
 
   return (
+    <div>
+      <div className="text-2xl bg-black text-white font-bold pt-8 lg:pl-20">
+          Recommended
+      </div>
     <div
       style={{
         overflowY: "auto",
@@ -104,9 +108,7 @@ const AddFriends = () => {
           backgroundPosition: "center",
         }}
       >
-        <div className="font-semibold text-xl my-4 ml-8 self-start pl-12 pt-4">
-          Recommended
-        </div>
+        
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 w-full md:pr-10 md:pl-20 pr-5 pl-10">
           {data.map((item) => (
             <div
@@ -136,6 +138,7 @@ const AddFriends = () => {
           ))}
         </div>
       </div>
+    </div>
     </div>
   );
 };
