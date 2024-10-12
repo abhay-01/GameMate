@@ -134,7 +134,7 @@ const Home = () => {
   const handleResult = async (email, result) => {
     try {
       const response = await fetch(
-        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateStatus",
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateResults",
         {
           method: "POST",
           headers: {

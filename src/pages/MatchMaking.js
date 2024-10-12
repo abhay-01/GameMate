@@ -139,33 +139,6 @@ const Matchmaking = () => {
     }
   };
 
-  const handleStatus = async () => {
-    try {
-      const response = await fetch(
-        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateStatus",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email1: myEmail,
-            email2: friendEmail,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        setShowResult(false);
-        console.log("Status updated successfully");
-      } else {
-        console.error("Failed to update status");
-      }
-    } catch (error) {
-      console.error("Error updating status:", error);
-    }
-  };
-
   useEffect(() => {
     (async function fetchUsername() {
       console.log("FETCHING USERNAME", myEmail);
@@ -328,7 +301,7 @@ const Matchmaking = () => {
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
               <div className="pl-16">
-                <Coin />
+                <Coin email ={myEmail}/>
               </div>
               <span className="text-yellow-500 font-bold pt-2 ml-6">
                 500 Coins on Stakes
@@ -351,7 +324,7 @@ const Matchmaking = () => {
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
               <div className="pl-16">
-                <Coin />
+                <Coin email = {friendEmail}/>
               </div>
 
               <span className="text-yellow-500 font-bold pt-2 ml-6">
