@@ -3,8 +3,11 @@ import { FaGem } from "react-icons/fa";
 
 function Coin({ email }) {
   const [coins, setCoins] = useState(0);
+  const passed_email = email;
 
-  const fetchCoins = async (email) => {
+
+  useEffect(() => {
+  const fetchCoins = async (passed_email) => {
     try {
       const response = await fetch(
         "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/coins",
@@ -14,7 +17,7 @@ function Coin({ email }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: email,
+            email: passed_email,
           }),
         }
       );
@@ -31,14 +34,9 @@ function Coin({ email }) {
     }
   };
 
-  useEffect(() => {
-    const storedCredentials = JSON.parse(
-      localStorage.getItem("userCredentials")
-    );
-    if (storedCredentials && storedCredentials.email) {
-      fetchCoins(storedCredentials.email);
-    }
-  }, []);
+  fetchCoins(passed_email);
+  }, [email]);
+  
 
   return (
     <div className="flex items-center gap-1">

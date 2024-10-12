@@ -146,7 +146,7 @@ function Profile() {
                 <div className="flex justify-center items-center p-4">
                   <img src={boy} alt="Boy" className="w-[90px] h-[90px]" />
                 </div>
-                <Coin />
+                <Coin email={userData.email}/>
               </div>
             </div>
             <div className="flex flex-row w-full justify-center items-center gap-x-4">

@@ -53,12 +53,18 @@ const Matchmaking = () => {
   }, []); // Empty dependency array ensures this runs only once on component mount
 
   useEffect(() => {
+    let redirect = false;
     setFriendEmail(friend_email);
     setGameUrl(game_Url);
     setOpponentName(friendName);
 
     // Listen for matchmaking acceptance
     socket.on("accept-matchmaking", (data) => {
+
+      if(redirect){
+        return;
+      }
+
       console.log("Matchmaking accepted by", data.url);
 
       const stored_email = JSON.parse(
@@ -72,7 +78,9 @@ const Matchmaking = () => {
         if (stored_email === myEmail || stored_email === friendEmail) {
           console.log("Opening URL for:", stored_email);
           window.open(gameUrlWithEmail, "_blank");
-          stopCountdown(); // Stop the countdown once the game URL is opened
+          stopCountdown();
+
+          redirect = true;
         }
       } else {
         console.error("No URL received");
@@ -136,33 +144,6 @@ const Matchmaking = () => {
       }
     } catch (error) {
       console.error("Error fetching results:", error);
-    }
-  };
-
-  const handleStatus = async () => {
-    try {
-      const response = await fetch(
-        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateStatus",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email1: myEmail,
-            email2: friendEmail,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        setShowResult(false);
-        console.log("Status updated successfully");
-      } else {
-        console.error("Failed to update status");
-      }
-    } catch (error) {
-      console.error("Error updating status:", error);
     }
   };
 
@@ -328,7 +309,7 @@ const Matchmaking = () => {
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
               <div className="pl-16">
-                <Coin />
+                <Coin email ={myEmail}/>
               </div>
               <span className="text-yellow-500 font-bold pt-2 ml-6">
                 500 Coins on Stakes
@@ -351,7 +332,7 @@ const Matchmaking = () => {
                 <span className="text-gray-500 pt-0">BIO/AIR</span>
               </div>
               <div className="pl-16">
-                <Coin />
+                <Coin email = {friendEmail}/>
               </div>
 
               <span className="text-yellow-500 font-bold pt-2 ml-6">
