@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export const useGameLogic = (userEmail, friendName,friendEmail) => {
+export const useGameLogic = (userEmail, friendName, friendEmail) => {
   const navigate = useNavigate();
 
   const startChessServer = () => {
@@ -8,7 +8,7 @@ export const useGameLogic = (userEmail, friendName,friendEmail) => {
       navigate("/matchmaking", {
         state: {
           friendName: friendName,
-          gameUrl: "https://chess-gamemate.onrender.com/",
+          gameUrl: "https://chess-26tz.onrender.com/",
           email: userEmail,
           friendEmail: friendEmail,
         },
@@ -17,9 +17,8 @@ export const useGameLogic = (userEmail, friendName,friendEmail) => {
       navigate("/friends", {
         state: {
           email: userEmail,
-          gameUrl: "https://chess-gamemate.onrender.com/",
+          gameUrl: "https://chess-26tz.onrender.com/",
           friendEmail: friendEmail,
-
         },
       });
     }
@@ -59,20 +58,17 @@ export const useGameLogic = (userEmail, friendName,friendEmail) => {
       navigate("/matchmaking", {
         state: {
           friendName: friendName,
-          gameUrl:
-            "https://salmon-bay-02f093e00.5.azurestaticapps.net",
+          gameUrl: "https://salmon-bay-02f093e00.5.azurestaticapps.net",
           email: userEmail,
           friendEmail: friendEmail,
-
         },
       });
     } else {
       navigate("/friends", {
         state: {
           email: userEmail,
-          gameUrl:
-            "https://salmon-bay-02f093e00.5.azurestaticapps.net",
-           friendEmail: friendEmail,
+          gameUrl: "https://salmon-bay-02f093e00.5.azurestaticapps.net",
+          friendEmail: friendEmail,
         },
       });
     }
@@ -82,5 +78,5 @@ export const useGameLogic = (userEmail, friendName,friendEmail) => {
     alert("Memory Game is coming soon!");
   };
 
-  return { startChessServer, openGeography, openTicTacToe, openMemory };
+  return { startChessServer, openGeography, openTicTacToe, openMemory };
 };
