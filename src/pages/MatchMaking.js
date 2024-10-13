@@ -61,8 +61,6 @@ const Matchmaking = () => {
     // Listen for matchmaking acceptance
     socket.on("accept-matchmaking", (data) => {
 
-      console.log("Matchmaking accepted by", data.url);
-
       if(redirect){
         return;
       }

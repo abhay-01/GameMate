@@ -50,6 +50,7 @@ const Home = () => {
       setShowLoginBanner(true);
     } else {
       const tempMail = JSON.parse(storedCredentials).email;
+      console.log("User credentials found:", tempMail);
 
       socket.on("matchmaking", (data) => {
         console.log("Matchmaking AA YAA:", data);
