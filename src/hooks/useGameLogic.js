@@ -11,7 +11,7 @@ export const useGameLogic = (userEmail, friendName, friendEmail) => {
       navigate("/matchmaking", {
         state: {
           friendName: friendName,
-          gameUrl: "https://chess-gamemate.onrender.com/",
+          gameUrl: "https://chess-26tz.onrender.com/",
           email: userEmail,
           friendEmail: friendEmail,
         },
@@ -20,7 +20,7 @@ export const useGameLogic = (userEmail, friendName, friendEmail) => {
       navigate("/friends", {
         state: {
           email: userEmail,
-          gameUrl: "https://chess-gamemate.onrender.com/",
+          gameUrl: "https://chess-26tz.onrender.com/",
           friendEmail: friendEmail,
         },
       });
