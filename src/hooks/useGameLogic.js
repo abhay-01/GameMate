@@ -1,14 +1,17 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export const useGameLogic = (userEmail, friendName, friendEmail) => {
   const navigate = useNavigate();
+
+  const [myEmail, setMyEmail] = useState("");
 
   const startChessServer = () => {
     if (friendName) {
       navigate("/matchmaking", {
         state: {
           friendName: friendName,
-          gameUrl: "https://chess-26tz.onrender.com/",
+          gameUrl: "https://chess-gamemate.onrender.com/",
           email: userEmail,
           friendEmail: friendEmail,
         },
@@ -17,7 +20,7 @@ export const useGameLogic = (userEmail, friendName, friendEmail) => {
       navigate("/friends", {
         state: {
           email: userEmail,
-          gameUrl: "https://chess-26tz.onrender.com/",
+          gameUrl: "https://chess-gamemate.onrender.com/",
           friendEmail: friendEmail,
         },
       });
@@ -25,8 +28,23 @@ export const useGameLogic = (userEmail, friendName, friendEmail) => {
   };
 
   const openGeography = async () => {
-    const email = userEmail;
+    // Retrieve the email directly from local storage, if not provided as a prop
+    let emailForUrl = userEmail;
+    if (!emailForUrl) {
+      const storedCredentials = JSON.parse(
+        localStorage.getItem("userCredentials")
+      );
+      if (storedCredentials && storedCredentials.email) {
+        emailForUrl = storedCredentials.email;
+        console.log("User email retrieved from local storage:", emailForUrl);
+      } else {
+        console.error("No email found in local storage");
+        return; // Stop execution if no email is found
+      }
+    }
+
     try {
+      console.log("Creating match for Geography Quiz..." + emailForUrl);
       const response = await fetch(
         "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/createSoloMatch",
         {
@@ -35,7 +53,7 @@ export const useGameLogic = (userEmail, friendName, friendEmail) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: email,
+            email: emailForUrl,
           }),
         }
       );
@@ -49,7 +67,9 @@ export const useGameLogic = (userEmail, friendName, friendEmail) => {
     } catch (error) {
       console.error("Error occurred:", error.message);
     }
-    const url = `https://geography-classes.netlify.app?email=${userEmail}`;
+
+    console.log("Opening Geography Quiz with email: " + emailForUrl);
+    const url = "https://geography-classes.netlify.app?email=" + emailForUrl;
     window.open(url, "_blank");
   };
 
