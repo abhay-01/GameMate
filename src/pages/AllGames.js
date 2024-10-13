@@ -15,22 +15,26 @@ const AllGames = () => {
   const friendName = location.state?.friendName;
 
   // Use the custom game logic hook
-  const gameLogic = useGameLogic(userEmail, friendName,location.state?.friendEmail);
+  const gameLogic = useGameLogic(
+    userEmail,
+    friendName,
+    location.state?.friendEmail
+  );
 
   useEffect(() => {
     const storedCredentials = JSON.parse(
       localStorage.getItem("userCredentials")
     );
     const userEmailFromStorage = storedCredentials?.email || email;
-    if(userEmailFromStorage && userEmail === ""){
-    setUserEmail(userEmailFromStorage);
+    if (userEmailFromStorage && userEmail === "") {
+      setUserEmail(userEmailFromStorage);
     }
 
     // Get the games and pass the game logic
     const gameList = games(gameLogic); // Fetch games with logic
-    if(gameList && availableGames.length === 0){
-    setAvailableGames(gameList); // Store fetched games
-  }
+    if (gameList && availableGames.length === 0) {
+      setAvailableGames(gameList); // Store fetched games
+    }
   }, [email, friendName, gameLogic]);
 
   return (
@@ -119,4 +123,4 @@ const AllGames = () => {
   );
 };
 
-export default AllGames;
+export default AllGames;
