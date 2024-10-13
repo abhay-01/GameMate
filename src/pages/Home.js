@@ -140,7 +140,7 @@ const Home = () => {
       if (result && result.winner) {
         setWinner(result.winner === queryMail ? "Win" : "Lost"); // Update winner status
         setShow(true); // Show the popup when we have the result
-        // handleResult(queryMail, result.winner === queryMail ? "win" : "loss");
+        handleResult(queryMail, result.winner === queryMail ? "win" : "loss");
       } else {
         console.log("No result found for the email.");
       }
@@ -149,30 +149,30 @@ const Home = () => {
     }
   };
 
-  // const handleResult = async (email, result) => {
-  //   try {
-  //     const response = await fetch(
-  //       "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateResults",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ email: email, result: result }),
-  //       }
-  //     );
+  const handleResult = async (email, result) => {
+    try {
+      const response = await fetch(
+        "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateResults",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email, result: result }),
+        }
+      );
 
-  //     console.log("Response updateStatus:", response);
+      console.log("Response updateStatus:", response);
 
-  //     if (response.ok) {
-  //       console.log("Match status updated successfully");
-  //     } else {
-  //       console.error("Failed to update match status");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating match status:", error);
-  //   }
-  // };
+      if (response.ok) {
+        console.log("Match status updated successfully");
+      } else {
+        console.error("Failed to update match status");
+      }
+    } catch (error) {
+      console.error("Error updating match status:", error);
+    }
+  };
 
   const handleAcceptInvite = async () => {
     setMatchedInvite(false);
