@@ -8,7 +8,6 @@ import Popup from "../components/PopUp";
 import LoginAlert from "../components/LoginAlert";
 import AllGames from "./AllGames";
 import DrawCard from "../components/DrawCard";
-import SoloGamePopup from "../components/SoloGamePopup";
 
 const socket = io(
   "https://gamemateserver3-eresf4e6c0drdnaf.southindia-01.azurewebsites.net",
@@ -32,7 +31,6 @@ const Home = () => {
   const [showSoloPopUp, setShowSoloPopUp] = useState(false);
   const [showLoginBanner, setShowLoginBanner] = useState(false);
   const [isDraw, setIsDraw] = useState(false);
-  const [soloResult, setSoloResult] = useState(false);
 
   const handleLoginClick = () => {
     setShowLoginBanner(false);
@@ -73,35 +71,19 @@ const Home = () => {
       const params = new URLSearchParams(location.search);
       const email = params.get("email");
       const result = params.get("result");
-
       return email, result;
     };
 
-    const getSolo = () => {
-      const params = new URLSearchParams(location.search);
-      const matchResult = params.get("matchResult");
-
-      return matchResult;
-    };
 
     const email = getEmailFromURL();
     const result = getEmailFromURL();
-    const matchResult = getSolo();
 
-    if (result) {
+    if(result){
       setIsDraw(true);
     }
     if (email) {
       setQueryMail(email);
       setShowSoloPopUp(true);
-    }
-
-    if (matchResult) {
-      setSoloResult(true);
-      setShow(true);
-      setWinner(matchResult === "win" ? "Win" : "Lost");
-
-      console.log("Match Result:", matchResult, soloResult, show);
     }
   }, [location.search]);
 
@@ -313,15 +295,13 @@ const Home = () => {
   const handleDraw = () => {
     setIsDraw(false);
     const urlWithoutEmail = window.location.pathname;
-    window.history.replaceState(null, "", urlWithoutEmail);
-  };
+        window.history.replaceState(null, "", urlWithoutEmail);
+  }
   return (
     <div className=" bg-black text-white md:pr-10 ">
       {showLoginBanner && <LoginAlert onLoginClick={handleLoginClick} />}
 
-      <div className="text-2xl bg-custom-gray text-white font-bold pt-8 lg:pl-20">
-        Home
-      </div>
+      <div className="text-2xl bg-custom-gray text-white font-bold pt-8 lg:pl-20">Home</div>
 
       {/* Header Image */}
       <div>
@@ -362,17 +342,13 @@ const Home = () => {
       <AllGames />
 
       {/* Popup for Draw */}
-      {isDraw && <DrawCard onClose={() => handleDraw()} />}
+      {isDraw && (
+        <DrawCard onClose={() => handleDraw()} />
+      )}
 
       {/* Popup for Result */}
       {showSoloPopUp && show && (
         <Popup show={show} winner={winner} handleClose={handleClose} />
-      )}
-
-      {/* Popup for Solo Game */}
-
-      {soloResult && show && (
-        <SoloGamePopup email={inviteTarget} show={show} winner={winner} />
       )}
 
       <Card />
