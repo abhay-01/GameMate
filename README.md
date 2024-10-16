@@ -1,5 +1,7 @@
 # GameMate - Multiplayer Game Invitation and Matchmaking System
 
+![Screenshot 2024-10-16 145458](https://github.com/user-attachments/assets/31d2b118-e416-489d-8909-04597c35a679)
+
 ## Project Overview
 
 GameMate is a real-time multiplayer game invitation and matchmaking platform where users can connect with friends, send game invites, and participate in various online games. The platform supports seamless game invites, matchmaking, and automatic coin staking. The application is built using React for the frontend and Socket.IO for real-time communication, with a backend hosted on Azure.
